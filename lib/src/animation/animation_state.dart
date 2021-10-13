@@ -198,8 +198,6 @@ class AnimationState extends EventDispatcher {
         var firstFrame = timelinesRotation.isEmpty;
         if (firstFrame) {
           timelinesRotation = List.filled(timelines.length << 1, 0.0);
-          // timelinesRotation.length = timelines.length << 1;
-          // timelinesRotation.fillRange(0, timelinesRotation.length, 0.0);
         }
 
         for (int tl = 0; tl < timelines.length; tl++) {
