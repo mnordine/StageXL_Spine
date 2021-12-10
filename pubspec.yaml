@@ -8,7 +8,10 @@ environment:
   sdk: '>=2.9.0 <3.0.0'
 
 dependencies:
-  stagexl: '>=1.4.6 <2.0.0'
+  stagexl:
+    git:
+      url: https://github.com/mnordine/StageXL
+      ref: dart-2
 
 dev_dependencies:
   pedantic: any
