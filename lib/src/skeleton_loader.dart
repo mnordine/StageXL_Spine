@@ -475,7 +475,7 @@ class SkeletonLoader {
           for (Map valueMap in values) {
             var time = _getDouble(valueMap, "time", 0.0);
             var name = _getString(valueMap, "name", null);
-            if (name != null) attachmentTimeline.setFrame(frameIndex, time, name);
+            attachmentTimeline.setFrame(frameIndex, time, name);
             frameIndex++;
           }
 
