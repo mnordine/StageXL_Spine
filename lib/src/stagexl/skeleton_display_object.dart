@@ -2,7 +2,7 @@ part of stagexl_spine;
 
 enum SkeletonBoundsCalculation { None, BoundingBoxes, Hull }
 
-class SkeletonDisplayObject extends DisplayObject {
+class SkeletonDisplayObject extends InteractiveObject {
   final Skeleton skeleton;
   final Matrix _skeletonMatrix = Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0);
   final Matrix _identityMatrix = Matrix.fromIdentity();
