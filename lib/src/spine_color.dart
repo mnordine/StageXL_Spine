@@ -44,42 +44,38 @@ class SpineColor {
 
   SpineColor(this.r, this.g, this.b, [this.a = 0.0]);
 
-  SpineColor setFrom(double r, double g, double b, double a) {
+  void setFrom(double r, double g, double b, double a) {
     this.r = r;
     this.g = g;
     this.b = b;
     this.a = a;
     clamp();
-    return this;
   }
 
-  SpineColor setFromColor(SpineColor c) {
+  void setFromColor(SpineColor c) {
     r = c.r;
     g = c.g;
     b = c.b;
     a = c.a;
-    return this;
   }
 
-  SpineColor setFromString(String hex) {
+  void setFromString(String hex) {
     hex = hex.startsWith('#') ? hex.substring(1) : hex;
     r = int.parse(hex.substring(0, 2), radix: 16) / 255.0;
     g = int.parse(hex.substring(2, 4), radix: 16) / 255.0;
     b = int.parse(hex.substring(4, 6), radix: 16) / 255.0;
     a = (hex.length != 8 ? 255 : int.parse(hex.substring(6, 8), radix: 16)) / 255.0;
-    return this;
   }
 
-  SpineColor add(double r, double g, double b, double a) {
+  void add(double r, double g, double b, double a) {
     this.r += r;
     this.g += g;
     this.b += b;
     this.a += a;
     clamp();
-    return this;
   }
 
-  SpineColor clamp() {
+  void clamp() {
     if (r < 0.0) {
       r = 0.0;
     } else if (r > 1.0) {
@@ -103,7 +99,5 @@ class SpineColor {
     } else if (a > 1.0) {
       a = 1.0;
     }
-    
-    return this;
   }
 }
