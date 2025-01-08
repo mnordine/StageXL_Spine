@@ -72,7 +72,7 @@ class SkeletonBounds {
           }
         }
 
-        if (vertices == null) vertices = Float32List(verticesLength);
+        vertices ??= Float32List(verticesLength);
         boundingBox.computeWorldVertices(slot, vertices);
 
         boundingBoxes.add(boundingBox);
