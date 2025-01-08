@@ -30,6 +30,7 @@
 
 part of stagexl_spine;
 
+// ignore: one_member_abstracts
 abstract class Updatable {
   void update();
 }
