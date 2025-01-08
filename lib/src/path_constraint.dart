@@ -80,9 +80,7 @@ class PathConstraint implements Constraint {
     if (!translate && !rotate) return;
 
     PathConstraintData data = this.data;
-    //SpacingMode spacingMode = data.spacingMode;
-    // Workaround for https://github.com/dart-lang/build/issues/1521
-    String spacingMode = data.spacingMode!;
+    SpacingMode spacingMode = data.spacingMode!;
     bool lengthSpacing = spacingMode == SpacingMode.length;
     RotateMode rotateMode = data.rotateMode!;
     bool tangents = rotateMode == RotateMode.tangent;

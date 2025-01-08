@@ -22,3 +22,4 @@ linter:
     - avoid_annotating_with_dynamic
     - avoid_returning_this
     - one_member_abstracts
+    - avoid_classes_with_only_static_members

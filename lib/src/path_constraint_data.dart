@@ -36,9 +36,7 @@ class PathConstraintData {
 
   late final SlotData target;
   PositionMode? positionMode;
-  //SpacingMode spacingMode;
-  // Workaround for https://github.com/dart-lang/build/issues/1521
-  String? spacingMode;
+  SpacingMode? spacingMode;
   RotateMode? rotateMode;
 
   int order = 0;

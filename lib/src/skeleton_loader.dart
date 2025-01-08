@@ -226,18 +226,15 @@ class SkeletonLoader {
       var target = skeletonData.findSlot(targetName);
       if (target == null) throw StateError("Path target slot not found: $targetName");
 
-      var positionMode = "PositionMode.${_getString(constraintMap, "positionMode", "percent")!}";
-      var spacingMode = "SpacingMode.${_getString(constraintMap, "spacingMode", "length")!}";
-      var rotateMode = "RotateMode.${_getString(constraintMap, "rotateMode", "tangent")!}";
+      final positionMode = PositionMode.fromString(constraintMap['positionMode'] as String?) ?? PositionMode.percent;
+      final spacingMode = SpacingMode.fromString(constraintMap['spacingMode'] as String?) ?? SpacingMode.length;  
+      final rotateMode = RotateMode.fromString(constraintMap['rotateMode'] as String?) ?? RotateMode.tangent;
 
       pathConstraintData.target = target;
       pathConstraintData.order = _getInt(constraintMap, "order", 0);
-      pathConstraintData.positionMode =
-          PositionMode.values.firstWhere((e) => e.toString() == positionMode);
-      pathConstraintData.spacingMode =
-          SpacingMode.values.firstWhere((e) => e == spacingMode);
-      pathConstraintData.rotateMode =
-          RotateMode.values.firstWhere((e) => e.toString() == rotateMode);
+      pathConstraintData.positionMode = positionMode;
+      pathConstraintData.spacingMode = spacingMode;
+      pathConstraintData.rotateMode = rotateMode;
       pathConstraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0);
       pathConstraintData.position = _getDouble(constraintMap, "position", 0);
       pathConstraintData.spacing = _getDouble(constraintMap, "spacing", 0);

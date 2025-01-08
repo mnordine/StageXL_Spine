@@ -30,12 +30,18 @@
 
 part of stagexl_spine;
 
-//enum SpacingMode { fixed, percent, length }
+enum SpacingMode { 
+  fixed, 
+  percent, 
+  length;
 
-/// Workaround for https://github.com/dart-lang/build/issues/1521
-class SpacingMode {
-  static const String length = "SpacingMode.length";
-  static const String percent = "SpacingMode.percent";
-  static const String fixed = "SpacingMode.fixed";
-  static final List<String> values = [length, percent, fixed];
+  static SpacingMode? fromString(String? s) {
+    if (s == null) return null;
+
+    for (final value in values)
+      if (value.toString() == s)
+        return value;
+
+    return null;
+  }
 }

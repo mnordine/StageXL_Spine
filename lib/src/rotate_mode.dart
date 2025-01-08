@@ -30,4 +30,18 @@
 
 part of stagexl_spine;
 
-enum RotateMode { tangent, chain, chainScale }
+enum RotateMode {
+  tangent, 
+  chain, 
+  chainScale;
+
+  static RotateMode? fromString(String? s) {
+    if (s == null) return null;
+
+    for (final value in values)
+      if (value.toString() == s)
+        return value;
+
+    return null;
+  }
+}

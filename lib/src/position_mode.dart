@@ -30,4 +30,16 @@
 
 part of stagexl_spine;
 
-enum PositionMode { fixed, percent }
+enum PositionMode { 
+  fixed, percent;
+
+  static PositionMode? fromString(String? s) {
+    if (s == null) return null;
+
+    for (final value in values)
+      if (value.toString() == s)
+        return value;
+
+    return null;
+  }
+}
