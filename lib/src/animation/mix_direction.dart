@@ -30,4 +30,5 @@
 
 part of stagexl_spine;
 
+// ignore: constant_identifier_names
 enum MixDirection { In, Out }

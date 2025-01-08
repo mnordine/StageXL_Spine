@@ -324,16 +324,16 @@ class AnimationState extends EventDispatcher {
       return;
     }
 
-    if (time >= frames[frames.length - RotateTimeline._ENTRIES]) {
+    if (time >= frames[frames.length - RotateTimeline._entries]) {
       // Time is after last frame.
-      r2 = bone.data.rotation + frames[frames.length + RotateTimeline._PREV_ROTATION];
+      r2 = bone.data.rotation + frames[frames.length + RotateTimeline._prevRotation];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, RotateTimeline._ENTRIES);
-      double prevTime = frames[frame + RotateTimeline._PREV_TIME];
-      double prevRotation = frames[frame + RotateTimeline._PREV_ROTATION];
-      double frameTime = frames[frame + RotateTimeline._TIME];
-      double frameRotation = frames[frame + RotateTimeline._ROTATION];
+      int frame = Animation.binarySearch(frames, time, RotateTimeline._entries);
+      double prevTime = frames[frame + RotateTimeline._prevTime];
+      double prevRotation = frames[frame + RotateTimeline._prevRotation];
+      double frameTime = frames[frame + RotateTimeline._time];
+      double frameRotation = frames[frame + RotateTimeline._rotation];
       double between = 1.0 - (time - frameTime) / (prevTime - frameTime);
       double percent = timeline.getCurvePercent((frame >> 1) - 1, between);
       r2 = _wrapRotation(frameRotation - prevRotation);

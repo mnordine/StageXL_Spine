@@ -31,11 +31,11 @@
 part of stagexl_spine;
 
 class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
-  static const int _ENTRIES = 2;
-  static const int _PREV_TIME = -2;
-  static const int _PREV_VALUE = -1;
-  static const int _TIME = 0;
-  static const int _VALUE = 1;
+  static const int _entries = 2;
+  static const int _prevTime = -2;
+  static const int _prevValue = -1;
+  static const int _time = 0;
+  static const int _value = 1;
 
   PathConstraintSpacingTimeline(super.frameCount);
 
@@ -61,18 +61,18 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      s = frames[frames.length + _PREV_VALUE];
+      s = frames[frames.length + _prevValue];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double t0 = frames[frame + _PREV_TIME];
-      double s0 = frames[frame + _PREV_VALUE];
-      double t1 = frames[frame + _TIME];
-      double s1 = frames[frame + _VALUE];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double t0 = frames[frame + _prevTime];
+      double s0 = frames[frame + _prevValue];
+      double t1 = frames[frame + _time];
+      double s1 = frames[frame + _value];
       double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       s = s0 + (s1 - s0) * percent;
     }
 

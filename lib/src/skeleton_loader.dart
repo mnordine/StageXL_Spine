@@ -519,7 +519,7 @@ class SkeletonLoader {
           duration = math.max(
               duration,
               twoColorTimeline
-                  .frames[(twoColorTimeline.frameCount - 1) * TwoColorTimeline._ENTRIES]);
+                  .frames[(twoColorTimeline.frameCount - 1) * TwoColorTimeline._entries]);
         } else {
           throw StateError("Invalid timeline type for a slot: $timelineName ($slotName)");
         }
@@ -554,7 +554,7 @@ class SkeletonLoader {
 
           timelines.add(rotateTimeline);
           duration = math.max(duration,
-              rotateTimeline.frames[(rotateTimeline.frameCount - 1) * RotateTimeline._ENTRIES]);
+              rotateTimeline.frames[(rotateTimeline.frameCount - 1) * RotateTimeline._entries]);
         } else if (timelineName == "translate" ||
             timelineName == "scale" ||
             timelineName == "shear") {
@@ -584,7 +584,7 @@ class SkeletonLoader {
           duration = math.max(
               duration,
               translateTimeline
-                  .frames[(translateTimeline.frameCount - 1) * TranslateTimeline._ENTRIES]);
+                  .frames[(translateTimeline.frameCount - 1) * TranslateTimeline._entries]);
         } else {
           throw StateError("Invalid timeline type for a bone: $timelineName ($boneName)");
         }
@@ -611,7 +611,7 @@ class SkeletonLoader {
       }
       timelines.add(ikTimeline);
       duration = math.max(
-          duration, ikTimeline.frames[(ikTimeline.frameCount - 1) * IkConstraintTimeline._ENTRIES]);
+          duration, ikTimeline.frames[(ikTimeline.frameCount - 1) * IkConstraintTimeline._entries]);
     }
 
     //-------------------------------------
@@ -640,7 +640,7 @@ class SkeletonLoader {
       duration = math.max(
           duration,
           transformTimeline
-              .frames[(transformTimeline.frameCount - 1) * TransformConstraintTimeline._ENTRIES]);
+              .frames[(transformTimeline.frameCount - 1) * TransformConstraintTimeline._entries]);
     }
 
     //-------------------------------------
@@ -679,7 +679,7 @@ class SkeletonLoader {
           duration = math.max(
               duration,
               pathTimeline
-                  .frames[(pathTimeline.frameCount - 1) * PathConstraintPositionTimeline._ENTRIES]);
+                  .frames[(pathTimeline.frameCount - 1) * PathConstraintPositionTimeline._entries]);
         } else if (timelineName == "mix") {
           PathConstraintMixTimeline pathMixTimeline = PathConstraintMixTimeline(valueMaps.length);
           pathMixTimeline.pathConstraintIndex = index;
@@ -698,7 +698,7 @@ class SkeletonLoader {
           duration = math.max(
               duration,
               pathMixTimeline
-                  .frames[(pathMixTimeline.frameCount - 1) * PathConstraintMixTimeline._ENTRIES]);
+                  .frames[(pathMixTimeline.frameCount - 1) * PathConstraintMixTimeline._entries]);
         }
       }
     }

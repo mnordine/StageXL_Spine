@@ -31,18 +31,18 @@
 part of stagexl_spine;
 
 class PathConstraintPositionTimeline extends CurveTimeline {
-  static const int _ENTRIES = 2;
-  static const int _PREV_TIME = -2;
-  static const int _PREV_VALUE = -1;
-  static const int _TIME = 0;
-  static const int _VALUE = 1;
+  static const int _entries = 2;
+  static const int _prevTime = -2;
+  static const int _prevValue = -1;
+  static const int _time = 0;
+  static const int _value = 1;
 
   int pathConstraintIndex = 0;
 
   final Float32List frames; // time, position, ...
 
   PathConstraintPositionTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -52,9 +52,9 @@ class PathConstraintPositionTimeline extends CurveTimeline {
   /// Sets the time and value of the specified keyframe.
 
   void setFrame(int frameIndex, double time, double value) {
-    frameIndex *= _ENTRIES;
-    frames[frameIndex + _TIME] = time;
-    frames[frameIndex + _VALUE] = value;
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _value] = value;
   }
 
   @override
@@ -74,18 +74,18 @@ class PathConstraintPositionTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      p = frames[frames.length + _PREV_VALUE];
+      p = frames[frames.length + _prevValue];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double t0 = frames[frame + _PREV_TIME];
-      double p0 = frames[frame + _PREV_VALUE];
-      double t1 = frames[frame + _TIME];
-      double p1 = frames[frame + _VALUE];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double t0 = frames[frame + _prevTime];
+      double p0 = frames[frame + _prevValue];
+      double t1 = frames[frame + _time];
+      double p1 = frames[frame + _value];
       double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       p = p0 + (p1 - p0) * percent;
     }
 

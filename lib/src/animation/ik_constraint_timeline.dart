@@ -31,19 +31,19 @@
 part of stagexl_spine;
 
 class IkConstraintTimeline extends CurveTimeline {
-  static const int _ENTRIES = 3;
-  static const int _PREV_TIME = -3;
-  static const int _PREV_MIX = -2;
-  static const int _PREV_BEND_DIRECTION = -1;
-  static const int _TIME = 0;
-  static const int _MIX = 1;
-  static const int _BEND_DIRECTION = 2;
+  static const int _entries = 3;
+  static const int _prevTime = -3;
+  static const int _prevMix = -2;
+  static const int _prevBendDirection = -1;
+  static const int _time = 0;
+  static const int _mix = 1;
+  static const int _bendDirection = 2;
 
   final Float32List frames; // time, mix, bendDirection, ...
   int ikConstraintIndex = 0;
 
   IkConstraintTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -53,10 +53,10 @@ class IkConstraintTimeline extends CurveTimeline {
   /// Sets the time, mix and bend direction of the specified keyframe.
 
   void setFrame(int frameIndex, double time, double mix, int bendDirection) {
-    frameIndex *= _ENTRIES;
-    frames[frameIndex + _TIME] = time;
-    frames[frameIndex + _MIX] = mix;
-    frames[frameIndex + _BEND_DIRECTION] = bendDirection.toDouble();
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _mix] = mix;
+    frames[frameIndex + _bendDirection] = bendDirection.toDouble();
   }
 
   @override
@@ -79,20 +79,20 @@ class IkConstraintTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      m = frames[frames.length + _PREV_MIX];
-      b = frames[frames.length + _PREV_BEND_DIRECTION];
+      m = frames[frames.length + _prevMix];
+      b = frames[frames.length + _prevBendDirection];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double t0 = frames[frame + _PREV_TIME];
-      double m0 = frames[frame + _PREV_MIX];
-      double b0 = frames[frame + _PREV_BEND_DIRECTION];
-      double t1 = frames[frame + _TIME];
-      double m1 = frames[frame + _MIX];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double t0 = frames[frame + _prevTime];
+      double m0 = frames[frame + _prevMix];
+      double b0 = frames[frame + _prevBendDirection];
+      double t1 = frames[frame + _time];
+      double m1 = frames[frame + _mix];
       double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       m = m0 + (m1 - m0) * percent;
       b = b0;
     }

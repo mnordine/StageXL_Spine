@@ -31,24 +31,24 @@
 part of stagexl_spine;
 
 class TransformConstraintTimeline extends CurveTimeline {
-  static const int _ENTRIES = 5;
-  static const int _PREV_TIME = -5;
-  static const int _PREV_ROTATE = -4;
-  static const int _PREV_TRANSLATE = -3;
-  static const int _PREV_SCALE = -2;
-  static const int _PREV_SHEAR = -1;
-  static const int _TIME = 0;
-  static const int _ROTATE = 1;
-  static const int _TRANSLATE = 2;
-  static const int _SCALE = 3;
-  static const int _SHEAR = 4;
+  static const int _entries = 5;
+  static const int _prevTime = -5;
+  static const int _prevRotate = -4;
+  static const int _prevTranslate = -3;
+  static const int _prevScale = -2;
+  static const int _prevShear = -1;
+  static const int _time = 0;
+  static const int _rotate = 1;
+  static const int _translate = 2;
+  static const int _scale = 3;
+  static const int _shear = 4;
 
   int transformConstraintIndex = 0;
 
   final Float32List frames; // time, rotate mix, translate mix, scale mix, shear mix, ...
 
   TransformConstraintTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -59,12 +59,12 @@ class TransformConstraintTimeline extends CurveTimeline {
 
   void setFrame(int frameIndex, double time, double rotateMix, double translateMix, double scaleMix,
       double shearMix) {
-    frameIndex *= _ENTRIES;
-    frames[frameIndex + _TIME] = time;
-    frames[frameIndex + _ROTATE] = rotateMix;
-    frames[frameIndex + _TRANSLATE] = translateMix;
-    frames[frameIndex + _SCALE] = scaleMix;
-    frames[frameIndex + _SHEAR] = shearMix;
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _rotate] = rotateMix;
+    frames[frameIndex + _translate] = translateMix;
+    frames[frameIndex + _scale] = scaleMix;
+    frames[frameIndex + _shear] = shearMix;
   }
 
   @override
@@ -94,27 +94,27 @@ class TransformConstraintTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      rot = frames[frames.length + _PREV_ROTATE];
-      tra = frames[frames.length + _PREV_TRANSLATE];
-      sca = frames[frames.length + _PREV_SCALE];
-      she = frames[frames.length + _PREV_SHEAR];
+      rot = frames[frames.length + _prevRotate];
+      tra = frames[frames.length + _prevTranslate];
+      sca = frames[frames.length + _prevScale];
+      she = frames[frames.length + _prevShear];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double tim0 = frames[frame + _PREV_TIME];
-      double rot0 = frames[frame + _PREV_ROTATE];
-      double tra0 = frames[frame + _PREV_TRANSLATE];
-      double sca0 = frames[frame + _PREV_SCALE];
-      double she0 = frames[frame + _PREV_SHEAR];
-      double tim1 = frames[frame + _TIME];
-      double rot1 = frames[frame + _ROTATE];
-      double tra1 = frames[frame + _TRANSLATE];
-      double sca1 = frames[frame + _SCALE];
-      double she1 = frames[frame + _SHEAR];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double tim0 = frames[frame + _prevTime];
+      double rot0 = frames[frame + _prevRotate];
+      double tra0 = frames[frame + _prevTranslate];
+      double sca0 = frames[frame + _prevScale];
+      double she0 = frames[frame + _prevShear];
+      double tim1 = frames[frame + _time];
+      double rot1 = frames[frame + _rotate];
+      double tra1 = frames[frame + _translate];
+      double sca1 = frames[frame + _scale];
+      double she1 = frames[frame + _shear];
       double between = 1.0 - (time - tim1) / (tim0 - tim1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       rot = rot0 + (rot1 - rot0) * percent;
       tra = tra0 + (tra1 - tra0) * percent;
       sca = sca0 + (sca1 - sca0) * percent;

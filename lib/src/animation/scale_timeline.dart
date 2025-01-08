@@ -31,13 +31,13 @@
 part of stagexl_spine;
 
 class ScaleTimeline extends TranslateTimeline {
-  static const int _ENTRIES = 3;
-  static const int _PREV_TIME = -3;
-  static const int _PREV_X = -2;
-  static const int _PREV_Y = -1;
-  static const int _TIME = 0;
-  static const int _X = 1;
-  static const int _Y = 2;
+  static const int _entries = 3;
+  static const int _prevTime = -3;
+  static const int _prevX = -2;
+  static const int _prevY = -1;
+  static const int _time = 0;
+  static const int _x = 1;
+  static const int _y = 2;
 
   ScaleTimeline(super.frameCount);
 
@@ -65,21 +65,21 @@ class ScaleTimeline extends TranslateTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      x = frames[frames.length + _PREV_X];
-      y = frames[frames.length + _PREV_Y];
+      x = frames[frames.length + _prevX];
+      y = frames[frames.length + _prevY];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double t0 = frames[frame + _PREV_TIME];
-      double x0 = frames[frame + _PREV_X];
-      double y0 = frames[frame + _PREV_Y];
-      double t1 = frames[frame + _TIME];
-      double x1 = frames[frame + _X];
-      double y1 = frames[frame + _Y];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double t0 = frames[frame + _prevTime];
+      double x0 = frames[frame + _prevX];
+      double y0 = frames[frame + _prevY];
+      double t1 = frames[frame + _time];
+      double x1 = frames[frame + _x];
+      double y1 = frames[frame + _y];
       double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       x = x0 + (x1 - x0) * percent;
       y = y0 + (y1 - y0) * percent;
     }

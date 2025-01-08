@@ -31,29 +31,29 @@
 part of stagexl_spine;
 
 class TwoColorTimeline extends CurveTimeline {
-  static const int _ENTRIES = 8;
-  static const int _PREV_TIME = -8;
-  static const int _PREV_R1 = -7;
-  static const int _PREV_G1 = -6;
-  static const int _PREV_B1 = -5;
-  static const int _PREV_A1 = -4;
-  static const int _PREV_R2 = -3;
-  static const int _PREV_G2 = -2;
-  static const int _PREV_B2 = -1;
-  static const int _TIME = 0;
-  static const int _R1 = 1;
-  static const int _G1 = 2;
-  static const int _B1 = 3;
-  static const int _A1 = 4;
-  static const int _R2 = 5;
-  static const int _G2 = 6;
-  static const int _B2 = 7;
+  static const int _entries = 8;
+  static const int _prevTime = -8;
+  static const int _prevR1 = -7;
+  static const int _prevG1 = -6;
+  static const int _prevB1 = -5;
+  static const int _prevA1 = -4;
+  static const int _prevR2 = -3;
+  static const int _prevG2 = -2;
+  static const int _prevB2 = -1;
+  static const int _time = 0;
+  static const int _r1 = 1;
+  static const int _g1 = 2;
+  static const int _b1 = 3;
+  static const int _a1 = 4;
+  static const int _r2 = 5;
+  static const int _g2 = 6;
+  static const int _b2 = 7;
 
   int slotIndex = 0;
   final Float32List frames; // time, r, g, b, a, ...
 
   TwoColorTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -63,15 +63,15 @@ class TwoColorTimeline extends CurveTimeline {
   /// Sets the time and value of the specified keyframe.
   void setFrame(int frameIndex, double time, double r, double g, double b, double a, double r2,
       double g2, double b2) {
-    frameIndex *= TwoColorTimeline._ENTRIES;
+    frameIndex *= TwoColorTimeline._entries;
     frames[frameIndex] = time;
-    frames[frameIndex + TwoColorTimeline._R1] = r;
-    frames[frameIndex + TwoColorTimeline._G1] = g;
-    frames[frameIndex + TwoColorTimeline._B1] = b;
-    frames[frameIndex + TwoColorTimeline._A1] = a;
-    frames[frameIndex + TwoColorTimeline._R2] = r2;
-    frames[frameIndex + TwoColorTimeline._G2] = g2;
-    frames[frameIndex + TwoColorTimeline._B2] = b2;
+    frames[frameIndex + TwoColorTimeline._r1] = r;
+    frames[frameIndex + TwoColorTimeline._g1] = g;
+    frames[frameIndex + TwoColorTimeline._b1] = b;
+    frames[frameIndex + TwoColorTimeline._a1] = a;
+    frames[frameIndex + TwoColorTimeline._r2] = r2;
+    frames[frameIndex + TwoColorTimeline._g2] = g2;
+    frames[frameIndex + TwoColorTimeline._b2] = b2;
   }
 
   @override
@@ -104,39 +104,39 @@ class TwoColorTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length - _ENTRIES]) {
+    if (time >= frames[frames.length - _entries]) {
       // Time is after last frame.
-      r1 = frames[frames.length + _PREV_R1];
-      g1 = frames[frames.length + _PREV_G1];
-      b1 = frames[frames.length + _PREV_B1];
-      a1 = frames[frames.length + _PREV_A1];
-      r2 = frames[frames.length + _PREV_R2];
-      g2 = frames[frames.length + _PREV_G2];
-      b2 = frames[frames.length + _PREV_B2];
+      r1 = frames[frames.length + _prevR1];
+      g1 = frames[frames.length + _prevG1];
+      b1 = frames[frames.length + _prevB1];
+      a1 = frames[frames.length + _prevA1];
+      r2 = frames[frames.length + _prevR2];
+      g2 = frames[frames.length + _prevG2];
+      b2 = frames[frames.length + _prevB2];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
+      int frame = Animation.binarySearch(frames, time, _entries);
 
-      double t0 = frames[frame + _PREV_TIME];
-      double r01 = frames[frame + _PREV_R1];
-      double g01 = frames[frame + _PREV_G1];
-      double b01 = frames[frame + _PREV_B1];
-      double a01 = frames[frame + _PREV_A1];
-      double r02 = frames[frame + _PREV_R2];
-      double g02 = frames[frame + _PREV_G2];
-      double b02 = frames[frame + _PREV_B2];
+      double t0 = frames[frame + _prevTime];
+      double r01 = frames[frame + _prevR1];
+      double g01 = frames[frame + _prevG1];
+      double b01 = frames[frame + _prevB1];
+      double a01 = frames[frame + _prevA1];
+      double r02 = frames[frame + _prevR2];
+      double g02 = frames[frame + _prevG2];
+      double b02 = frames[frame + _prevB2];
 
-      double t1 = frames[frame + _TIME];
-      double r11 = frames[frame + _R1];
-      double g11 = frames[frame + _G1];
-      double b11 = frames[frame + _B1];
-      double a11 = frames[frame + _A1];
-      double r12 = frames[frame + _R2];
-      double g12 = frames[frame + _G2];
-      double b12 = frames[frame + _B2];
+      double t1 = frames[frame + _time];
+      double r11 = frames[frame + _r1];
+      double g11 = frames[frame + _g1];
+      double b11 = frames[frame + _b1];
+      double a11 = frames[frame + _a1];
+      double r12 = frames[frame + _r2];
+      double g12 = frames[frame + _g2];
+      double b12 = frames[frame + _b2];
 
       double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
 
       r1 = r01 + (r11 - r01) * percent;
       g1 = g01 + (g11 - g01) * percent;

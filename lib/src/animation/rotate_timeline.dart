@@ -31,17 +31,17 @@
 part of stagexl_spine;
 
 class RotateTimeline extends CurveTimeline {
-  static const int _ENTRIES = 2;
-  static const int _PREV_TIME = -2;
-  static const int _PREV_ROTATION = -1;
-  static const int _TIME = 0;
-  static const int _ROTATION = 1;
+  static const int _entries = 2;
+  static const int _prevTime = -2;
+  static const int _prevRotation = -1;
+  static const int _time = 0;
+  static const int _rotation = 1;
 
   final Float32List frames; // time, degrees, ...
   int boneIndex = 0;
 
   RotateTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -52,8 +52,8 @@ class RotateTimeline extends CurveTimeline {
 
   void setFrame(int frameIndex, double time, double degrees) {
     frameIndex = frameIndex << 1;
-    frames[frameIndex + _TIME] = time;
-    frames[frameIndex + _ROTATION] = degrees;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _rotation] = degrees;
   }
 
   @override
@@ -73,16 +73,16 @@ class RotateTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      rotation = frames[frames.length + _PREV_ROTATION];
+      rotation = frames[frames.length + _prevRotation];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double t0 = frames[frame + _PREV_TIME];
-      double r0 = frames[frame + _PREV_ROTATION];
-      double t1 = frames[frame + _TIME];
-      double r1 = frames[frame + _ROTATION];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double t0 = frames[frame + _prevTime];
+      double r0 = frames[frame + _prevRotation];
+      double t1 = frames[frame + _time];
+      double r1 = frames[frame + _rotation];
       double between = 1.0 - (time - t1) / (t0 - t1);
       double percent = getCurvePercent((frame >> 1) - 1, between);
       rotation = r0 + _wrapRotation(r1 - r0) * percent;

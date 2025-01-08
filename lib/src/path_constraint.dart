@@ -31,9 +31,9 @@
 part of stagexl_spine;
 
 class PathConstraint implements Constraint {
-  static const int _NONE = -1;
-  static const int _BEFORE = -2;
-  static const int _AFTER = -3;
+  static const int _none = -1;
+  static const int _before = -2;
+  static const int _after = -3;
 
   static const double _epsilon = 0.00001;
 
@@ -223,7 +223,7 @@ class PathConstraint implements Constraint {
     bool closed = path.closed;
     int verticesLength = path.worldVerticesLength;
     int curveCount = verticesLength ~/ 6;
-    int prevCurve = _NONE;
+    int prevCurve = _none;
 
     if (!path.constantSpeed) {
       Float32List lengths = path.lengths;
@@ -249,15 +249,15 @@ class PathConstraint implements Constraint {
           p = p % pathLength;
           curve = 0;
         } else if (p < 0) {
-          if (prevCurve != _BEFORE) {
-            prevCurve = _BEFORE;
+          if (prevCurve != _before) {
+            prevCurve = _before;
             path.computeWorldVertices2(target, 2, 4, world, 0, 2);
           }
           _addBeforePosition(p, world, 0, out, o);
           continue;
         } else if (p > pathLength) {
-          if (prevCurve != _AFTER) {
-            prevCurve = _AFTER;
+          if (prevCurve != _after) {
+            prevCurve = _after;
             path.computeWorldVertices2(target, verticesLength - 6, 4, world, 0, 2);
           }
           _addAfterPosition(p - pathLength, world, 0, out, o);

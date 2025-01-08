@@ -33,14 +33,14 @@ part of stagexl_spine;
 /// Base class for frames that use an interpolation bezier curve.
 ///
 class CurveTimeline implements Timeline {
-  static const double _LINEAR = 0.0;
-  static const double _STEPPED = 1.0;
-  static const double _BEZIER = 2.0;
-  static const int _BEZIER_SIZE = 10 * 2 - 1;
+  static const double _linear = 0.0;
+  static const double _stepped = 1.0;
+  static const double _bezier = 2.0;
+  static const int _bezierSize = 10 * 2 - 1;
 
   final Float32List _curves; // type, x, y, ...
 
-  CurveTimeline(int frameCount) : _curves = Float32List((frameCount - 1) * _BEZIER_SIZE);
+  CurveTimeline(int frameCount) : _curves = Float32List((frameCount - 1) * _bezierSize);
 
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
@@ -49,14 +49,14 @@ class CurveTimeline implements Timeline {
   @override
   int getPropertyId() => 0;
 
-  int get frameCount => _curves.length ~/ _BEZIER_SIZE + 1;
+  int get frameCount => _curves.length ~/ _bezierSize + 1;
 
   void setLinear(int frameIndex) {
-    _curves[frameIndex * _BEZIER_SIZE] = _LINEAR;
+    _curves[frameIndex * _bezierSize] = _linear;
   }
 
   void setStepped(int frameIndex) {
-    _curves[frameIndex * _BEZIER_SIZE] = _STEPPED;
+    _curves[frameIndex * _bezierSize] = _stepped;
   }
 
   /// Sets the control handle positions for an interpolation bezier curve
@@ -76,13 +76,13 @@ class CurveTimeline implements Timeline {
     double dfx = cx1 * 0.3 + tmpx + dddfx * 0.16666667;
     double dfy = cy1 * 0.3 + tmpy + dddfy * 0.16666667;
 
-    int i = frameIndex * _BEZIER_SIZE;
-    _curves[i++] = _BEZIER;
+    int i = frameIndex * _bezierSize;
+    _curves[i++] = _bezier;
 
     double x = dfx;
     double y = dfy;
 
-    for (int n = i + _BEZIER_SIZE - 1; i < n; i += 2) {
+    for (int n = i + _bezierSize - 1; i < n; i += 2) {
       _curves[i + 0] = x;
       _curves[i + 1] = y;
       dfx += ddfx;
@@ -98,14 +98,14 @@ class CurveTimeline implements Timeline {
     if (percent < 0.0) percent = 0.0;
     if (percent > 1.0) percent = 1.0;
 
-    int i = frameIndex * _BEZIER_SIZE;
+    int i = frameIndex * _bezierSize;
     double type = _curves[i];
-    if (type == _LINEAR) return percent;
-    if (type == _STEPPED) return 0.0;
+    if (type == _linear) return percent;
+    if (type == _stepped) return 0.0;
     i++;
 
     double x = 0.0;
-    for (int start = i, n = i + _BEZIER_SIZE - 1; i < n; i += 2) {
+    for (int start = i, n = i + _bezierSize - 1; i < n; i += 2) {
       x = _curves[i];
       if (x >= percent) {
         double prevX = (i == start) ? 0.0 : _curves[i - 2];

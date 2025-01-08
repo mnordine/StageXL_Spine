@@ -58,7 +58,7 @@ Future main() async {
   skeletonAnimation.x = 240;
   skeletonAnimation.y = 520;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.7;
-  skeletonAnimation.boundsCalculation = SkeletonBoundsCalculation.Hull;
+  skeletonAnimation.boundsCalculation = SkeletonBoundsCalculation.hull;
 
   var mouseContainer = Sprite();
   mouseContainer.addChild(skeletonAnimation);

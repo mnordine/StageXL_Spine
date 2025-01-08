@@ -31,20 +31,20 @@
 part of stagexl_spine;
 
 class PathConstraintMixTimeline extends CurveTimeline {
-  static const int _ENTRIES = 3;
-  static const int _PREV_TIME = -3;
-  static const int _PREV_ROTATE = -2;
-  static const int _PREV_TRANSLATE = -1;
-  static const int _TIME = 0;
-  static const int _ROTATE = 1;
-  static const int _TRANSLATE = 2;
+  static const int _entries = 3;
+  static const int _prevTime = -3;
+  static const int _prevRotate = -2;
+  static const int _prevTranslate = -1;
+  static const int _time = 0;
+  static const int _rotate = 1;
+  static const int _translate = 2;
 
   int pathConstraintIndex = 0;
 
   final Float32List frames; // time, rotate mix, translate mix, ...
 
   PathConstraintMixTimeline(super.frameCount)
-      : frames = Float32List(frameCount * _ENTRIES);
+      : frames = Float32List(frameCount * _entries);
 
   @override
   int getPropertyId() {
@@ -54,10 +54,10 @@ class PathConstraintMixTimeline extends CurveTimeline {
   /// Sets the time and mixes of the specified keyframe.
 
   void setFrame(int frameIndex, double time, double rotateMix, double translateMix) {
-    frameIndex *= _ENTRIES;
-    frames[frameIndex + _TIME] = time;
-    frames[frameIndex + _ROTATE] = rotateMix;
-    frames[frameIndex + _TRANSLATE] = translateMix;
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _rotate] = rotateMix;
+    frames[frameIndex + _translate] = translateMix;
   }
 
   @override
@@ -80,21 +80,21 @@ class PathConstraintMixTimeline extends CurveTimeline {
       return;
     }
 
-    if (time >= frames[frames.length + _PREV_TIME]) {
+    if (time >= frames[frames.length + _prevTime]) {
       // Time is after last frame.
-      rot = frames[frames.length + _PREV_ROTATE];
-      tra = frames[frames.length + _PREV_TRANSLATE];
+      rot = frames[frames.length + _prevRotate];
+      tra = frames[frames.length + _prevTranslate];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _ENTRIES);
-      double tim0 = frames[frame + _PREV_TIME];
-      double rot0 = frames[frame + _PREV_ROTATE];
-      double tra0 = frames[frame + _PREV_TRANSLATE];
-      double tim1 = frames[frame + _TIME];
-      double rot1 = frames[frame + _ROTATE];
-      double tra1 = frames[frame + _TRANSLATE];
+      int frame = Animation.binarySearch(frames, time, _entries);
+      double tim0 = frames[frame + _prevTime];
+      double rot0 = frames[frame + _prevRotate];
+      double tra0 = frames[frame + _prevTranslate];
+      double tim1 = frames[frame + _time];
+      double rot1 = frames[frame + _rotate];
+      double tra1 = frames[frame + _translate];
       double between = 1.0 - (time - tim1) / (tim0 - tim1);
-      double percent = getCurvePercent(frame ~/ _ENTRIES - 1, between);
+      double percent = getCurvePercent(frame ~/ _entries - 1, between);
       rot = rot0 + (rot1 - rot0) * percent;
       tra = tra0 + (tra1 - tra0) * percent;
     }

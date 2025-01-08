@@ -1,6 +1,6 @@
 part of stagexl_spine;
 
-enum SkeletonBoundsCalculation { None, BoundingBoxes, Hull }
+enum SkeletonBoundsCalculation { none, boundingBoxes, hull }
 
 class SkeletonDisplayObject extends InteractiveObject {
   final Skeleton skeleton;
@@ -11,7 +11,7 @@ class SkeletonDisplayObject extends InteractiveObject {
   static final Float32List _vertices = Float32List(2048);
   static final SkeletonClipping _clipping = SkeletonClipping();
 
-  SkeletonBoundsCalculation boundsCalculation = SkeletonBoundsCalculation.None;
+  SkeletonBoundsCalculation boundsCalculation = SkeletonBoundsCalculation.none;
 
   SkeletonDisplayObject(SkeletonData skeletonData) : skeleton = Skeleton(skeletonData) {
     skeleton.updateWorldTransform();
@@ -24,7 +24,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     Float32List vertices = _vertices;
     int offset = 0;
 
-    if (boundsCalculation == SkeletonBoundsCalculation.BoundingBoxes) {
+    if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
       for (var slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
@@ -33,7 +33,7 @@ class SkeletonDisplayObject extends InteractiveObject {
           offset += length;
         }
       }
-    } else if (boundsCalculation == SkeletonBoundsCalculation.Hull) {
+    } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
       for (var slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is RenderAttachment) {
@@ -72,7 +72,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     double sx = 0.0 + localX;
     double sy = 0.0 - localY;
 
-    if (boundsCalculation == SkeletonBoundsCalculation.BoundingBoxes) {
+    if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
       for (var slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
@@ -81,7 +81,7 @@ class SkeletonDisplayObject extends InteractiveObject {
           if (_windingCount(vertices, length, sx, sy) != 0) return this;
         }
       }
-    } else if (boundsCalculation == SkeletonBoundsCalculation.Hull) {
+    } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
       for (var slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is RenderAttachment) {
