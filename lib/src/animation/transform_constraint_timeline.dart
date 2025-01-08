@@ -51,9 +51,7 @@ class TransformConstraintTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.transformConstraint.ordinal << 24) + transformConstraintIndex;
-  }
+  int getPropertyId() => (TimelineType.transformConstraint.ordinal << 24) + transformConstraintIndex;
 
   /// Sets the time and mixes of the specified keyframe.
 

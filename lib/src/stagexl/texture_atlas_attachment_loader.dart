@@ -19,22 +19,14 @@ class TextureAtlasAttachmentLoader implements AttachmentLoader {
   }
 
   @override
-  BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name) {
-    return BoundingBoxAttachment(name);
-  }
+  BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name) => BoundingBoxAttachment(name);
 
   @override
-  PathAttachment newPathAttachment(Skin skin, String name) {
-    return PathAttachment(name);
-  }
+  PathAttachment newPathAttachment(Skin skin, String name) => PathAttachment(name);
 
   @override
-  PointAttachment newPointAttachment(Skin skin, String name) {
-    return PointAttachment(name);
-  }
+  PointAttachment newPointAttachment(Skin skin, String name) => PointAttachment(name);
 
   @override
-  ClippingAttachment newClippingAttachment(Skin skin, String name) {
-    return ClippingAttachment(name);
-  }
+  ClippingAttachment newClippingAttachment(Skin skin, String name) => ClippingAttachment(name);
 }

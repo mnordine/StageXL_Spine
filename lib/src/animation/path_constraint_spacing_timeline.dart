@@ -40,9 +40,7 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
   PathConstraintSpacingTimeline(super.frameCount);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.pathConstraintSpacing.ordinal << 24) + pathConstraintIndex;
-  }
+  int getPropertyId() => (TimelineType.pathConstraintSpacing.ordinal << 24) + pathConstraintIndex;
 
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,

@@ -56,9 +56,7 @@ class TwoColorTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.twoColor.ordinal << 24) + slotIndex;
-  }
+  int getPropertyId() => (TimelineType.twoColor.ordinal << 24) + slotIndex;
 
   /// Sets the time and value of the specified keyframe.
   void setFrame(int frameIndex, double time, double r, double g, double b, double a, double r2,

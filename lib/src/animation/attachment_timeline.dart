@@ -42,9 +42,7 @@ class AttachmentTimeline implements Timeline {
   int get frameCount => frames.length;
 
   @override
-  int getPropertyId() {
-    return (TimelineType.attachment.ordinal << 24) + slotIndex;
-  }
+  int getPropertyId() => (TimelineType.attachment.ordinal << 24) + slotIndex;
 
   /// Sets the time and value of the specified keyframe.
   ///

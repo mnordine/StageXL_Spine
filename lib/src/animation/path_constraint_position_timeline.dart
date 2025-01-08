@@ -45,9 +45,7 @@ class PathConstraintPositionTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.pathConstraintPosition.ordinal << 24) + pathConstraintIndex;
-  }
+  int getPropertyId() => (TimelineType.pathConstraintPosition.ordinal << 24) + pathConstraintIndex;
 
   /// Sets the time and value of the specified keyframe.
 

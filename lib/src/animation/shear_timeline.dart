@@ -42,9 +42,7 @@ class ShearTimeline extends TranslateTimeline {
   ShearTimeline(super.frameCount);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.shear.ordinal << 24) + boneIndex;
-  }
+  int getPropertyId() => (TimelineType.shear.ordinal << 24) + boneIndex;
 
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,

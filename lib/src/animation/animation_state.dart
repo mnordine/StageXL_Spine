@@ -52,29 +52,17 @@ class AnimationState extends EventDispatcher {
 
   AnimationState(this.data);
 
-  EventStream<TrackEntryStartEvent> get onTrackStart {
-    return const EventStreamProvider<TrackEntryStartEvent>("start").forTarget(this);
-  }
+  EventStream<TrackEntryStartEvent> get onTrackStart => const EventStreamProvider<TrackEntryStartEvent>("start").forTarget(this);
 
-  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt {
-    return const EventStreamProvider<TrackEntryInterruptEvent>("interrupt").forTarget(this);
-  }
+  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt => const EventStreamProvider<TrackEntryInterruptEvent>("interrupt").forTarget(this);
 
-  EventStream<TrackEntryEndEvent> get onTrackEnd {
-    return const EventStreamProvider<TrackEntryEndEvent>("end").forTarget(this);
-  }
+  EventStream<TrackEntryEndEvent> get onTrackEnd => const EventStreamProvider<TrackEntryEndEvent>("end").forTarget(this);
 
-  EventStream<TrackEntryDisposeEvent> get onTrackDispose {
-    return const EventStreamProvider<TrackEntryDisposeEvent>("dispose").forTarget(this);
-  }
+  EventStream<TrackEntryDisposeEvent> get onTrackDispose => const EventStreamProvider<TrackEntryDisposeEvent>("dispose").forTarget(this);
 
-  EventStream<TrackEntryCompleteEvent> get onTrackComplete {
-    return const EventStreamProvider<TrackEntryCompleteEvent>("complete").forTarget(this);
-  }
+  EventStream<TrackEntryCompleteEvent> get onTrackComplete => const EventStreamProvider<TrackEntryCompleteEvent>("complete").forTarget(this);
 
-  EventStream<TrackEntryEventEvent> get onTrackEvent {
-    return const EventStreamProvider<TrackEntryEventEvent>("event").forTarget(this);
-  }
+  EventStream<TrackEntryEventEvent> get onTrackEvent => const EventStreamProvider<TrackEntryEventEvent>("event").forTarget(this);
 
   //-----------------------------------------------------------------------------------------------
 

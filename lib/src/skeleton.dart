@@ -330,9 +330,7 @@ class Skeleton {
 
   Bone? get rootBone => bones.isEmpty ? null : bones.first;
 
-  Bone? findBone(String boneName) {
-    return bones.firstWhere((b) => b.data.name == boneName);
-  }
+  Bone? findBone(String boneName) => bones.firstWhere((b) => b.data.name == boneName);
 
   int findBoneIndex(String boneName) {
     for (int i = 0; i < bones.length; i++) {
@@ -341,9 +339,7 @@ class Skeleton {
     return -1;
   }
 
-  Slot? findSlot(String slotName) {
-    return slots.firstWhere((s) => s.data.name == slotName);
-  }
+  Slot? findSlot(String slotName) => slots.firstWhere((s) => s.data.name == slotName);
 
   int findSlotIndex(String slotName) {
     for (int i = 0; i < slots.length; i++) {
@@ -385,9 +381,7 @@ class Skeleton {
     _skin = newSkin;
   }
 
-  Attachment? getAttachmentForSlotName(String slotName, String attachmentName) {
-    return getAttachmentForSlotIndex(data.findSlotIndex(slotName), attachmentName);
-  }
+  Attachment? getAttachmentForSlotName(String slotName, String attachmentName) => getAttachmentForSlotIndex(data.findSlotIndex(slotName), attachmentName);
 
   Attachment? getAttachmentForSlotIndex(int slotIndex, String attachmentName) {
     if (_skin != null) {

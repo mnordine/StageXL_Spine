@@ -39,9 +39,7 @@ class EventTimeline implements Timeline {
         events = List<SpineEvent?>.filled(frameCount, null);
 
   @override
-  int getPropertyId() {
-    return TimelineType.event.ordinal << 24;
-  }
+  int getPropertyId() => TimelineType.event.ordinal << 24;
 
   int get frameCount => frames.length;
 

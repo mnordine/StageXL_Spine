@@ -50,9 +50,7 @@ class ColorTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * 5);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.color.ordinal << 24) + slotIndex;
-  }
+  int getPropertyId() => (TimelineType.color.ordinal << 24) + slotIndex;
 
   /// Sets the time and value of the specified keyframe.
   ///

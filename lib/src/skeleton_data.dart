@@ -52,9 +52,7 @@ class SkeletonData {
 
   // --- Bones.
 
-  BoneData? findBone(String boneName) {
-    return bones.firstWhere((b) => b.name == boneName);
-  }
+  BoneData? findBone(String boneName) => bones.firstWhere((b) => b.name == boneName);
 
   int findBoneIndex(String boneName) {
     for (int i = 0; i < bones.length; i++) {
@@ -65,9 +63,7 @@ class SkeletonData {
 
   // --- Slots.
 
-  SlotData? findSlot(String slotName) {
-    return slots.firstWhere((s) => s.name == slotName);
-  }
+  SlotData? findSlot(String slotName) => slots.firstWhere((s) => s.name == slotName);
 
   int findSlotIndex(String slotName) {
     for (int i = 0; i < slots.length; i++) {
@@ -78,33 +74,23 @@ class SkeletonData {
 
   // --- Skins.
 
-  Skin? findSkin(String skinName) {
-    return skins.firstWhere((s) => s.name == skinName);
-  }
+  Skin? findSkin(String skinName) => skins.firstWhere((s) => s.name == skinName);
 
   // --- Events.
 
-  EventData? findEvent(String eventName) {
-    return events.firstWhere((e) => e.name == eventName);
-  }
+  EventData? findEvent(String eventName) => events.firstWhere((e) => e.name == eventName);
 
   // --- Animations.
 
-  Animation? findAnimation(String animationName) {
-    return animations.firstWhere((a) => a.name == animationName);
-  }
+  Animation? findAnimation(String animationName) => animations.firstWhere((a) => a.name == animationName);
 
   // --- IK constraints.
 
-  IkConstraintData? findIkConstraint(String constraintName) {
-    return ikConstraints.firstWhere((i) => i.name == constraintName);
-  }
+  IkConstraintData? findIkConstraint(String constraintName) => ikConstraints.firstWhere((i) => i.name == constraintName);
 
   // --- Transform constraints.
 
-  TransformConstraintData? findTransformConstraint(String constraintName) {
-    return transformConstraints.firstWhere((t) => t.name == constraintName);
-  }
+  TransformConstraintData? findTransformConstraint(String constraintName) => transformConstraints.firstWhere((t) => t.name == constraintName);
 
   int findTransformConstraintIndex(String constraintName) {
     for (int i = 0; i < transformConstraints.length; i++) {
@@ -115,9 +101,7 @@ class SkeletonData {
 
   // --- Path constraints.
 
-  PathConstraintData? findPathConstraint(String constraintName) {
-    return pathConstraints.firstWhere((p) => p.name == constraintName);
-  }
+  PathConstraintData? findPathConstraint(String constraintName) => pathConstraints.firstWhere((p) => p.name == constraintName);
 
   int findPathConstraintIndex(String constraintName) {
     for (int i = 0; i < pathConstraints.length; i++) {

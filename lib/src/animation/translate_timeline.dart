@@ -46,9 +46,7 @@ class TranslateTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * 3);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.translate.ordinal << 24) + boneIndex;
-  }
+  int getPropertyId() => (TimelineType.translate.ordinal << 24) + boneIndex;
 
   /// Sets the time and value of the specified keyframe.
 

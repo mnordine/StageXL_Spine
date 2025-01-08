@@ -42,9 +42,7 @@ class ScaleTimeline extends TranslateTimeline {
   ScaleTimeline(super.frameCount);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.scale.ordinal << 24) + boneIndex;
-  }
+  int getPropertyId() => (TimelineType.scale.ordinal << 24) + boneIndex;
 
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,

@@ -44,9 +44,7 @@ class RotateTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.rotate.ordinal << 24) + boneIndex;
-  }
+  int getPropertyId() => (TimelineType.rotate.ordinal << 24) + boneIndex;
 
   /// Sets the time and angle of the specified keyframe.
 

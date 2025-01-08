@@ -39,9 +39,7 @@ class DrawOrderTimeline implements Timeline {
         drawOrders = List<Int16List?>.filled(frameCount, null);
 
   @override
-  int getPropertyId() {
-    return TimelineType.drawOrder.ordinal << 24;
-  }
+  int getPropertyId() => TimelineType.drawOrder.ordinal << 24;
 
   int get frameCount => frames.length;
 

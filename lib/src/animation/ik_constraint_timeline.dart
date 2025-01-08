@@ -46,9 +46,7 @@ class IkConstraintTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.ikConstraint.ordinal << 24) + ikConstraintIndex;
-  }
+  int getPropertyId() => (TimelineType.ikConstraint.ordinal << 24) + ikConstraintIndex;
 
   /// Sets the time, mix and bend direction of the specified keyframe.
 

@@ -116,9 +116,7 @@ class SkeletonBounds {
 
   /// Returns true if the axis aligned bounding box contains the point.
   ///
-  bool aabbContainsPoint(double x, double y) {
-    return x >= minX && x <= maxX && y >= minY && y <= maxY;
-  }
+  bool aabbContainsPoint(double x, double y) => x >= minX && x <= maxX && y >= minY && y <= maxY;
 
   /// Returns true if the axis aligned bounding box intersects the line segment.
   ///
@@ -148,9 +146,7 @@ class SkeletonBounds {
   /// Returns true if the axis aligned bounding box intersects the axis
   /// aligned bounding box of the specified bounds.
   ///
-  bool aabbIntersectsSkeleton(SkeletonBounds bounds) {
-    return minX < bounds.maxX && maxX > bounds.minX && minY < bounds.maxY && maxY > bounds.minY;
-  }
+  bool aabbIntersectsSkeleton(SkeletonBounds bounds) => minX < bounds.maxX && maxX > bounds.minX && minY < bounds.maxY && maxY > bounds.minY;
 
   /// Returns the first bounding box attachment that contains the point,
   /// or null. When doing many checks, it is usually more efficient to only

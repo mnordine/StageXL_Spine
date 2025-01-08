@@ -147,7 +147,5 @@ class VertexAttachment extends Attachment {
   /// Returns true if a deform originally applied to the specified attachment
   /// should be applied to this attachment.
 
-  bool applyDeform(VertexAttachment sourceAttachment) {
-    return this == sourceAttachment;
-  }
+  bool applyDeform(VertexAttachment sourceAttachment) => this == sourceAttachment;
 }

@@ -47,9 +47,7 @@ class PathConstraintMixTimeline extends CurveTimeline {
       : frames = Float32List(frameCount * _entries);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.pathConstraintMix.ordinal << 24) + pathConstraintIndex;
-  }
+  int getPropertyId() => (TimelineType.pathConstraintMix.ordinal << 24) + pathConstraintIndex;
 
   /// Sets the time and mixes of the specified keyframe.
 

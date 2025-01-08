@@ -42,9 +42,7 @@ class DeformTimeline extends CurveTimeline {
         frameVertices = List<Float32List?>.filled(frameCount, null);
 
   @override
-  int getPropertyId() {
-    return (TimelineType.deform.ordinal << 27) + attachment.id + slotIndex;
-  }
+  int getPropertyId() => (TimelineType.deform.ordinal << 27) + attachment.id + slotIndex;
 
   /// Sets the time and value of the specified keyframe.
 
