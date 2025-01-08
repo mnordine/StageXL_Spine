@@ -38,7 +38,7 @@ class SkeletonLoader {
 
   /// Parameter 'object' must be a String or Map.
   ///
-  SkeletonData readSkeletonData(dynamic object, [String? name]) {
+  SkeletonData readSkeletonData(Object? object, [String? name]) {
     Map root;
 
     if (object == null) {
