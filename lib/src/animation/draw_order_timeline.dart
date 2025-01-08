@@ -48,7 +48,7 @@ class DrawOrderTimeline implements Timeline {
   /// Sets the time and value of the specified keyframe.
 
   void setFrame(int frameIndex, double time, Int16List? drawOrder) {
-    frames[frameIndex] = time.toDouble();
+    frames[frameIndex] = time;
     drawOrders[frameIndex] = drawOrder;
   }
 

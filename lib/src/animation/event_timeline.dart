@@ -48,7 +48,7 @@ class EventTimeline implements Timeline {
   /// Sets the time and value of the specified keyframe.
   ///
   void setFrame(int frameIndex, SpineEvent event) {
-    frames[frameIndex] = event.time.toDouble();
+    frames[frameIndex] = event.time;
     events[frameIndex] = event;
   }
 

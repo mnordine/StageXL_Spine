@@ -55,9 +55,9 @@ class TranslateTimeline extends CurveTimeline {
 
   void setFrame(int frameIndex, double time, double x, double y) {
     frameIndex *= 3;
-    frames[frameIndex + 0] = time.toDouble();
-    frames[frameIndex + 1] = x.toDouble();
-    frames[frameIndex + 2] = y.toDouble();
+    frames[frameIndex + 0] = time;
+    frames[frameIndex + 1] = x;
+    frames[frameIndex + 2] = y;
   }
 
   @override

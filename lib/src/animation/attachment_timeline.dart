@@ -49,7 +49,7 @@ class AttachmentTimeline implements Timeline {
   /// Sets the time and value of the specified keyframe.
   ///
   void setFrame(int frameIndex, double time, String? attachmentName) {
-    frames[frameIndex] = time.toDouble();
+    frames[frameIndex] = time;
     attachmentNames[frameIndex] = attachmentName;
   }
 

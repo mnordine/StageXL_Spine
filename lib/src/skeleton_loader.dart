@@ -239,7 +239,7 @@ class SkeletonLoader {
       pathConstraintData.positionMode =
           PositionMode.values.firstWhere((e) => e.toString() == positionMode);
       pathConstraintData.spacingMode =
-          SpacingMode.values.firstWhere((e) => e.toString() == spacingMode);
+          SpacingMode.values.firstWhere((e) => e == spacingMode);
       pathConstraintData.rotateMode =
           RotateMode.values.firstWhere((e) => e.toString() == rotateMode);
       pathConstraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0.0);
@@ -888,33 +888,27 @@ class SkeletonLoader {
     var value = map[name];
     if (value is num) {
       return value.toDouble();
-    } else if (defaultValue is num) {
-      return defaultValue.toDouble();
     } else {
-      return 0.0;
-    }
+      return defaultValue;
+    } 
   }
 
   int _getInt(Map map, String name, int defaultValue) {
     var value = map[name];
     if (value is int) {
       return value;
-    } else if (defaultValue is int) {
-      return defaultValue;
     } else {
-      return 0;
-    }
+      return defaultValue;
+    } 
   }
 
   bool _getBool(Map map, String name, bool defaultValue) {
     var value = map[name];
     if (value is bool) {
       return value;
-    } else if (defaultValue is bool) {
-      return defaultValue;
     } else {
-      return false;
-    }
+      return defaultValue;
+    } 
   }
 }
 

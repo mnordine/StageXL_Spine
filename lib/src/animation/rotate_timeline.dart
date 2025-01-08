@@ -53,8 +53,8 @@ class RotateTimeline extends CurveTimeline {
 
   void setFrame(int frameIndex, double time, double degrees) {
     frameIndex = frameIndex << 1;
-    frames[frameIndex + _TIME] = time.toDouble();
-    frames[frameIndex + _ROTATION] = degrees.toDouble();
+    frames[frameIndex + _TIME] = time;
+    frames[frameIndex + _ROTATION] = degrees;
   }
 
   @override
