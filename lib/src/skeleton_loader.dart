@@ -101,7 +101,7 @@ class SkeletonLoader {
 
     // Slots
 
-    for (final slotMap in (root["slots"] as List? ?? []).cast<Map>()) {
+    for (final slotMap in (root["slots"] as List? ?? []).cast<Json>()) {
       var slotName = _getString(slotMap, "name", null);
       var boneName = _getString(slotMap, "bone", null);
       if (slotName == null || boneName == null)
@@ -206,7 +206,7 @@ class SkeletonLoader {
 
     // Path constraints.
 
-    for (Map constraintMap in (root["path"] as List? ?? []).cast<Json>()) {
+    for (final constraintMap in (root["path"] as List? ?? []).cast<Json>()) {
       var constraintName = _getString(constraintMap, "name", null);
       if (constraintName == null)
         continue;
@@ -764,7 +764,7 @@ class SkeletonLoader {
       int slotCount = skeletonData.slots.length;
       int frameIndex = 0;
 
-      for (Map drawOrderMap in drawOrderValues) {
+      for (final drawOrderMap in drawOrderValues) {
         double time = _getDouble(drawOrderMap, "time", 0);
         Int16List? drawOrder;
 
@@ -779,7 +779,7 @@ class SkeletonLoader {
           int originalIndex = 0;
           int unchangedIndex = 0;
 
-          for (Map offsetMap in offsetMaps) {
+          for (final offsetMap in offsetMaps) {
             var slotName = _getString(offsetMap, "slot", null);
             if (slotName == null)
               continue;
@@ -859,17 +859,17 @@ class SkeletonLoader {
     return Float32List.fromList(values);
   }
 
-  Int16List _getInt16List(Map map, String name) {
+  Int16List _getInt16List(Json map, String name) {
     final values = (map[name] as List).cast<int>();
     return Int16List.fromList(values);
   }
 
-  String? _getString(Map map, String name, String? defaultValue) {
+  String? _getString(Json map, String name, String? defaultValue) {
     var value = map[name];
     return value is String ? value : defaultValue;
   }
 
-  double _getDouble(Map map, String name, double defaultValue) {
+  double _getDouble(Json map, String name, double defaultValue) {
     var value = map[name];
     if (value is num) {
       return value.toDouble();
@@ -878,7 +878,7 @@ class SkeletonLoader {
     } 
   }
 
-  int _getInt(Map map, String name, int defaultValue) {
+  int _getInt(Json map, String name, int defaultValue) {
     var value = map[name];
     if (value is int) {
       return value;
@@ -887,7 +887,7 @@ class SkeletonLoader {
     } 
   }
 
-  bool _getBool(Map map, String name, bool defaultValue) {
+  bool _getBool(Json map, String name, bool defaultValue) {
     var value = map[name];
     if (value is bool) {
       return value;
