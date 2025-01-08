@@ -41,7 +41,7 @@ class AnimationState extends EventDispatcher {
   final List<TrackEntry?> _tracks = [];
   final List<SpineEvent> _events = [];
   final List<TrackEntryEvent> _trackEntryEvents = [];
-  final Set<int> _propertyIDs = Set<int>();
+  final Set<int> _propertyIDs = <int>{};
   final List<TrackEntry> _mixingTo = [];
 
   bool _eventDispatchDisabled = false;
