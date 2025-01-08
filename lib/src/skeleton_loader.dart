@@ -498,7 +498,7 @@ class SkeletonLoader {
 
           timelines.add(colorTimeline);
           duration = math.max(duration,
-              colorTimeline.frames[(colorTimeline.frameCount - 1) * ColorTimeline._ENTRIES]);
+              colorTimeline.frames[(colorTimeline.frameCount - 1) * ColorTimeline._entries]);
         } else if (timelineName == "twoColor") {
           var twoColorTimeline = TwoColorTimeline(values.length);
           twoColorTimeline.slotIndex = slotIndex;

@@ -31,10 +31,10 @@
 part of stagexl_spine;
 
 class AnimationState extends EventDispatcher {
-  static const int SUBSEQUENT = 0;
-  static const int FIRST = 1;
-  static const int DIP = 2;
-  static const int DIP_MIX = 3;
+  static const int subsequent = 0;
+  static const int first = 1;
+  static const int dip = 2;
+  static const int dipMix = 3;
   static final Animation _emptyAnimation = Animation("<empty>", [], 0.0);
 
   final AnimationStateData data;
@@ -202,7 +202,7 @@ class AnimationState extends EventDispatcher {
 
         for (int tl = 0; tl < timelines.length; tl++) {
           var timeline = timelines[tl];
-          var pose = timelineData[tl] >= AnimationState.FIRST ? MixPose.setup : currentPose;
+          var pose = timelineData[tl] >= AnimationState.first ? MixPose.setup : currentPose;
           if (timeline is RotateTimeline) {
             _applyRotateTimeline(timeline, skeleton, animationTime, mix, pose, timelinesRotation,
                 tl << 1, firstFrame);
@@ -263,17 +263,17 @@ class AnimationState extends EventDispatcher {
     for (int i = 0; i < timelines.length; i++) {
       Timeline timeline = timelines[i];
       switch (timelineData[i]) {
-        case SUBSEQUENT:
+        case subsequent:
           if (!attachments && timeline is AttachmentTimeline) continue;
           if (!drawOrder && timeline is DrawOrderTimeline) continue;
           pose = currentPose;
           alpha = alphaMix;
           break;
-        case FIRST:
+        case first:
           pose = MixPose.setup;
           alpha = alphaMix;
           break;
-        case DIP:
+        case dip:
           pose = MixPose.setup;
           alpha = alphaDip;
           break;
