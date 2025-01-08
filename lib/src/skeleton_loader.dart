@@ -84,7 +84,7 @@ class SkeletonLoader {
         continue;
 
       var boneData = BoneData(boneIndex, boneName, parent);
-      var transformMode = "TransformMode." + _getString(boneMap, "transform", "normal")!;
+      var transformMode = "TransformMode.${_getString(boneMap, "transform", "normal")!}";
 
       boneData.length = _getDouble(boneMap, "length", 0.0);
       boneData.x = _getDouble(boneMap, "x", 0.0);
@@ -230,9 +230,9 @@ class SkeletonLoader {
       var target = skeletonData.findSlot(targetName);
       if (target == null) throw StateError("Path target slot not found: $targetName");
 
-      var positionMode = "PositionMode." + _getString(constraintMap, "positionMode", "percent")!;
-      var spacingMode = "SpacingMode." + _getString(constraintMap, "spacingMode", "length")!;
-      var rotateMode = "RotateMode." + _getString(constraintMap, "rotateMode", "tangent")!;
+      var positionMode = "PositionMode.${_getString(constraintMap, "positionMode", "percent")!}";
+      var spacingMode = "SpacingMode.${_getString(constraintMap, "spacingMode", "length")!}";
+      var rotateMode = "RotateMode.${_getString(constraintMap, "rotateMode", "tangent")!}";
 
       pathConstraintData.target = target;
       pathConstraintData.order = _getInt(constraintMap, "order", 0);
@@ -316,7 +316,7 @@ class SkeletonLoader {
       Map map, Skin skin, int slotIndex, String name, SkeletonData skeletonData) {
     name = _getString(map, "name", name)!;
 
-    var typeName = "AttachmentType." + _getString(map, "type", "region")!;
+    var typeName = "AttachmentType.${_getString(map, "type", "region")!}";
     var type = AttachmentType.values.firstWhere((e) => e.toString() == typeName);
     var path = _getString(map, "path", name)!;
 
@@ -411,7 +411,7 @@ class SkeletonLoader {
 
         if (end != null) {
           var slot = skeletonData.findSlot(end);
-          if (slot == null) throw StateError("Clipping end slot not found: " + end);
+          if (slot == null) throw StateError("Clipping end slot not found: $end");
           clip.endSlot = slot;
         }
 
