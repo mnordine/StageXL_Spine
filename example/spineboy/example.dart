@@ -68,19 +68,19 @@ Future main() async {
 
   // register track events
 
-  skeletonAnimation.state.onTrackStart.listen((TrackEntryStartEvent e) {
+  skeletonAnimation.state.onTrackStart.listen((e) {
     print("${e.trackEntry.trackIndex} start: ${e.trackEntry}");
   });
 
-  skeletonAnimation.state.onTrackEnd.listen((TrackEntryEndEvent e) {
+  skeletonAnimation.state.onTrackEnd.listen((e) {
     print("${e.trackEntry.trackIndex} end: ${e.trackEntry}");
   });
 
-  skeletonAnimation.state.onTrackComplete.listen((TrackEntryCompleteEvent e) {
+  skeletonAnimation.state.onTrackComplete.listen((e) {
     print("${e.trackEntry.trackIndex} complete: ${e.trackEntry}");
   });
 
-  skeletonAnimation.state.onTrackEvent.listen((TrackEntryEventEvent e) {
+  skeletonAnimation.state.onTrackEvent.listen((e) {
     var ev = e.event;
     var text = "${ev.data.name}: ${ev.intValue}, ${ev.floatValue}, ${ev.stringValue}";
     print("${e.trackEntry.trackIndex} event: ${e.trackEntry}, $text");
