@@ -39,7 +39,7 @@ class ScaleTimeline extends TranslateTimeline {
   static const int _X = 1;
   static const int _Y = 2;
 
-  ScaleTimeline(int frameCount) : super(frameCount);
+  ScaleTimeline(super.frameCount);
 
   @override
   int getPropertyId() {

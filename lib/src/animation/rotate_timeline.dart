@@ -40,9 +40,8 @@ class RotateTimeline extends CurveTimeline {
   final Float32List frames; // time, degrees, ...
   int boneIndex = 0;
 
-  RotateTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  RotateTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

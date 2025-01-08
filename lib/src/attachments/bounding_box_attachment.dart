@@ -31,5 +31,5 @@
 part of stagexl_spine;
 
 class BoundingBoxAttachment extends VertexAttachment {
-  BoundingBoxAttachment(String name) : super(name);
+  BoundingBoxAttachment(super.name);
 }

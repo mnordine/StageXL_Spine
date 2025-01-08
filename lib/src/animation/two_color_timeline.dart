@@ -52,9 +52,8 @@ class TwoColorTimeline extends CurveTimeline {
   int slotIndex = 0;
   final Float32List frames; // time, r, g, b, a, ...
 
-  TwoColorTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  TwoColorTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

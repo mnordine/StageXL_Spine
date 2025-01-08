@@ -40,7 +40,7 @@ class MeshAttachment extends RenderAttachment {
   double height = 0.0;
   MeshAttachment? _parentMesh;
 
-  MeshAttachment(String name, String path, BitmapData bitmapData) : super(name, path, bitmapData);
+  MeshAttachment(super.name, super.path, super.bitmapData);
 
   //---------------------------------------------------------------------------
 

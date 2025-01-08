@@ -39,7 +39,7 @@ class ShearTimeline extends TranslateTimeline {
   static const int _X = 1;
   static const int _Y = 2;
 
-  ShearTimeline(int frameCount) : super(frameCount);
+  ShearTimeline(super.frameCount);
 
   @override
   int getPropertyId() {

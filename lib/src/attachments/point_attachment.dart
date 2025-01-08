@@ -36,7 +36,7 @@ class PointAttachment extends VertexAttachment {
   double rotation = 0.0;
   SpineColor color = SpineColor(0.38, 0.94, 0.0, 1.0);
 
-  PointAttachment(String name) : super(name);
+  PointAttachment(super.name);
 
   Point<double> computeWorldPosition(Bone bone) {
     var x = this.x * bone.a + this.y * bone.b + bone.worldX;

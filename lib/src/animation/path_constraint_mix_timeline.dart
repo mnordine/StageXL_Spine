@@ -43,9 +43,8 @@ class PathConstraintMixTimeline extends CurveTimeline {
 
   final Float32List frames; // time, rotate mix, translate mix, ...
 
-  PathConstraintMixTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  PathConstraintMixTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

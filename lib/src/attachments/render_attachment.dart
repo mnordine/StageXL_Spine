@@ -39,7 +39,7 @@ abstract class RenderAttachment extends VertexAttachment {
   int hullLength = 0;
   SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
 
-  RenderAttachment(String name, this.path, this.bitmapData) : super(name);
+  RenderAttachment(super.name, this.path, this.bitmapData);
 
   //----------------------------------------------------------------------------
 

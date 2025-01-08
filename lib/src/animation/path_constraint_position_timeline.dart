@@ -41,9 +41,8 @@ class PathConstraintPositionTimeline extends CurveTimeline {
 
   final Float32List frames; // time, position, ...
 
-  PathConstraintPositionTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  PathConstraintPositionTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

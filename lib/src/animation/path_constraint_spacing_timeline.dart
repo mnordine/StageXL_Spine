@@ -37,7 +37,7 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
   static const int _TIME = 0;
   static const int _VALUE = 1;
 
-  PathConstraintSpacingTimeline(int frameCount) : super(frameCount);
+  PathConstraintSpacingTimeline(super.frameCount);
 
   @override
   int getPropertyId() {

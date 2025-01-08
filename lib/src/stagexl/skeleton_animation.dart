@@ -4,9 +4,8 @@ class SkeletonAnimation extends SkeletonDisplayObject implements Animatable {
   final AnimationState state;
   double timeScale = 1.0;
 
-  SkeletonAnimation(SkeletonData skeletonData, [AnimationStateData? stateData])
-      : state = AnimationState(stateData ?? AnimationStateData(skeletonData)),
-        super(skeletonData);
+  SkeletonAnimation(super.skeletonData, [AnimationStateData? stateData])
+      : state = AnimationState(stateData ?? AnimationStateData(skeletonData));
 
   @override
   bool advanceTime(num time) {

@@ -38,7 +38,7 @@ class VertexAttachment extends Attachment {
   late Float32List vertices;
   int worldVerticesLength = 0;
 
-  VertexAttachment(String name) : super(name);
+  VertexAttachment(super.name);
 
   void computeWorldVertices(Slot slot, Float32List worldVertices) {
     computeWorldVertices2(slot, 0, worldVerticesLength, worldVertices, 0, 2);

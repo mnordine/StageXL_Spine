@@ -35,5 +35,5 @@ class PathAttachment extends VertexAttachment {
   bool closed = false;
   bool constantSpeed = false;
 
-  PathAttachment(String name) : super(name);
+  PathAttachment(super.name);
 }

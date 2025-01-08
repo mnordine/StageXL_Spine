@@ -42,9 +42,8 @@ class TranslateTimeline extends CurveTimeline {
   final Float32List frames; // time, value, value, ...
   int boneIndex = 0;
 
-  TranslateTimeline(int frameCount)
-      : frames = Float32List(frameCount * 3),
-        super(frameCount);
+  TranslateTimeline(super.frameCount)
+      : frames = Float32List(frameCount * 3);
 
   @override
   int getPropertyId() {

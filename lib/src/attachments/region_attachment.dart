@@ -41,8 +41,7 @@ class RegionAttachment extends RenderAttachment {
 
   final Matrix transformationMatrix = Matrix.fromIdentity();
 
-  RegionAttachment(String name, String path, BitmapData bitmapData)
-      : super(name, path, bitmapData) {
+  RegionAttachment(super.name, super.path, super.bitmapData) {
     initRenderGeometry();
   }
 

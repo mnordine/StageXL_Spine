@@ -32,7 +32,7 @@ part of stagexl_spine;
 
 abstract class TrackEntryEvent extends stagexl.Event {
   final TrackEntry trackEntry;
-  TrackEntryEvent(String type, this.trackEntry) : super(type);
+  TrackEntryEvent(super.type, this.trackEntry);
 
   @override
   bool get captures => false;

@@ -42,9 +42,8 @@ class IkConstraintTimeline extends CurveTimeline {
   final Float32List frames; // time, mix, bendDirection, ...
   int ikConstraintIndex = 0;
 
-  IkConstraintTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  IkConstraintTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

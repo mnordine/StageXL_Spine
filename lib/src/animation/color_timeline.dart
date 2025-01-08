@@ -46,9 +46,8 @@ class ColorTimeline extends CurveTimeline {
   final Float32List frames; // time, r, g, b, a, ...
   int slotIndex = 0;
 
-  ColorTimeline(int frameCount)
-      : frames = Float32List(frameCount * 5),
-        super(frameCount);
+  ColorTimeline(super.frameCount)
+      : frames = Float32List(frameCount * 5);
 
   @override
   int getPropertyId() {

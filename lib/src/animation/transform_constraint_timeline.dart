@@ -47,9 +47,8 @@ class TransformConstraintTimeline extends CurveTimeline {
 
   final Float32List frames; // time, rotate mix, translate mix, scale mix, shear mix, ...
 
-  TransformConstraintTimeline(int frameCount)
-      : frames = Float32List(frameCount * _ENTRIES),
-        super(frameCount);
+  TransformConstraintTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _ENTRIES);
 
   @override
   int getPropertyId() {

@@ -37,10 +37,9 @@ class DeformTimeline extends CurveTimeline {
   int slotIndex = 0;
   VertexAttachment attachment;
 
-  DeformTimeline(int frameCount, this.attachment)
+  DeformTimeline(super.frameCount, this.attachment)
       : frames = Float32List(frameCount),
-        frameVertices = List<Float32List?>.filled(frameCount, null),
-        super(frameCount);
+        frameVertices = List<Float32List?>.filled(frameCount, null);
 
   @override
   int getPropertyId() {
