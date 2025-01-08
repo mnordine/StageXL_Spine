@@ -51,7 +51,7 @@ class PathConstraint implements Constraint {
   Float32List _world = Float32List(0);
   Float32List _curves = Float32List(0);
   Float32List _lengths = Float32List(0);
-  Float32List _segments = Float32List(10);
+  final Float32List _segments = Float32List(10);
 
   PathConstraint(this.data, Skeleton skeleton) : target = skeleton.findSlot(data.target.name)! {
     for (BoneData boneData in data.bones) {
