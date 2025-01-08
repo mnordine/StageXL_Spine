@@ -256,21 +256,17 @@ class AnimationState extends EventDispatcher {
           if (!drawOrder && timeline is DrawOrderTimeline) continue;
           pose = currentPose;
           alpha = alphaMix;
-          break;
         case first:
           pose = MixPose.setup;
           alpha = alphaMix;
-          break;
         case dip:
           pose = MixPose.setup;
           alpha = alphaDip;
-          break;
         default:
           pose = MixPose.setup;
           alpha = alphaDip;
           TrackEntry dipMix = timelineDipMix[i]!;
           alpha *= math.max(0.0, 1.0 - dipMix.mixTime / dipMix.mixDuration);
-          break;
       }
       from.totalAlpha += alpha;
       if (timeline is RotateTimeline) {

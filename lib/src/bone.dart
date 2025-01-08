@@ -129,7 +129,6 @@ class Bone implements Updatable {
         _b = scaleY * _cosDeg(rotation + 90 + shearY);
         _c = scaleX * _sinDeg(rotation + shearX);
         _d = scaleY * _sinDeg(rotation + 90 + shearY);
-        break;
 
       case TransformMode.noRotationOrReflection:
         double s = pa * pa + pc * pc;
@@ -154,7 +153,6 @@ class Bone implements Updatable {
         _b = pa * lb - pb * ld;
         _c = pc * la + pd * lc;
         _d = pc * lb + pd * ld;
-        break;
 
       case TransformMode.noScale:
       case TransformMode.noScaleOrReflection:
@@ -184,7 +182,6 @@ class Bone implements Updatable {
         _b = za * lb + zb * ld;
         _c = zc * la + zd * lc;
         _d = zc * lb + zd * ld;
-        break;
     }
   }
 

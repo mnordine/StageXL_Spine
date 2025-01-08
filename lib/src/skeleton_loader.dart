@@ -123,16 +123,12 @@ class SkeletonLoader {
       switch (_getString(slotMap, "blend", "normal")) {
         case "normal":
           slotData.blendMode = BlendMode.NORMAL;
-          break;
         case "additive":
           slotData.blendMode = BlendMode.ADD;
-          break;
         case "multiply":
           slotData.blendMode = BlendMode.MULTIPLY;
-          break;
         case "screen":
           slotData.blendMode = BlendMode.SCREEN;
-          break;
       }
 
       skeletonData.slots.add(slotData);

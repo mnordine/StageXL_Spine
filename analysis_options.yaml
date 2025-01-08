@@ -13,3 +13,4 @@ linter:
     - avoid_types_on_closure_parameters
     - prefer_int_literals
     - prefer_expression_function_bodies
+    - unnecessary_breaks
