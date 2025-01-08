@@ -62,7 +62,7 @@ class IkConstraint implements Constraint {
   }
 
   @override
-  int getOrder() => this.data.order;
+  int getOrder() => data.order;
 
   @override
   String toString() => data.name;

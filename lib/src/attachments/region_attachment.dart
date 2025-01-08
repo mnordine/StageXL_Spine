@@ -43,7 +43,7 @@ class RegionAttachment extends RenderAttachment {
 
   RegionAttachment(String name, String path, BitmapData bitmapData)
       : super(name, path, bitmapData) {
-    this.initRenderGeometry();
+    initRenderGeometry();
   }
 
   //---------------------------------------------------------------------------
@@ -102,10 +102,10 @@ class RegionAttachment extends RenderAttachment {
   @override
   void initRenderGeometry() {
     var renderTextureQuad = bitmapData.renderTextureQuad;
-    this.ixList = Int16List.fromList(renderTextureQuad.ixList);
-    this.vxList = Float32List.fromList(renderTextureQuad.vxList);
-    this.worldVerticesLength = this.hullLength = vxList.length >> 1;
-    this.vertices = Float32List(worldVerticesLength);
-    this.update();
+    ixList = Int16List.fromList(renderTextureQuad.ixList);
+    vxList = Float32List.fromList(renderTextureQuad.vxList);
+    worldVerticesLength = hullLength = vxList.length >> 1;
+    vertices = Float32List(worldVerticesLength);
+    update();
   }
 }

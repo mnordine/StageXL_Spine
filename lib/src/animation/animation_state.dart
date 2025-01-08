@@ -581,7 +581,7 @@ class AnimationState extends EventDispatcher {
       _eventDispatchDisabled = true;
       _trackEntryEvents.toList().forEach((trackEntryEvent) {
         trackEntryEvent.trackEntry.dispatchEvent(trackEntryEvent);
-        this.dispatchEvent(trackEntryEvent);
+        dispatchEvent(trackEntryEvent);
       });
       _trackEntryEvents.clear();
       _eventDispatchDisabled = false;
@@ -594,12 +594,12 @@ class AnimationState extends EventDispatcher {
   }
 
   void clearListeners() {
-    this.removeEventListeners("start");
-    this.removeEventListeners("interrupt");
-    this.removeEventListeners("end");
-    this.removeEventListeners("dispose");
-    this.removeEventListeners("complete");
-    this.removeEventListeners("event");
+    removeEventListeners("start");
+    removeEventListeners("interrupt");
+    removeEventListeners("end");
+    removeEventListeners("dispose");
+    removeEventListeners("complete");
+    removeEventListeners("event");
   }
 
   void clearListenerNotifications() {

@@ -177,8 +177,8 @@ class TransformConstraint implements Constraint {
     var td = target.d;
     var degRad = math.pi / 180.0;
     var degRadReflect = ta * td - tb * tc > 0 ? degRad : -degRad;
-    var offsetRotation = this.data.offsetRotation * degRadReflect;
-    var offsetShearY = this.data.offsetShearY * degRadReflect;
+    var offsetRotation = data.offsetRotation * degRadReflect;
+    var offsetShearY = data.offsetShearY * degRadReflect;
     var bones = this.bones;
 
     for (int i = 0; i < bones.length; i++) {
@@ -220,8 +220,8 @@ class TransformConstraint implements Constraint {
 
       if (scaleMix > 0) {
         var st = math.sqrt(ta * ta + tc * tc) - 1.0;
-        var sx = (st + this.data.offsetScaleX) * scaleMix + 1.0;
-        var sy = (st + this.data.offsetScaleY) * scaleMix + 1.0;
+        var sx = (st + data.offsetScaleX) * scaleMix + 1.0;
+        var sy = (st + data.offsetScaleY) * scaleMix + 1.0;
         bone._a *= sx;
         bone._c *= sx;
         bone._b *= sy;
@@ -265,31 +265,31 @@ class TransformConstraint implements Constraint {
 
       var rotation = bone.arotation;
       if (rotateMix != 0.0) {
-        var r = target.arotation - rotation + this.data.offsetRotation;
+        var r = target.arotation - rotation + data.offsetRotation;
         rotation += _wrapRotation(r) * rotateMix;
       }
 
       var x = bone.ax;
       var y = bone.ay;
       if (translateMix != 0) {
-        x += (target.ax - x + this.data.offsetX) * translateMix;
-        y += (target.ay - y + this.data.offsetY) * translateMix;
+        x += (target.ax - x + data.offsetX) * translateMix;
+        y += (target.ay - y + data.offsetY) * translateMix;
       }
 
       var scaleX = bone.ascaleX;
       var scaleY = bone.ascaleY;
       if (scaleMix > 0.0) {
         if (scaleX > 0.00001) {
-          scaleX = (scaleX + (target.ascaleX - scaleX + this.data.offsetScaleX) * scaleMix) / scaleX;
+          scaleX = (scaleX + (target.ascaleX - scaleX + data.offsetScaleX) * scaleMix) / scaleX;
         }
         if (scaleY > 0.00001) {
-          scaleY = (scaleY + (target.ascaleY - scaleY + this.data.offsetScaleY) * scaleMix) / scaleY;
+          scaleY = (scaleY + (target.ascaleY - scaleY + data.offsetScaleY) * scaleMix) / scaleY;
         }
       }
 
       var shearY = bone.ashearY;
       if (shearMix > 0.0) {
-        var r = target.ashearY - shearY + this.data.offsetShearY;
+        var r = target.ashearY - shearY + data.offsetShearY;
         bone.shearY += _wrapRotation(r) * shearMix;
       }
 
@@ -312,30 +312,30 @@ class TransformConstraint implements Constraint {
 
       var rotation = bone.arotation;
       if (rotateMix != 0.0) {
-        rotation += (target.arotation + this.data.offsetRotation) * rotateMix;
+        rotation += (target.arotation + data.offsetRotation) * rotateMix;
       }
 
       var x = bone.ax;
       var y = bone.ay;
       if (translateMix != 0.0) {
-        x += (target.ax + this.data.offsetX) * translateMix;
-        y += (target.ay + this.data.offsetY) * translateMix;
+        x += (target.ax + data.offsetX) * translateMix;
+        y += (target.ay + data.offsetY) * translateMix;
       }
 
       var scaleX = bone.ascaleX;
       var scaleY = bone.ascaleY;
       if (scaleMix > 0.0) {
         if (scaleX > 0.00001) {
-          scaleX *= ((target.ascaleX - 1 + this.data.offsetScaleX) * scaleMix) + 1;
+          scaleX *= ((target.ascaleX - 1 + data.offsetScaleX) * scaleMix) + 1;
         }
         if (scaleY > 0.00001) {
-          scaleY *= ((target.ascaleY - 1 + this.data.offsetScaleY) * scaleMix) + 1;
+          scaleY *= ((target.ascaleY - 1 + data.offsetScaleY) * scaleMix) + 1;
         }
       }
 
       var shearY = bone.ashearY;
       if (shearMix > 0.0) {
-        shearY += (target.ashearY + this.data.offsetShearY) * shearMix;
+        shearY += (target.ashearY + data.offsetShearY) * shearMix;
       }
 
       bone.updateWorldTransformWith(x, y, rotation, scaleX, scaleY, bone.ashearX, shearY);

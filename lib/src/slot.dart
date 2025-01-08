@@ -66,7 +66,7 @@ class Slot {
 
   void setToSetupPose() {
     color.setFromColor(data.color);
-    if (darkColor != null && data.darkColor != null) darkColor!.setFromColor(this.data.darkColor!);
+    if (darkColor != null && data.darkColor != null) darkColor!.setFromColor(data.darkColor!);
     if (data.attachmentName == null) {
       attachment = null;
     } else {

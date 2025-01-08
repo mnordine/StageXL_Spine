@@ -1,5 +1,11 @@
 include: package:lints/recommended.yaml
 
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    curly_braces_in_flow_control_structures: ignore
+
 linter:
+
   rules:
     - noop_primitive_operations

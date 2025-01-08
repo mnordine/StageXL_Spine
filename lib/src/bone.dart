@@ -241,7 +241,7 @@ class Bone implements Updatable {
     _b = cos * b - sin * d;
     _c = sin * a + cos * c;
     _d = sin * b + cos * d;
-    this.appliedValid = false;
+    appliedValid = false;
   }
 
   /// Computes the individual applied transform values from the world transform.
@@ -252,7 +252,7 @@ class Bone implements Updatable {
   /// versus 180 rotation.
 
   void _updateAppliedTransform() {
-    this.appliedValid = true;
+    appliedValid = true;
     Bone? parent = this.parent;
 
     if (parent == null) {
@@ -273,8 +273,8 @@ class Bone implements Updatable {
     double pid = 1.0 / (pa * pd - pb * pc);
     double dx = worldX - parent.worldX;
     double dy = worldY - parent.worldY;
-    this.ax = (dx * pd * pid - dy * pb * pid);
-    this.ay = (dy * pa * pid - dx * pc * pid);
+    ax = (dx * pd * pid - dy * pb * pid);
+    ay = (dy * pa * pid - dx * pc * pid);
 
     double ia = pid * pd;
     double id = pid * pa;
@@ -285,19 +285,19 @@ class Bone implements Updatable {
     double rc = id * c - ic * a;
     double rd = id * d - ic * b;
 
-    this.ashearX = 0.0;
-    this.ascaleX = math.sqrt(ra * ra + rc * rc);
+    ashearX = 0.0;
+    ascaleX = math.sqrt(ra * ra + rc * rc);
 
-    if (this.ascaleX > 0.0001) {
+    if (ascaleX > 0.0001) {
       double det = ra * rd - rb * rc;
-      this.ascaleY = det / this.ascaleX;
-      this.ashearY = _toDeg(math.atan2(ra * rb + rc * rd, det));
-      this.arotation = _toDeg(math.atan2(rc, ra));
+      ascaleY = det / ascaleX;
+      ashearY = _toDeg(math.atan2(ra * rb + rc * rd, det));
+      arotation = _toDeg(math.atan2(rc, ra));
     } else {
-      this.ascaleX = 0.0;
-      this.ascaleY = math.sqrt(rb * rb + rd * rd);
-      this.ashearY = 0.0;
-      this.arotation = 90.0 - _toDeg(math.atan2(rd, rb));
+      ascaleX = 0.0;
+      ascaleY = math.sqrt(rb * rb + rd * rd);
+      ashearY = 0.0;
+      arotation = 90.0 - _toDeg(math.atan2(rd, rb));
     }
   }
 
@@ -317,5 +317,5 @@ class Bone implements Updatable {
   }
 
   @override
-  String toString() => this.data.name;
+  String toString() => data.name;
 }

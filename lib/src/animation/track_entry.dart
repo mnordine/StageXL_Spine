@@ -64,7 +64,7 @@ class TrackEntry extends EventDispatcher {
   double totalAlpha = 0.0;
 
   TrackEntry(this.trackIndex, this.animation) {
-    this.animationEnd = this.animation.duration;
+    animationEnd = animation.duration;
   }
 
   //---------------------------------------------------------------------------
@@ -119,22 +119,22 @@ class TrackEntry extends EventDispatcher {
     for (int i = 0; i < timelinesCount; i++) {
       int id = animation.timelines[i].getPropertyId();
       if (propertyIDs.add(id) == false) {
-        this.timelineData[i] = AnimationState.SUBSEQUENT;
+        timelineData[i] = AnimationState.subsequent;
       } else if (to == null || to._hasTimeline(id) == false) {
-        this.timelineData[i] = AnimationState.FIRST;
+        timelineData[i] = AnimationState.first;
       } else {
         for (int ii = mixingToArray.length - 1; ii >= 0; ii--) {
           var entry = mixingToArray[ii];
           if (entry._hasTimeline(id) == false) {
             if (entry.mixDuration > 0) {
-              this.timelineData[i] = AnimationState.DIP_MIX;
-              this.timelineDipMix[i] = entry;
+              timelineData[i] = AnimationState.dipMix;
+              timelineDipMix[i] = entry;
               continue outer;
             }
             break;
           }
         }
-        this.timelineData[i] = AnimationState.DIP;
+        timelineData[i] = AnimationState.dip;
       }
     }
     return lastEntry;

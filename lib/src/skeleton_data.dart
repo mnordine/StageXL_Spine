@@ -107,8 +107,8 @@ class SkeletonData {
   }
 
   int findTransformConstraintIndex(String constraintName) {
-    for (int i = 0; i < this.transformConstraints.length; i++) {
-      if (this.transformConstraints[i].name == constraintName) return i;
+    for (int i = 0; i < transformConstraints.length; i++) {
+      if (transformConstraints[i].name == constraintName) return i;
     }
     return -1;
   }
@@ -116,12 +116,12 @@ class SkeletonData {
   // --- Path constraints.
 
   PathConstraintData? findPathConstraint(String constraintName) {
-    return this.pathConstraints.firstWhere((p) => p.name == constraintName);
+    return pathConstraints.firstWhere((p) => p.name == constraintName);
   }
 
   int findPathConstraintIndex(String constraintName) {
-    for (int i = 0; i < this.pathConstraints.length; i++) {
-      if (this.pathConstraints[i].name == constraintName) return i;
+    for (int i = 0; i < pathConstraints.length; i++) {
+      if (pathConstraints[i].name == constraintName) return i;
     }
     return -1;
   }

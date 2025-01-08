@@ -45,8 +45,8 @@ class PointAttachment extends VertexAttachment {
   }
 
   double computeWorldRotation(Bone bone) {
-    double cos = _cosDeg(this.rotation);
-    double sin = _sinDeg(this.rotation);
+    double cos = _cosDeg(rotation);
+    double sin = _sinDeg(rotation);
     double x = cos * bone.a + sin * bone.b;
     double y = cos * bone.c + sin * bone.d;
     return _toDeg(math.atan2(y, x));

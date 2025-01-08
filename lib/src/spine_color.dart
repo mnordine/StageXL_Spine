@@ -49,24 +49,24 @@ class SpineColor {
     this.g = g;
     this.b = b;
     this.a = a;
-    this.clamp();
+    clamp();
     return this;
   }
 
   SpineColor setFromColor(SpineColor c) {
-    this.r = c.r;
-    this.g = c.g;
-    this.b = c.b;
-    this.a = c.a;
+    r = c.r;
+    g = c.g;
+    b = c.b;
+    a = c.a;
     return this;
   }
 
   SpineColor setFromString(String hex) {
     hex = hex.startsWith('#') ? hex.substring(1) : hex;
-    this.r = int.parse(hex.substring(0, 2), radix: 16) / 255.0;
-    this.g = int.parse(hex.substring(2, 4), radix: 16) / 255.0;
-    this.b = int.parse(hex.substring(4, 6), radix: 16) / 255.0;
-    this.a = (hex.length != 8 ? 255 : int.parse(hex.substring(6, 8), radix: 16)) / 255.0;
+    r = int.parse(hex.substring(0, 2), radix: 16) / 255.0;
+    g = int.parse(hex.substring(2, 4), radix: 16) / 255.0;
+    b = int.parse(hex.substring(4, 6), radix: 16) / 255.0;
+    a = (hex.length != 8 ? 255 : int.parse(hex.substring(6, 8), radix: 16)) / 255.0;
     return this;
   }
 
@@ -75,33 +75,33 @@ class SpineColor {
     this.g += g;
     this.b += b;
     this.a += a;
-    this.clamp();
+    clamp();
     return this;
   }
 
   SpineColor clamp() {
-    if (this.r < 0.0) {
-      this.r = 0.0;
-    } else if (this.r > 1.0) {
-      this.r = 1.0;
+    if (r < 0.0) {
+      r = 0.0;
+    } else if (r > 1.0) {
+      r = 1.0;
     }
 
-    if (this.g < 0.0) {
-      this.g = 0.0;
-     } else if (this.g > 1.0) {
-       this.g = 1.0;
+    if (g < 0.0) {
+      g = 0.0;
+     } else if (g > 1.0) {
+       g = 1.0;
      }
 
-    if (this.b < 0.0) {
-      this.b = 0.0;
-    } else if (this.b > 1.0) {
-      this.b = 1.0;
+    if (b < 0.0) {
+      b = 0.0;
+    } else if (b > 1.0) {
+      b = 1.0;
     }
 
-    if (this.a < 0.0) {
-      this.a = 0.0;
-    } else if (this.a > 1.0) {
-      this.a = 1.0;
+    if (a < 0.0) {
+      a = 0.0;
+    } else if (a > 1.0) {
+      a = 1.0;
     }
     
     return this;

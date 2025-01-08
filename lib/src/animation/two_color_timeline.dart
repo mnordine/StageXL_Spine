@@ -65,14 +65,14 @@ class TwoColorTimeline extends CurveTimeline {
   void setFrame(int frameIndex, double time, double r, double g, double b, double a, double r2,
       double g2, double b2) {
     frameIndex *= TwoColorTimeline._ENTRIES;
-    this.frames[frameIndex] = time;
-    this.frames[frameIndex + TwoColorTimeline._R1] = r;
-    this.frames[frameIndex + TwoColorTimeline._G1] = g;
-    this.frames[frameIndex + TwoColorTimeline._B1] = b;
-    this.frames[frameIndex + TwoColorTimeline._A1] = a;
-    this.frames[frameIndex + TwoColorTimeline._R2] = r2;
-    this.frames[frameIndex + TwoColorTimeline._G2] = g2;
-    this.frames[frameIndex + TwoColorTimeline._B2] = b2;
+    frames[frameIndex] = time;
+    frames[frameIndex + TwoColorTimeline._R1] = r;
+    frames[frameIndex + TwoColorTimeline._G1] = g;
+    frames[frameIndex + TwoColorTimeline._B1] = b;
+    frames[frameIndex + TwoColorTimeline._A1] = a;
+    frames[frameIndex + TwoColorTimeline._R2] = r2;
+    frames[frameIndex + TwoColorTimeline._G2] = g2;
+    frames[frameIndex + TwoColorTimeline._B2] = b2;
   }
 
   @override

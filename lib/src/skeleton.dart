@@ -62,10 +62,10 @@ class Skeleton {
     }
 
     for (SlotData slotData in data.slots) {
-      Bone bone = this.bones[slotData.boneData.index];
+      Bone bone = bones[slotData.boneData.index];
       Slot slot = Slot(slotData, bone);
-      this.slots.add(slot);
-      this.drawOrder.add(slot);
+      slots.add(slot);
+      drawOrder.add(slot);
     }
 
     for (IkConstraintData ikConstraintData in data.ikConstraints) {
@@ -93,7 +93,7 @@ class Skeleton {
     _updateCache.clear();
     _updateCacheReset.clear();
 
-    for (var bone in this.bones) {
+    for (var bone in bones) {
       bone._sorted = false;
     }
 
@@ -131,7 +131,7 @@ class Skeleton {
       }
     }
 
-    for (var bone in this.bones) {
+    for (var bone in bones) {
       _sortBone(bone);
     }
   }
@@ -320,7 +320,7 @@ class Skeleton {
 
   void setSlotsToSetupPose() {
     int i = 0;
-    for (Slot slot in this.slots) {
+    for (Slot slot in slots) {
       drawOrder[i++] = slot;
       slot.setToSetupPose();
     }
@@ -331,23 +331,23 @@ class Skeleton {
   Bone? get rootBone => bones.isEmpty ? null : bones.first;
 
   Bone? findBone(String boneName) {
-    return this.bones.firstWhere((b) => b.data.name == boneName);
+    return bones.firstWhere((b) => b.data.name == boneName);
   }
 
   int findBoneIndex(String boneName) {
-    for (int i = 0; i < this.bones.length; i++) {
-      if (this.bones[i].data.name == boneName) return i;
+    for (int i = 0; i < bones.length; i++) {
+      if (bones[i].data.name == boneName) return i;
     }
     return -1;
   }
 
   Slot? findSlot(String slotName) {
-    return this.slots.firstWhere((s) => s.data.name == slotName);
+    return slots.firstWhere((s) => s.data.name == slotName);
   }
 
   int findSlotIndex(String slotName) {
-    for (int i = 0; i < this.slots.length; i++) {
-      if (this.slots[i].data.name == slotName) return i;
+    for (int i = 0; i < slots.length; i++) {
+      if (slots[i].data.name == slotName) return i;
     }
     return -1;
   }
@@ -372,8 +372,8 @@ class Skeleton {
       if (_skin != null) {
         newSkin.attachAll(this, _skin!);
       } else {
-        for (int i = 0; i < this.slots.length; i++) {
-          Slot slot = this.slots[i];
+        for (int i = 0; i < slots.length; i++) {
+          Slot slot = slots[i];
           String? name = slot.data.attachmentName;
           if (name != null) {
             Attachment? attachment = newSkin.getAttachment(i, name);
@@ -401,8 +401,8 @@ class Skeleton {
   }
 
   void setAttachment(String slotName, String attachmentName) {
-    for (int i = 0; i < this.slots.length; i++) {
-      Slot slot = this.slots[i];
+    for (int i = 0; i < slots.length; i++) {
+      Slot slot = slots[i];
       if (slot.data.name == slotName) {
         var attachment = getAttachmentForSlotIndex(i, attachmentName);
         if (attachment == null) {
@@ -485,5 +485,5 @@ class Skeleton {
  */
 
   @override
-  String toString() => this.data.name ?? super.toString();
+  String toString() => data.name ?? super.toString();
 }
