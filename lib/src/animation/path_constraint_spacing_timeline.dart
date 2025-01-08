@@ -49,7 +49,7 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
       double alpha, MixPose pose, MixDirection direction) {
     PathConstraint constraint = skeleton.pathConstraints[pathConstraintIndex];
     PathConstraintData data = constraint.data;
-    double s = 0.0;
+    double s = 0;
 
     if (time < frames[0]) {
       // Time is before first frame.

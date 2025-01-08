@@ -2,7 +2,7 @@ part of stagexl_spine;
 
 class SkeletonAnimation extends SkeletonDisplayObject implements Animatable {
   final AnimationState state;
-  double timeScale = 1.0;
+  double timeScale = 1;
 
   SkeletonAnimation(super.skeletonData, [AnimationStateData? stateData])
       : state = AnimationState(stateData ?? AnimationStateData(skeletonData));

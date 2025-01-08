@@ -60,7 +60,7 @@ class RotateTimeline extends CurveTimeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     Bone bone = skeleton.bones[boneIndex];
-    double rotation = 0.0;
+    double rotation = 0;
 
     if (time < frames[0]) {
       // Time is before first frame.

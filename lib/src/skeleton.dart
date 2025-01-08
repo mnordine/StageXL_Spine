@@ -43,10 +43,10 @@ class Skeleton {
 
   Skin? _skin;
 
-  SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
-  double time = 0.0;
-  double x = 0.0;
-  double y = 0.0;
+  SpineColor color = SpineColor(1, 1, 1, 1);
+  double time = 0;
+  double x = 0;
+  double y = 0;
 
   Skeleton(this.data) {
     for (BoneData boneData in data.bones) {

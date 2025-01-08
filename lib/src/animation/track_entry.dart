@@ -41,27 +41,27 @@ class TrackEntry extends EventDispatcher {
   TrackEntry? mixingFrom;
   bool loop = false;
 
-  double eventThreshold = 0.0;
-  double attachmentThreshold = 0.0;
-  double drawOrderThreshold = 0.0;
+  double eventThreshold = 0;
+  double attachmentThreshold = 0;
+  double drawOrderThreshold = 0;
 
-  double animationStart = 0.0;
-  double animationEnd = 0.0;
-  double animationLast = -1.0;
-  double nextAnimationLast = -1.0;
+  double animationStart = 0;
+  double animationEnd = 0;
+  double animationLast = -1;
+  double nextAnimationLast = -1;
 
-  double delay = 0.0;
-  double trackTime = 0.0;
-  double trackLast = -1.0;
-  double nextTrackLast = -1.0;
+  double delay = 0;
+  double trackTime = 0;
+  double trackLast = -1;
+  double nextTrackLast = -1;
   double trackEnd = double.maxFinite;
-  double timeScale = 1.0;
+  double timeScale = 1;
 
-  double alpha = 1.0;
-  double interruptAlpha = 1.0;
-  double mixTime = 0.0;
-  double mixDuration = 0.0;
-  double totalAlpha = 0.0;
+  double alpha = 1;
+  double interruptAlpha = 1;
+  double mixTime = 0;
+  double mixDuration = 0;
+  double totalAlpha = 0;
 
   TrackEntry(this.trackIndex, this.animation) {
     animationEnd = animation.duration;

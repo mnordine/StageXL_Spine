@@ -11,3 +11,4 @@ linter:
   rules:
     - noop_primitive_operations
     - avoid_types_on_closure_parameters
+    - prefer_int_literals

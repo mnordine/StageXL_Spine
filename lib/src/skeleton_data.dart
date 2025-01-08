@@ -35,9 +35,9 @@ class SkeletonData {
   String version = "";
   String hash = "";
   String imagesPath = "";
-  double width = 0.0;
-  double height = 0.0;
-  double fps = 30.0;
+  double width = 0;
+  double height = 0;
+  double fps = 30;
 
   List<BoneData> bones = []; // Ordered parents first.
   List<SlotData> slots = []; // Setup pose draw order.

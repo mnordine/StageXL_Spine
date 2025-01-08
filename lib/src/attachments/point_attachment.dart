@@ -31,10 +31,10 @@
 part of stagexl_spine;
 
 class PointAttachment extends VertexAttachment {
-  double x = 0.0;
-  double y = 0.0;
-  double rotation = 0.0;
-  SpineColor color = SpineColor(0.38, 0.94, 0.0, 1.0);
+  double x = 0;
+  double y = 0;
+  double rotation = 0;
+  SpineColor color = SpineColor(0.38, 0.94, 0, 1);
 
   PointAttachment(super.name);
 

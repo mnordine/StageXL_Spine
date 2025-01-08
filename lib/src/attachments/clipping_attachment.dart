@@ -32,7 +32,7 @@ part of stagexl_spine;
 
 class ClippingAttachment extends VertexAttachment {
   SlotData? endSlot;
-  SpineColor color = SpineColor(0.2275, 0.2275, 0.2275, 1.0);
+  SpineColor color = SpineColor(0.2275, 0.2275, 0.2275, 1);
 
   ClippingAttachment(super.name);
 }

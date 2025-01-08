@@ -36,29 +36,29 @@ class Bone implements Updatable {
   final Bone? parent;
   final List<Bone> children = [];
 
-  double x = 0.0;
-  double y = 0.0;
-  double rotation = 0.0;
-  double scaleX = 0.0;
-  double scaleY = 0.0;
-  double shearX = 0.0;
-  double shearY = 0.0;
+  double x = 0;
+  double y = 0;
+  double rotation = 0;
+  double scaleX = 0;
+  double scaleY = 0;
+  double shearX = 0;
+  double shearY = 0;
 
-  double ax = 0.0;
-  double ay = 0.0;
-  double arotation = 0.0;
-  double ascaleX = 0.0;
-  double ascaleY = 0.0;
-  double ashearX = 0.0;
-  double ashearY = 0.0;
+  double ax = 0;
+  double ay = 0;
+  double arotation = 0;
+  double ascaleX = 0;
+  double ascaleY = 0;
+  double ashearX = 0;
+  double ashearY = 0;
   bool appliedValid = false;
 
-  double _a = 1.0;
-  double _b = 0.0;
-  double _c = 0.0;
-  double _d = 1.0;
-  double _worldX = 0.0;
-  double _worldY = 0.0;
+  double _a = 1;
+  double _b = 0;
+  double _c = 0;
+  double _d = 1;
+  double _worldX = 0;
+  double _worldY = 0;
 
   bool _sorted = false;
 
@@ -133,7 +133,7 @@ class Bone implements Updatable {
 
       case TransformMode.noRotationOrReflection:
         double s = pa * pa + pc * pc;
-        double prx = 0.0;
+        double prx = 0;
         if (s > 0.0001) {
           s = (pa * pd - pb * pc).abs() / s;
           pb = pc * s;

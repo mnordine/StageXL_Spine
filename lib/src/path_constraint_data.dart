@@ -42,11 +42,11 @@ class PathConstraintData {
   RotateMode? rotateMode;
 
   int order = 0;
-  double offsetRotation = 0.0;
-  double position = 0.0;
-  double spacing = 0.0;
-  double rotateMix = 0.0;
-  double translateMix = 0.0;
+  double offsetRotation = 0;
+  double position = 0;
+  double spacing = 0;
+  double rotateMix = 0;
+  double translateMix = 0;
 
   PathConstraintData(this.name);
 

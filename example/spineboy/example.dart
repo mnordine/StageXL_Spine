@@ -101,8 +101,8 @@ Future main() async {
   stage.onMouseClick.listen((me) {
     animationIndex = (animationIndex + 1) % animationNames.length;
     if (animationIndex == 1) {
-      animationState.setEmptyAnimation(1, 0.0);
-      animationState.addAnimationByName(1, "shoot", false, 0.0).mixDuration = 0.2;
+      animationState.setEmptyAnimation(1, 0);
+      animationState.addAnimationByName(1, "shoot", false, 0).mixDuration = 0.2;
       animationState.addEmptyAnimation(1, 0.2, 0.5);
     } else {
       var animationName = animationNames[animationIndex];

@@ -35,7 +35,7 @@ class SlotData {
   final String name;
   final BoneData boneData;
 
-  SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
+  SpineColor color = SpineColor(1, 1, 1, 1);
   SpineColor? darkColor;
 
   String? attachmentName;

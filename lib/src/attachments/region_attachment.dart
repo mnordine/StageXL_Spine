@@ -31,13 +31,13 @@
 part of stagexl_spine;
 
 class RegionAttachment extends RenderAttachment {
-  double x = 0.0;
-  double y = 0.0;
-  double width = 0.0;
-  double height = 0.0;
-  double scaleX = 1.0;
-  double scaleY = 1.0;
-  double rotation = 0.0;
+  double x = 0;
+  double y = 0;
+  double width = 0;
+  double height = 0;
+  double scaleX = 1;
+  double scaleY = 1;
+  double rotation = 0;
 
   final Matrix transformationMatrix = Matrix.fromIdentity();
 

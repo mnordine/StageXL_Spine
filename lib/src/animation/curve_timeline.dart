@@ -33,9 +33,9 @@ part of stagexl_spine;
 /// Base class for frames that use an interpolation bezier curve.
 ///
 class CurveTimeline implements Timeline {
-  static const double _linear = 0.0;
-  static const double _stepped = 1.0;
-  static const double _bezier = 2.0;
+  static const double _linear = 0;
+  static const double _stepped = 1;
+  static const double _bezier = 2;
   static const int _bezierSize = 10 * 2 - 1;
 
   final Float32List _curves; // type, x, y, ...
@@ -101,10 +101,10 @@ class CurveTimeline implements Timeline {
     int i = frameIndex * _bezierSize;
     double type = _curves[i];
     if (type == _linear) return percent;
-    if (type == _stepped) return 0.0;
+    if (type == _stepped) return 0;
     i++;
 
-    double x = 0.0;
+    double x = 0;
     for (int start = i, n = i + _bezierSize - 1; i < n; i += 2) {
       x = _curves[i];
       if (x >= percent) {

@@ -63,8 +63,8 @@ class TranslateTimeline extends CurveTimeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     Bone bone = skeleton.bones[boneIndex];
-    double x = 0.0;
-    double y = 0.0;
+    double x = 0;
+    double y = 0;
 
     if (time < frames[0]) {
       // Time is before first frame.

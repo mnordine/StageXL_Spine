@@ -33,7 +33,7 @@ part of stagexl_spine;
 class AnimationStateData {
   final SkeletonData skeletonData;
   final Map<String, num> animationToMixTime = <String, num>{};
-  double defaultMix = 0.0;
+  double defaultMix = 0;
 
   AnimationStateData(this.skeletonData);
 

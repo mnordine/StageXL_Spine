@@ -36,8 +36,8 @@ class MeshAttachment extends RenderAttachment {
   late Int16List edges;
 
   bool inheritDeform = false;
-  double width = 0.0;
-  double height = 0.0;
+  double width = 0;
+  double height = 0;
   MeshAttachment? _parentMesh;
 
   MeshAttachment(super.name, super.path, super.bitmapData);

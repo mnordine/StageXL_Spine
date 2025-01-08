@@ -41,10 +41,10 @@ class PathConstraint implements Constraint {
   final List<Bone> bones = [];
 
   Slot target;
-  double position = 0.0;
-  double spacing = 0.0;
-  double rotateMix = 0.0;
-  double translateMix = 0.0;
+  double position = 0;
+  double spacing = 0;
+  double rotateMix = 0;
+  double translateMix = 0;
 
   Float32List _spaces = Float32List(0);
   Float32List _positions = Float32List(0);
@@ -165,9 +165,9 @@ class PathConstraint implements Constraint {
         double b = bone.b;
         double c = bone.c;
         double d = bone.d;
-        double r = 0.0;
-        double cos = 0.0;
-        double sin = 0.0;
+        double r = 0;
+        double cos = 0;
+        double sin = 0;
 
         if (tangents) {
           r = positions[p - 1];
@@ -316,15 +316,15 @@ class PathConstraint implements Constraint {
     if (_curves.length != curveCount) _curves = Float32List(curveCount);
 
     Float32List curves = _curves;
-    double pathLength = 0.0;
+    double pathLength = 0;
     double x1 = world[0], y1 = world[1];
-    double cx1 = 0.0, cy1 = 0.0;
-    double cx2 = 0.0, cy2 = 0.0;
-    double x2 = 0.0, y2 = 0.0;
-    double tmpx = 0.0, tmpy = 0.0;
-    double dddfx = 0.0, dddfy = 0.0;
-    double ddfx = 0.0, ddfy = 0.0;
-    double dfx = 0.0, dfy = 0.0;
+    double cx1 = 0, cy1 = 0;
+    double cx2 = 0, cy2 = 0;
+    double x2 = 0, y2 = 0;
+    double tmpx = 0, tmpy = 0;
+    double dddfx = 0, dddfy = 0;
+    double ddfx = 0, ddfy = 0;
+    double dfx = 0, dfy = 0;
     int w = 2;
 
     for (int i = 0; i < curveCount; i++, w += 6) {
@@ -370,7 +370,7 @@ class PathConstraint implements Constraint {
     }
 
     Float32List segments = _segments;
-    double curveLength = 0.0;
+    double curveLength = 0;
     int segment = 0;
     int o = 0;
     int curve = 0;

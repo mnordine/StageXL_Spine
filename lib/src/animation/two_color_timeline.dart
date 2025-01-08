@@ -78,13 +78,13 @@ class TwoColorTimeline extends CurveTimeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     Slot slot = skeleton.slots[slotIndex];
-    double r1 = 0.0;
-    double g1 = 0.0;
-    double b1 = 0.0;
-    double a1 = 0.0;
-    double r2 = 0.0;
-    double g2 = 0.0;
-    double b2 = 0.0;
+    double r1 = 0;
+    double g1 = 0;
+    double b1 = 0;
+    double a1 = 0;
+    double r2 = 0;
+    double g2 = 0;
+    double b2 = 0;
 
     if (time < frames[0]) {
       if (pose == MixPose.setup) {
@@ -99,7 +99,7 @@ class TwoColorTimeline extends CurveTimeline {
         var s2 = slot.data.darkColor!;
         l1.add((l2.r - l1.r) * alpha, (l2.g - l1.g) * alpha, (l2.b - l1.b) * alpha,
             (l2.a - l1.a) * alpha);
-        d1.add((s2.r - d1.r) * alpha, (s2.g - d1.g) * alpha, (s2.b - d1.b) * alpha, 0.0);
+        d1.add((s2.r - d1.r) * alpha, (s2.g - d1.g) * alpha, (s2.b - d1.b) * alpha, 0);
       }
       return;
     }
@@ -149,7 +149,7 @@ class TwoColorTimeline extends CurveTimeline {
 
     if (alpha == 1.0) {
       slot.color.setFrom(r1, g1, b1, a1);
-      slot.darkColor?.setFrom(r2, g2, b2, 1.0);
+      slot.darkColor?.setFrom(r2, g2, b2, 1);
     } else {
       var light = slot.color;
       var dark = slot.darkColor;
@@ -161,7 +161,7 @@ class TwoColorTimeline extends CurveTimeline {
       }
       light.add((r1 - light.r) * alpha, (g1 - light.g) * alpha, (b1 - light.b) * alpha,
           (a1 - light.a) * alpha);
-      dark?.add((r2 - dark.r) * alpha, (g2 - dark.g) * alpha, (b2 - dark.b) * alpha, 0.0);
+      dark?.add((r2 - dark.r) * alpha, (g2 - dark.g) * alpha, (b2 - dark.b) * alpha, 0);
     }
   }
 }

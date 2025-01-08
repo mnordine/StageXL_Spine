@@ -35,10 +35,10 @@ class TransformConstraint implements Constraint {
   final List<Bone> bones = [];
 
   Bone target;
-  double translateMix = 0.0;
-  double rotateMix = 0.0;
-  double scaleMix = 0.0;
-  double shearMix = 0.0;
+  double translateMix = 0;
+  double rotateMix = 0;
+  double scaleMix = 0;
+  double shearMix = 0;
 
   final Float32List _temp = Float32List(2);
 

@@ -73,10 +73,10 @@ class TransformConstraintTimeline extends CurveTimeline {
     List<TransformConstraint> tcs = skeleton.transformConstraints;
     TransformConstraint tc = tcs[transformConstraintIndex];
     TransformConstraintData data = tc.data;
-    double rot = 0.0; // rotate
-    double tra = 0.0; // translate
-    double sca = 0.0; // scale
-    double she = 0.0; // shear
+    double rot = 0; // rotate
+    double tra = 0; // translate
+    double sca = 0; // scale
+    double she = 0; // shear
 
     if (time < frames[0]) {
       // Time is before first frame.

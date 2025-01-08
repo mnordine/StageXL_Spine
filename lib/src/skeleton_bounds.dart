@@ -35,10 +35,10 @@ class SkeletonBounds {
   final List<Float32List> verticesList = [];
   final List<ByteBuffer> _byteBuffers = [];
 
-  double minX = 0.0;
-  double minY = 0.0;
-  double maxX = 0.0;
-  double maxY = 0.0;
+  double minX = 0;
+  double minY = 0;
+  double maxX = 0;
+  double maxY = 0;
 
   double get width => maxX - minX;
   double get height => maxY - minY;

@@ -64,8 +64,8 @@ class IkConstraintTimeline extends CurveTimeline {
       double alpha, MixPose pose, MixDirection direction) {
     IkConstraint constraint = skeleton.ikConstraints[ikConstraintIndex];
     IkConstraintData data = constraint.data;
-    double m = 0.0;
-    double b = 0.0;
+    double m = 0;
+    double b = 0;
 
     if (time < frames[0]) {
       // Time is before first frame.

@@ -97,8 +97,8 @@ class VertexAttachment extends Attachment {
       }
 
       for (int i = 0; i < count; i += 2, wi += stride) {
-        double x = 0.0;
-        double y = 0.0;
+        double x = 0;
+        double y = 0;
         int boneCount = bones[bi++];
         int boneFinal = bi + boneCount;
         for (; bi < boneFinal; bi += 1, vi += 3) {
@@ -126,8 +126,8 @@ class VertexAttachment extends Attachment {
       }
 
       for (int i = 0; i < count; i += 2, wi += stride) {
-        double x = 0.0;
-        double y = 0.0;
+        double x = 0;
+        double y = 0;
         int boneCount = bones[bi++];
         int boneFinal = bi + boneCount;
         for (; bi < boneFinal; bi += 1, vi += 3, di += 2) {

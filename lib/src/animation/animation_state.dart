@@ -35,7 +35,7 @@ class AnimationState extends EventDispatcher {
   static const int first = 1;
   static const int dip = 2;
   static const int dipMix = 3;
-  static final Animation _emptyAnimation = Animation("<empty>", [], 0.0);
+  static final Animation _emptyAnimation = Animation("<empty>", [], 0);
 
   final AnimationStateData data;
   final List<TrackEntry?> _tracks = [];
@@ -46,7 +46,7 @@ class AnimationState extends EventDispatcher {
 
   bool _eventDispatchDisabled = false;
   bool _animationsChanged = false;
-  double timeScale = 1.0;
+  double timeScale = 1;
 
   //----------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ class AnimationState extends EventDispatcher {
       if (mix == 1.0) {
         for (int tl = 0; tl < timelines.length; tl++) {
           timelines[tl].apply(
-              skeleton, animationLast, animationTime, events, 1.0, MixPose.setup, MixDirection.In);
+              skeleton, animationLast, animationTime, events, 1, MixPose.setup, MixDirection.In);
         }
       } else {
         var timelineData = current.timelineData;
@@ -228,7 +228,7 @@ class AnimationState extends EventDispatcher {
     TrackEntry from = to.mixingFrom!;
     if (from.mixingFrom != null) _applyMixingFrom(from, skeleton, currentPose);
 
-    double mix = 0.0;
+    double mix = 0;
     if (to.mixDuration == 0.0) {
       // Single frame mix to undo mixingFrom changes.
       mix = 1.0;
@@ -257,7 +257,7 @@ class AnimationState extends EventDispatcher {
     MixPose pose;
     double alphaDip = from.alpha * to.interruptAlpha;
     double alphaMix = alphaDip * (1.0 - mix);
-    double alpha = 0.0;
+    double alpha = 0;
     from.totalAlpha = 0.0;
 
     for (int i = 0; i < timelines.length; i++) {
@@ -311,13 +311,13 @@ class AnimationState extends EventDispatcher {
     }
 
     if (alpha == 1.0) {
-      timeline.apply(skeleton, 0.0, time, null, 1.0, pose, MixDirection.In);
+      timeline.apply(skeleton, 0, time, null, 1, pose, MixDirection.In);
       return;
     }
 
     Float32List frames = timeline.frames;
     Bone bone = skeleton.bones[timeline.boneIndex];
-    double r2 = 0.0;
+    double r2 = 0;
 
     if (time < frames[0]) {
       if (pose == MixPose.setup) bone.rotation = bone.data.rotation;

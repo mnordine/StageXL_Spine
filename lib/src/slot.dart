@@ -34,15 +34,15 @@ class Slot {
   final SlotData data;
   final Bone bone;
 
-  SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
+  SpineColor color = SpineColor(1, 1, 1, 1);
   SpineColor? darkColor;
 
   Attachment? _attachment;
-  double _attachmentTime = 0.0;
+  double _attachmentTime = 0;
   Float32List attachmentVertices = Float32List(0);
 
   Slot(this.data, this.bone) {
-    darkColor = data.darkColor == null ? null : SpineColor(1.0, 1.0, 1.0, 1.0);
+    darkColor = data.darkColor == null ? null : SpineColor(1, 1, 1, 1);
     setToSetupPose();
   }
 

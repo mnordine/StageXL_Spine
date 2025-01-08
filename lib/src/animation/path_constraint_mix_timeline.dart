@@ -65,8 +65,8 @@ class PathConstraintMixTimeline extends CurveTimeline {
       double alpha, MixPose pose, MixDirection direction) {
     PathConstraint pc = skeleton.pathConstraints[pathConstraintIndex];
     PathConstraintData data = pc.data;
-    double rot = 0.0;
-    double tra = 0.0;
+    double rot = 0;
+    double tra = 0;
 
     if (time < frames[0]) {
       // Time is before first frame.

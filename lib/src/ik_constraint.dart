@@ -35,7 +35,7 @@ class IkConstraint implements Constraint {
   final IkConstraintData data;
   final Bone target;
 
-  double mix = 1.0;
+  double mix = 1;
   int bendDirection = 0;
 
   IkConstraint(this.data, Skeleton skeleton) : target = skeleton.findBone(data.target.name)! {
@@ -130,9 +130,9 @@ class IkConstraint implements Constraint {
     }
 
     double cx = child.ax;
-    double cy = 0.0;
-    double cwx = 0.0;
-    double cwy = 0.0;
+    double cy = 0;
+    double cwx = 0;
+    double cwy = 0;
     double a = parent.a;
     double b = parent.b;
     double c = parent.c;
@@ -165,8 +165,8 @@ class IkConstraint implements Constraint {
     double dy = (y * a - x * c) * id - py;
     double l1 = math.sqrt(dx * dx + dy * dy);
     double l2 = child.data.length * csx;
-    double a1 = 0.0;
-    double a2 = 0.0;
+    double a1 = 0;
+    double a2 = 0;
 
     outer:
     if (u) {
@@ -210,11 +210,11 @@ class IkConstraint implements Constraint {
       double minAngle = math.pi;
       double minX = l1 - a;
       double minDist = minX * minX;
-      double minY = 0.0;
-      double maxAngle = 0.0;
+      double minY = 0;
+      double maxAngle = 0;
       double maxX = l1 + a;
       double maxDist = maxX * maxX;
-      double maxY = 0.0;
+      double maxY = 0;
 
       c = -a * l1 / (aa - bb);
       if (c >= -1.0 && c <= 1.0) {
@@ -249,7 +249,7 @@ class IkConstraint implements Constraint {
     double rotation = parent.arotation;
     a1 = _wrapRotation(_toDeg(a1 - os) + os1 - rotation);
     parent.updateWorldTransformWith(
-        px, py, rotation + a1 * alpha, parent.ascaleX, parent.ascaleY, 0.0, 0.0);
+        px, py, rotation + a1 * alpha, parent.ascaleX, parent.ascaleY, 0, 0);
     rotation = child.arotation;
     a2 = _wrapRotation((_toDeg(a2 + os) - child.ashearX) * s2 + os2 - rotation);
     child.updateWorldTransformWith(

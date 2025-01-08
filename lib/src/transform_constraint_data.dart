@@ -40,16 +40,16 @@ class TransformConstraintData {
   bool relative = false;
   bool local = false;
 
-  double translateMix = 0.0;
-  double rotateMix = 0.0;
-  double scaleMix = 0.0;
-  double shearMix = 0.0;
-  double offsetRotation = 0.0;
-  double offsetX = 0.0;
-  double offsetY = 0.0;
-  double offsetScaleX = 0.0;
-  double offsetScaleY = 0.0;
-  double offsetShearY = 0.0;
+  double translateMix = 0;
+  double rotateMix = 0;
+  double scaleMix = 0;
+  double shearMix = 0;
+  double offsetRotation = 0;
+  double offsetX = 0;
+  double offsetY = 0;
+  double offsetScaleX = 0;
+  double offsetScaleY = 0;
+  double offsetShearY = 0;
 
   TransformConstraintData(this.name);
 

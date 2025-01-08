@@ -61,9 +61,9 @@ class SkeletonLoader {
     if (skeletonMap != null) {
       skeletonData.version = _getString(skeletonMap, "spine", "")!;
       skeletonData.hash = _getString(skeletonMap, "hash", "")!;
-      skeletonData.width = _getDouble(skeletonMap, "width", 0.0);
-      skeletonData.height = _getDouble(skeletonMap, "height", 0.0);
-      skeletonData.fps = _getDouble(skeletonMap, "fps", 0.0);
+      skeletonData.width = _getDouble(skeletonMap, "width", 0);
+      skeletonData.height = _getDouble(skeletonMap, "height", 0);
+      skeletonData.fps = _getDouble(skeletonMap, "fps", 0);
       skeletonData.imagesPath = _getString(skeletonMap, "images", "")!;
     }
 
@@ -86,14 +86,14 @@ class SkeletonLoader {
       var boneData = BoneData(boneIndex, boneName, parent);
       var transformMode = "TransformMode.${_getString(boneMap, "transform", "normal")!}";
 
-      boneData.length = _getDouble(boneMap, "length", 0.0);
-      boneData.x = _getDouble(boneMap, "x", 0.0);
-      boneData.y = _getDouble(boneMap, "y", 0.0);
-      boneData.rotation = _getDouble(boneMap, "rotation", 0.0);
-      boneData.scaleX = _getDouble(boneMap, "scaleX", 1.0);
-      boneData.scaleY = _getDouble(boneMap, "scaleY", 1.0);
-      boneData.shearX = _getDouble(boneMap, "shearX", 0.0);
-      boneData.shearY = _getDouble(boneMap, "shearY", 0.0);
+      boneData.length = _getDouble(boneMap, "length", 0);
+      boneData.x = _getDouble(boneMap, "x", 0);
+      boneData.y = _getDouble(boneMap, "y", 0);
+      boneData.rotation = _getDouble(boneMap, "rotation", 0);
+      boneData.scaleX = _getDouble(boneMap, "scaleX", 1);
+      boneData.scaleY = _getDouble(boneMap, "scaleY", 1);
+      boneData.shearX = _getDouble(boneMap, "shearX", 0);
+      boneData.shearY = _getDouble(boneMap, "shearY", 0);
       boneData.transformMode =
           TransformMode.values.firstWhere((e) => e.toString() == transformMode);
       skeletonData.bones.add(boneData);
@@ -117,7 +117,7 @@ class SkeletonLoader {
 
       if (slotMap.containsKey("dark")) {
         slotData.darkColor =
-          SpineColor(1.0, 1.0, 1.0, 0.0)..setFromString(_getString(slotMap, "dark", "FFFFFF")!);
+          SpineColor(1, 1, 1, 0)..setFromString(_getString(slotMap, "dark", "FFFFFF")!);
       }
 
       switch (_getString(slotMap, "blend", "normal")) {
@@ -163,7 +163,7 @@ class SkeletonLoader {
       constraintData.target = target;
       constraintData.order = _getInt(constraintMap, "order", 0);
       constraintData.bendDirection = _getBool(constraintMap, "bendPositive", true) ? 1 : -1;
-      constraintData.mix = _getDouble(constraintMap, "mix", 1.0);
+      constraintData.mix = _getDouble(constraintMap, "mix", 1);
 
       skeletonData.ikConstraints.add(constraintData);
     }
@@ -194,16 +194,16 @@ class SkeletonLoader {
       constraintData.local = _getBool(constraintMap, "local", false);
       constraintData.relative = _getBool(constraintMap, "relative", false);
       constraintData.order = _getInt(constraintMap, "order", 0);
-      constraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0.0);
-      constraintData.offsetX = _getDouble(constraintMap, "x", 0.0);
-      constraintData.offsetY = _getDouble(constraintMap, "y", 0.0);
-      constraintData.offsetScaleX = _getDouble(constraintMap, "scaleX", 0.0);
-      constraintData.offsetScaleY = _getDouble(constraintMap, "scaleY", 0.0);
-      constraintData.offsetShearY = _getDouble(constraintMap, "shearY", 0.0);
-      constraintData.rotateMix = _getDouble(constraintMap, "rotateMix", 1.0);
-      constraintData.translateMix = _getDouble(constraintMap, "translateMix", 1.0);
-      constraintData.scaleMix = _getDouble(constraintMap, "scaleMix", 1.0);
-      constraintData.shearMix = _getDouble(constraintMap, "shearMix", 1.0);
+      constraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0);
+      constraintData.offsetX = _getDouble(constraintMap, "x", 0);
+      constraintData.offsetY = _getDouble(constraintMap, "y", 0);
+      constraintData.offsetScaleX = _getDouble(constraintMap, "scaleX", 0);
+      constraintData.offsetScaleY = _getDouble(constraintMap, "scaleY", 0);
+      constraintData.offsetShearY = _getDouble(constraintMap, "shearY", 0);
+      constraintData.rotateMix = _getDouble(constraintMap, "rotateMix", 1);
+      constraintData.translateMix = _getDouble(constraintMap, "translateMix", 1);
+      constraintData.scaleMix = _getDouble(constraintMap, "scaleMix", 1);
+      constraintData.shearMix = _getDouble(constraintMap, "shearMix", 1);
 
       skeletonData.transformConstraints.add(constraintData);
     }
@@ -242,11 +242,11 @@ class SkeletonLoader {
           SpacingMode.values.firstWhere((e) => e == spacingMode);
       pathConstraintData.rotateMode =
           RotateMode.values.firstWhere((e) => e.toString() == rotateMode);
-      pathConstraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0.0);
-      pathConstraintData.position = _getDouble(constraintMap, "position", 0.0);
-      pathConstraintData.spacing = _getDouble(constraintMap, "spacing", 0.0);
-      pathConstraintData.rotateMix = _getDouble(constraintMap, "rotateMix", 1.0);
-      pathConstraintData.translateMix = _getDouble(constraintMap, "translateMix", 1.0);
+      pathConstraintData.offsetRotation = _getDouble(constraintMap, "rotation", 0);
+      pathConstraintData.position = _getDouble(constraintMap, "position", 0);
+      pathConstraintData.spacing = _getDouble(constraintMap, "spacing", 0);
+      pathConstraintData.rotateMix = _getDouble(constraintMap, "rotateMix", 1);
+      pathConstraintData.translateMix = _getDouble(constraintMap, "translateMix", 1);
 
       skeletonData.pathConstraints.add(pathConstraintData);
     }
@@ -294,7 +294,7 @@ class SkeletonLoader {
       Map eventMap = events[eventName];
       var eventData = EventData(eventName);
       eventData.intValue = _getInt(eventMap, "int", 0);
-      eventData.floatValue = _getDouble(eventMap, "float", 0.0);
+      eventData.floatValue = _getDouble(eventMap, "float", 0);
       eventData.stringValue = _getString(eventMap, "string", null);
       skeletonData.events.add(eventData);
     }
@@ -325,13 +325,13 @@ class SkeletonLoader {
         var region = attachmentLoader.newRegionAttachment(skin, name, path);
         if (region == null) return null;
 
-        region.x = _getDouble(map, "x", 0.0);
-        region.y = _getDouble(map, "y", 0.0);
-        region.scaleX = _getDouble(map, "scaleX", 1.0);
-        region.scaleY = _getDouble(map, "scaleY", 1.0);
-        region.rotation = _getDouble(map, "rotation", 0.0);
-        region.width = _getDouble(map, "width", 0.0);
-        region.height = _getDouble(map, "height", 0.0);
+        region.x = _getDouble(map, "x", 0);
+        region.y = _getDouble(map, "y", 0);
+        region.scaleX = _getDouble(map, "scaleX", 1);
+        region.scaleY = _getDouble(map, "scaleY", 1);
+        region.rotation = _getDouble(map, "rotation", 0);
+        region.width = _getDouble(map, "width", 0);
+        region.height = _getDouble(map, "height", 0);
         region.color.setFromString(_getString(map, "color", "FFFFFFFF")!);
         region.update();
 
@@ -347,8 +347,8 @@ class SkeletonLoader {
         if (mesh == null) return null;
 
         mesh.color.setFromString(_getString(map, "color", "FFFFFFFF")!);
-        mesh.width = _getDouble(map, "width", 0.0);
-        mesh.height = _getDouble(map, "height", 0.0);
+        mesh.width = _getDouble(map, "width", 0);
+        mesh.height = _getDouble(map, "height", 0);
 
         var parentName = _getString(map, "parent", null);
 
@@ -396,9 +396,9 @@ class SkeletonLoader {
         var point = attachmentLoader.newPointAttachment(skin, name);
         if (point == null) return null;
 
-        point.x = _getDouble(map, "x", 0.0);
-        point.y = _getDouble(map, "y", 0.0);
-        point.rotation = _getDouble(map, "rotation", 0.0);
+        point.x = _getDouble(map, "x", 0);
+        point.y = _getDouble(map, "y", 0);
+        point.rotation = _getDouble(map, "rotation", 0);
         point.color.setFromString(_getString(map, "color", "FFFFFFFF")!);
         return point;
 
@@ -454,7 +454,7 @@ class SkeletonLoader {
 
   void _readAnimation(Map map, String name, SkeletonData skeletonData) {
     List<Timeline> timelines = [];
-    double duration = 0.0;
+    double duration = 0;
 
     //-------------------------------------
 
@@ -473,7 +473,7 @@ class SkeletonLoader {
 
           int frameIndex = 0;
           for (Map valueMap in values) {
-            var time = _getDouble(valueMap, "time", 0.0);
+            var time = _getDouble(valueMap, "time", 0);
             var name = _getString(valueMap, "name", null);
             attachmentTimeline.setFrame(frameIndex, time, name);
             frameIndex++;
@@ -488,8 +488,8 @@ class SkeletonLoader {
 
           int frameIndex = 0;
           for (Map valueMap in values) {
-            double time = _getDouble(valueMap, "time", 0.0);
-            SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
+            double time = _getDouble(valueMap, "time", 0);
+            SpineColor color = SpineColor(1, 1, 1, 1);
             color.setFromString(_getString(valueMap, "color", "FFFFFFFF")!);
             colorTimeline.setFrame(frameIndex, time, color.r, color.g, color.b, color.a);
             _readCurve(valueMap, colorTimeline, frameIndex);
@@ -505,9 +505,9 @@ class SkeletonLoader {
 
           int frameIndex = 0;
           for (Map valueMap in values) {
-            var time = _getDouble(valueMap, "time", 0.0);
-            var cl = SpineColor(1.0, 1.0, 1.0, 1.0);
-            var cd = SpineColor(1.0, 1.0, 1.0, 1.0);
+            var time = _getDouble(valueMap, "time", 0);
+            var cl = SpineColor(1, 1, 1, 1);
+            var cd = SpineColor(1, 1, 1, 1);
             cl.setFromString(_getString(valueMap, "light", "FFFFFFFF")!);
             cd.setFromString(_getString(valueMap, "dark", "FFFFFFFF")!);
             twoColorTimeline.setFrame(frameIndex, time, cl.r, cl.g, cl.b, cl.a, cd.r, cd.g, cd.b);
@@ -545,8 +545,8 @@ class SkeletonLoader {
 
           int frameIndex = 0;
           for (Map valueMap in values) {
-            double time = _getDouble(valueMap, "time", 0.0);
-            double degrees = _getDouble(valueMap, "angle", 0.0);
+            double time = _getDouble(valueMap, "time", 0);
+            double degrees = _getDouble(valueMap, "angle", 0);
             rotateTimeline.setFrame(frameIndex, time, degrees);
             _readCurve(valueMap, rotateTimeline, frameIndex);
             frameIndex++;
@@ -572,9 +572,9 @@ class SkeletonLoader {
 
           int frameIndex = 0;
           for (Map valueMap in values) {
-            double x = _getDouble(valueMap, "x", 0.0);
-            double y = _getDouble(valueMap, "y", 0.0);
-            double time = _getDouble(valueMap, "time", 0.0);
+            double x = _getDouble(valueMap, "x", 0);
+            double y = _getDouble(valueMap, "y", 0);
+            double time = _getDouble(valueMap, "time", 0);
             translateTimeline.setFrame(frameIndex, time, x, y);
             _readCurve(valueMap, translateTimeline, frameIndex);
             frameIndex++;
@@ -602,8 +602,8 @@ class SkeletonLoader {
       ikTimeline.ikConstraintIndex = skeletonData.ikConstraints.indexOf(ikConstraint);
       int frameIndex = 0;
       for (Map valueMap in valueMaps) {
-        double time = _getDouble(valueMap, "time", 0.0);
-        double mix = _getDouble(valueMap, "mix", 1.0);
+        double time = _getDouble(valueMap, "time", 0);
+        double mix = _getDouble(valueMap, "mix", 1);
         int bendDirection = _getBool(valueMap, "bendPositive", true) ? 1 : -1;
         ikTimeline.setFrame(frameIndex, time, mix, bendDirection);
         _readCurve(valueMap, ikTimeline, frameIndex);
@@ -627,11 +627,11 @@ class SkeletonLoader {
           skeletonData.transformConstraints.indexOf(transformConstraint);
       int frameIndex = 0;
       for (Map valueMap in valueMaps) {
-        double rotateMix = _getDouble(valueMap, "rotateMix", 1.0);
-        double translateMix = _getDouble(valueMap, "translateMix", 1.0);
-        double scaleMix = _getDouble(valueMap, "scaleMix", 1.0);
-        double shearMix = _getDouble(valueMap, "shearMix", 1.0);
-        double time = _getDouble(valueMap, "time", 0.0);
+        double rotateMix = _getDouble(valueMap, "rotateMix", 1);
+        double translateMix = _getDouble(valueMap, "translateMix", 1);
+        double scaleMix = _getDouble(valueMap, "scaleMix", 1);
+        double shearMix = _getDouble(valueMap, "shearMix", 1);
+        double time = _getDouble(valueMap, "time", 0);
         transformTimeline.setFrame(frameIndex, time, rotateMix, translateMix, scaleMix, shearMix);
         _readCurve(valueMap, transformTimeline, frameIndex);
         frameIndex++;
@@ -668,8 +668,8 @@ class SkeletonLoader {
           int frameIndex = 0;
 
           for (Map valueMap in valueMaps) {
-            double value = _getDouble(valueMap, timelineName, 0.0);
-            double time = _getDouble(valueMap, "time", 0.0);
+            double value = _getDouble(valueMap, timelineName, 0);
+            double time = _getDouble(valueMap, "time", 0);
             pathTimeline.setFrame(frameIndex, time, value);
             _readCurve(valueMap, pathTimeline, frameIndex);
             frameIndex++;
@@ -686,9 +686,9 @@ class SkeletonLoader {
           int frameIndex = 0;
 
           for (Map valueMap in valueMaps) {
-            double rotateMix = _getDouble(valueMap, "rotateMix", 1.0);
-            double translateMix = _getDouble(valueMap, "translateMix", 1.0);
-            double time = _getDouble(valueMap, "time", 0.0);
+            double rotateMix = _getDouble(valueMap, "rotateMix", 1);
+            double translateMix = _getDouble(valueMap, "translateMix", 1);
+            double time = _getDouble(valueMap, "time", 0);
             pathMixTimeline.setFrame(frameIndex, time, rotateMix, translateMix);
             _readCurve(valueMap, pathMixTimeline, frameIndex);
             frameIndex++;
@@ -746,7 +746,7 @@ class SkeletonLoader {
                 }
               }
             }
-            var time = _getDouble(valueMap, "time", 0.0);
+            var time = _getDouble(valueMap, "time", 0);
             deformTimeline.setFrame(frameIndex, time, deform);
             _readCurve(valueMap, deformTimeline, frameIndex);
             frameIndex++;
@@ -768,7 +768,7 @@ class SkeletonLoader {
       int frameIndex = 0;
 
       for (Map drawOrderMap in drawOrderValues) {
-        double time = _getDouble(drawOrderMap, "time", 0.0);
+        double time = _getDouble(drawOrderMap, "time", 0);
         Int16List? drawOrder;
 
         if (drawOrderMap.containsKey("offsets")) {
@@ -825,7 +825,7 @@ class SkeletonLoader {
       for (Map eventMap in eventsMap) {
         var eventData = skeletonData.findEvent(eventMap["name"]);
         if (eventData == null) throw StateError("Event not found: ${eventMap["name"]}");
-        var eventTime = _getDouble(eventMap, "time", 0.0);
+        var eventTime = _getDouble(eventMap, "time", 0);
         var event = SpineEvent(
             eventTime,
             eventData,

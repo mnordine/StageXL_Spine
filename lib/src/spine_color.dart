@@ -37,10 +37,10 @@ class SpineColor {
   //static final Color BLUE = new Color(0.0, 0.0, 1.0, 1.0);
   //static final Color MAGENTA = new Color(1.0, 0.0, 1.0, 1.0);
 
-  double r = 0.0;
-  double g = 0.0;
-  double b = 0.0;
-  double a = 0.0;
+  double r = 0;
+  double g = 0;
+  double b = 0;
+  double a = 0;
 
   SpineColor(this.r, this.g, this.b, [this.a = 0.0]);
 

@@ -37,7 +37,7 @@ class IkConstraintData {
   late final BoneData target;
   int bendDirection = 1;
   int order = 0;
-  double mix = 1.0;
+  double mix = 1;
 
   IkConstraintData(this.name);
 
