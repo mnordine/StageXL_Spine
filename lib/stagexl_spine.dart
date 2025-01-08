@@ -74,3 +74,5 @@ part 'src/stagexl/skeleton_animation.dart';
 part 'src/stagexl/skeleton_clipping.dart';
 part 'src/stagexl/skeleton_display_object.dart';
 part 'src/stagexl/texture_atlas_attachment_loader.dart';
+
+typedef Json = Map<String, Object?>;

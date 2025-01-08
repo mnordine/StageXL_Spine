@@ -34,7 +34,7 @@ part of stagexl_spine;
 ///
 class Skin {
   final String name;
-  final List<Map<String, Attachment>?> attachments = [];
+  final List<Map<String, Attachment?>?> attachments = [];
 
   Skin(this.name);
 
@@ -59,9 +59,9 @@ class Skin {
     for (Slot slot in skeleton.slots) {
       Attachment? slotAttachment = slot.attachment;
       if (slotAttachment != null && slotIndex < oldSkin.attachments.length) {
-        Map map = oldSkin.attachments[slotIndex] ?? {};
+        final map = oldSkin.attachments[slotIndex] ?? <String, Attachment?>{};
         for (var name in map.keys) {
-          Attachment skinAttachment = map[name];
+          final skinAttachment = map[name];
           if (slotAttachment == skinAttachment) {
             Attachment? attachment = getAttachment(slotIndex, name);
             if (attachment != null) slot.attachment = attachment;

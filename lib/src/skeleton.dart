@@ -227,7 +227,7 @@ class Skeleton {
   void _sortPathConstraintAttachment(Skin skin, int slotIndex, Bone slotBone) {
     var dict = skin.attachments[slotIndex];
     if (dict == null) return;
-    for (Attachment value in dict.values) {
+    for (Attachment value in dict.values.nonNulls) {
       _sortPathConstraintAttachment2(value, slotBone);
     }
   }
