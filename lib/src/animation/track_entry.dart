@@ -85,7 +85,7 @@ class TrackEntry extends EventDispatcher {
 
   double getAnimationTime() {
     if (loop) {
-      double duration = animationEnd - animationStart;
+      var duration = animationEnd - animationStart;
       if (duration == 0.0) return animationStart;
       return trackTime.remainder(duration) + animationStart;
     } else {
@@ -98,20 +98,20 @@ class TrackEntry extends EventDispatcher {
     var lastEntry = mixingFrom?.setTimelineData(this, mixingToArray, propertyIDs) ?? this;
     if (to != null) mixingToArray.removeLast();
 
-    int timelinesCount = animation.timelines.length;
+    var timelinesCount = animation.timelines.length;
 
     timelineData = List.filled(timelinesCount, 0);
     timelineDipMix = List.filled(timelinesCount, null);
 
     outer:
-    for (int i = 0; i < timelinesCount; i++) {
-      int id = animation.timelines[i].getPropertyId();
+    for (var i = 0; i < timelinesCount; i++) {
+      var id = animation.timelines[i].getPropertyId();
       if (propertyIDs.add(id) == false) {
         timelineData[i] = AnimationState.subsequent;
       } else if (to == null || to._hasTimeline(id) == false) {
         timelineData[i] = AnimationState.first;
       } else {
-        for (int ii = mixingToArray.length - 1; ii >= 0; ii--) {
+        for (var ii = mixingToArray.length - 1; ii >= 0; ii--) {
           var entry = mixingToArray[ii];
           if (entry._hasTimeline(id) == false) {
             if (entry.mixDuration > 0) {
@@ -130,7 +130,7 @@ class TrackEntry extends EventDispatcher {
 
   bool _hasTimeline(int id) {
     var timelines = animation.timelines;
-    for (int i = 0; i < timelines.length; i++) {
+    for (var i = 0; i < timelines.length; i++) {
       if (timelines[i].getPropertyId() == id) return true;
     }
     return false;

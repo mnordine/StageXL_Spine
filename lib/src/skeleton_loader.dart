@@ -58,7 +58,7 @@ class SkeletonLoader {
       throw ArgumentError('object must be a String or Map.');
     }
 
-    SkeletonData skeletonData = SkeletonData();
+    var skeletonData = SkeletonData();
     skeletonData.name = name;
 
     // Skeleton
@@ -79,7 +79,7 @@ class SkeletonLoader {
     for (final boneMap in root['bones'].getList<Json>()) {
       BoneData? parent;
 
-      String? parentName = _getString(boneMap, 'parent', null);
+      var parentName = _getString(boneMap, 'parent', null);
       if (parentName != null) {
         parent = skeletonData.findBone(parentName);
         if (parent == null) throw StateError('Parent bone not found: $parentName');
@@ -118,7 +118,7 @@ class SkeletonLoader {
       if (boneData == null) throw StateError('Slot bone not found: $boneName');
 
       var slotIndex = skeletonData.slots.length;
-      SlotData slotData = SlotData(slotIndex, slotName, boneData);
+      var slotData = SlotData(slotIndex, slotName, boneData);
       slotData.color.setFromString(_getString(slotMap, 'color', 'FFFFFFFF')!);
       slotData.attachmentName = _getString(slotMap, 'attachment', null);
 
@@ -220,7 +220,7 @@ class SkeletonLoader {
 
       var pathConstraintData = PathConstraintData(constraintName);
 
-      for (String boneName in constraintMap['bones'].getList<String>()) {
+      for (var boneName in constraintMap['bones'].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('Path constraint bone not found: $boneName');
         pathConstraintData.bones.add(bone);
@@ -255,13 +255,13 @@ class SkeletonLoader {
 
     final skins = root['skins'].json;
 
-    for (String skinName in skins.keys) {
+    for (var skinName in skins.keys) {
       var skinMap = skins[skinName]! as Json;
       var skin = Skin(skinName);
-      for (String slotName in skinMap.keys) {
+      for (var slotName in skinMap.keys) {
         var slotIndex = skeletonData.findSlotIndex(slotName);
         var slotEntry = skinMap[slotName]! as Json;
-        for (String attachmentName in slotEntry.keys) {
+        for (var attachmentName in slotEntry.keys) {
           final map = slotEntry[attachmentName]! as Json;
           var attachment = readAttachment(map, skin, slotIndex, attachmentName, skeletonData);
           if (attachment != null) skin.addAttachment(slotIndex, attachmentName, attachment);
@@ -290,7 +290,7 @@ class SkeletonLoader {
 
     final events = root['events'].json;
 
-    for (String eventName in events.keys) {
+    for (var eventName in events.keys) {
       final eventMap = events[eventName]! as Json;
       var eventData = EventData(eventName);
       eventData.intValue = _getInt(eventMap, 'int', 0);
@@ -361,7 +361,7 @@ class SkeletonLoader {
           return mesh;
         }
 
-        Float32List uvs = _getFloat32List(map, 'uvs');
+        var uvs = _getFloat32List(map, 'uvs');
         _readVertices(map, mesh, uvs.length);
 
         mesh.triangles = _getInt16List(map, 'triangles');
@@ -376,7 +376,7 @@ class SkeletonLoader {
       case AttachmentType.boundingbox:
         var box = attachmentLoader.newBoundingBoxAttachment(skin, name);
         if (box == null) return null;
-        int vertexCount = _getInt(map, 'vertexCount', 0);
+        var vertexCount = _getInt(map, 'vertexCount', 0);
         _readVertices(map, box, vertexCount << 1);
         return box;
 
@@ -388,7 +388,7 @@ class SkeletonLoader {
         path.constantSpeed = _getBool(map, 'constantSpeed', true);
         path.lengths = _getFloat32List(map, 'lengths');
 
-        int vertexCount = _getInt(map, 'vertexCount', 0);
+        var vertexCount = _getInt(map, 'vertexCount', 0);
         _readVertices(map, path, vertexCount << 1);
 
         return path;
@@ -436,8 +436,8 @@ class SkeletonLoader {
       return;
     }
 
-    for (int i = 0; i < vertices.length;) {
-      int boneCount = vertices[i++].toInt();
+    for (var i = 0; i < vertices.length;) {
+      var boneCount = vertices[i++].toInt();
       bones.add(boneCount);
       for (var nn = i + boneCount * 4; i < nn; i += 4) {
         bones.add(vertices[i + 0].toInt());
@@ -454,7 +454,7 @@ class SkeletonLoader {
   //---------------------------------------------------------------------------
 
   void _readAnimation(Json map, String name, SkeletonData skeletonData) {
-    List<Timeline> timelines = [];
+    var timelines = <Timeline>[];
     double duration = 0;
 
     //-------------------------------------
@@ -463,16 +463,16 @@ class SkeletonLoader {
 
     for (final slotName in slots.keys) {
       final slotMap = slots[slotName]! as Json;
-      int slotIndex = skeletonData.findSlotIndex(slotName);
+      var slotIndex = skeletonData.findSlotIndex(slotName);
 
       for (final timelineName in slotMap.keys) {
         final values = slotMap[timelineName].getList<Json>();
 
         if (timelineName == 'attachment') {
-          AttachmentTimeline attachmentTimeline = AttachmentTimeline(values.length);
+          var attachmentTimeline = AttachmentTimeline(values.length);
           attachmentTimeline.slotIndex = slotIndex;
 
-          int frameIndex = 0;
+          var frameIndex = 0;
           for (final valueMap in values) {
             var time = _getDouble(valueMap, 'time', 0);
             var name = _getString(valueMap, 'name', null);
@@ -484,13 +484,13 @@ class SkeletonLoader {
           duration =
               math.max(duration, attachmentTimeline.frames[attachmentTimeline.frameCount - 1]);
         } else if (timelineName == 'color') {
-          ColorTimeline colorTimeline = ColorTimeline(values.length);
+          var colorTimeline = ColorTimeline(values.length);
           colorTimeline.slotIndex = slotIndex;
 
-          int frameIndex = 0;
+          var frameIndex = 0;
           for (final valueMap in values) {
-            double time = _getDouble(valueMap, 'time', 0);
-            SpineColor color = SpineColor(1, 1, 1, 1);
+            var time = _getDouble(valueMap, 'time', 0);
+            var color = SpineColor(1, 1, 1, 1);
             color.setFromString(_getString(valueMap, 'color', 'FFFFFFFF')!);
             colorTimeline.setFrame(frameIndex, time, color.r, color.g, color.b, color.a);
             _readCurve(valueMap, colorTimeline, frameIndex);
@@ -504,7 +504,7 @@ class SkeletonLoader {
           var twoColorTimeline = TwoColorTimeline(values.length);
           twoColorTimeline.slotIndex = slotIndex;
 
-          int frameIndex = 0;
+          var frameIndex = 0;
           for (final valueMap in values) {
             var time = _getDouble(valueMap, 'time', 0);
             var cl = SpineColor(1, 1, 1, 1);
@@ -531,23 +531,23 @@ class SkeletonLoader {
 
     final bones = map['bones'].json;
 
-    for (String boneName in bones.keys) {
-      int boneIndex = skeletonData.findBoneIndex(boneName);
+    for (var boneName in bones.keys) {
+      var boneIndex = skeletonData.findBoneIndex(boneName);
       if (boneIndex == -1) throw StateError('Bone not found: $boneName');
 
       final boneMap = bones[boneName]! as Json;
 
-      for (String timelineName in boneMap.keys) {
+      for (var timelineName in boneMap.keys) {
         final values = boneMap[timelineName].getList<Json>();
 
         if (timelineName == 'rotate') {
-          RotateTimeline rotateTimeline = RotateTimeline(values.length);
+          var rotateTimeline = RotateTimeline(values.length);
           rotateTimeline.boneIndex = boneIndex;
 
-          int frameIndex = 0;
+          var frameIndex = 0;
           for (final valueMap in values) {
-            double time = _getDouble(valueMap, 'time', 0);
-            double degrees = _getDouble(valueMap, 'angle', 0);
+            var time = _getDouble(valueMap, 'time', 0);
+            var degrees = _getDouble(valueMap, 'angle', 0);
             rotateTimeline.setFrame(frameIndex, time, degrees);
             _readCurve(valueMap, rotateTimeline, frameIndex);
             frameIndex++;
@@ -571,11 +571,11 @@ class SkeletonLoader {
 
           translateTimeline.boneIndex = boneIndex;
 
-          int frameIndex = 0;
+          var frameIndex = 0;
           for (final valueMap in values) {
-            double x = _getDouble(valueMap, 'x', 0);
-            double y = _getDouble(valueMap, 'y', 0);
-            double time = _getDouble(valueMap, 'time', 0);
+            var x = _getDouble(valueMap, 'x', 0);
+            var y = _getDouble(valueMap, 'y', 0);
+            var time = _getDouble(valueMap, 'time', 0);
             translateTimeline.setFrame(frameIndex, time, x, y);
             _readCurve(valueMap, translateTimeline, frameIndex);
             frameIndex++;
@@ -596,16 +596,16 @@ class SkeletonLoader {
 
     final ikMap = map['ik'].json;
 
-    for (String ikConstraintName in ikMap.keys) {
-      IkConstraintData ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
+    for (var ikConstraintName in ikMap.keys) {
+      var ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
       final valueMaps = ikMap[ikConstraintName].getList<Json>();
-      IkConstraintTimeline ikTimeline = IkConstraintTimeline(valueMaps.length);
+      var ikTimeline = IkConstraintTimeline(valueMaps.length);
       ikTimeline.ikConstraintIndex = skeletonData.ikConstraints.indexOf(ikConstraint);
-      int frameIndex = 0;
+      var frameIndex = 0;
       for (final valueMap in valueMaps) {
-        double time = _getDouble(valueMap, 'time', 0);
-        double mix = _getDouble(valueMap, 'mix', 1);
-        int bendDirection = _getBool(valueMap, 'bendPositive', true) ? 1 : -1;
+        var time = _getDouble(valueMap, 'time', 0);
+        var mix = _getDouble(valueMap, 'mix', 1);
+        var bendDirection = _getBool(valueMap, 'bendPositive', true) ? 1 : -1;
         ikTimeline.setFrame(frameIndex, time, mix, bendDirection);
         _readCurve(valueMap, ikTimeline, frameIndex);
         frameIndex++;
@@ -619,20 +619,20 @@ class SkeletonLoader {
 
     final transformMap = map['transform'].json;
 
-    for (String transformName in transformMap.keys) {
-      TransformConstraintData transformConstraint =
+    for (var transformName in transformMap.keys) {
+      var transformConstraint =
           skeletonData.findTransformConstraint(transformName)!;
       final valueMaps = transformMap[transformName].getList<Json>();
-      TransformConstraintTimeline transformTimeline = TransformConstraintTimeline(valueMaps.length);
+      var transformTimeline = TransformConstraintTimeline(valueMaps.length);
       transformTimeline.transformConstraintIndex =
           skeletonData.transformConstraints.indexOf(transformConstraint);
-      int frameIndex = 0;
+      var frameIndex = 0;
       for (final valueMap in valueMaps) {
-        double rotateMix = _getDouble(valueMap, 'rotateMix', 1);
-        double translateMix = _getDouble(valueMap, 'translateMix', 1);
-        double scaleMix = _getDouble(valueMap, 'scaleMix', 1);
-        double shearMix = _getDouble(valueMap, 'shearMix', 1);
-        double time = _getDouble(valueMap, 'time', 0);
+        var rotateMix = _getDouble(valueMap, 'rotateMix', 1);
+        var translateMix = _getDouble(valueMap, 'translateMix', 1);
+        var scaleMix = _getDouble(valueMap, 'scaleMix', 1);
+        var shearMix = _getDouble(valueMap, 'shearMix', 1);
+        var time = _getDouble(valueMap, 'time', 0);
         transformTimeline.setFrame(frameIndex, time, rotateMix, translateMix, scaleMix, shearMix);
         _readCurve(valueMap, transformTimeline, frameIndex);
         frameIndex++;
@@ -648,12 +648,12 @@ class SkeletonLoader {
 
     final pathsMaps = map['paths'].json;
 
-    for (String pathName in pathsMaps.keys) {
-      int index = skeletonData.findPathConstraintIndex(pathName);
+    for (var pathName in pathsMaps.keys) {
+      var index = skeletonData.findPathConstraintIndex(pathName);
       if (index == -1) throw StateError('Path constraint not found: $pathName');
 
       final pathMap = pathsMaps[pathName]! as Json;
-      for (String timelineName in pathMap.keys) {
+      for (var timelineName in pathMap.keys) {
         final valueMaps = pathMap[timelineName].getList<Json>();
 
         if (timelineName == 'position' || timelineName == 'spacing') {
@@ -666,11 +666,11 @@ class SkeletonLoader {
           }
 
           pathTimeline.pathConstraintIndex = index;
-          int frameIndex = 0;
+          var frameIndex = 0;
 
           for (final valueMap in valueMaps) {
-            double value = _getDouble(valueMap, timelineName, 0);
-            double time = _getDouble(valueMap, 'time', 0);
+            var value = _getDouble(valueMap, timelineName, 0);
+            var time = _getDouble(valueMap, 'time', 0);
             pathTimeline.setFrame(frameIndex, time, value);
             _readCurve(valueMap, pathTimeline, frameIndex);
             frameIndex++;
@@ -682,14 +682,14 @@ class SkeletonLoader {
               pathTimeline
                   .frames[(pathTimeline.frameCount - 1) * PathConstraintPositionTimeline._entries]);
         } else if (timelineName == 'mix') {
-          PathConstraintMixTimeline pathMixTimeline = PathConstraintMixTimeline(valueMaps.length);
+          var pathMixTimeline = PathConstraintMixTimeline(valueMaps.length);
           pathMixTimeline.pathConstraintIndex = index;
-          int frameIndex = 0;
+          var frameIndex = 0;
 
           for (final valueMap in valueMaps) {
-            double rotateMix = _getDouble(valueMap, 'rotateMix', 1);
-            double translateMix = _getDouble(valueMap, 'translateMix', 1);
-            double time = _getDouble(valueMap, 'time', 0);
+            var rotateMix = _getDouble(valueMap, 'rotateMix', 1);
+            var translateMix = _getDouble(valueMap, 'translateMix', 1);
+            var time = _getDouble(valueMap, 'time', 0);
             pathMixTimeline.setFrame(frameIndex, time, rotateMix, translateMix);
             _readCurve(valueMap, pathMixTimeline, frameIndex);
             frameIndex++;
@@ -708,25 +708,25 @@ class SkeletonLoader {
 
     final deformMap = map['deform'].json;
 
-    for (String skinName in deformMap.keys) {
-      Skin skin = skeletonData.findSkin(skinName)!;
+    for (var skinName in deformMap.keys) {
+      var skin = skeletonData.findSkin(skinName)!;
       final slotMap = deformMap[skinName]! as Json;
 
-      for (String slotName in slotMap.keys) {
-        int slotIndex = skeletonData.findSlotIndex(slotName);
+      for (var slotName in slotMap.keys) {
+        var slotIndex = skeletonData.findSlotIndex(slotName);
         final timelineMap = slotMap[slotName]! as Json;
 
-        for (String timelineName in timelineMap.keys) {
+        for (var timelineName in timelineMap.keys) {
           final valueMaps = timelineMap[timelineName].getList<Json>();
           var attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
           if (attachment == null) throw StateError('Deform attachment not found: $timelineName');
 
-          bool weighted = attachment.bones != null;
-          Float32List vertices = attachment.vertices;
-          int deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
-          int frameIndex = 0;
+          var weighted = attachment.bones != null;
+          var vertices = attachment.vertices;
+          var deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
+          var frameIndex = 0;
 
-          DeformTimeline deformTimeline = DeformTimeline(valueMaps.length, attachment);
+          var deformTimeline = DeformTimeline(valueMaps.length, attachment);
           deformTimeline.slotIndex = slotIndex;
 
           for (final valueMap in valueMaps) {
@@ -736,13 +736,13 @@ class SkeletonLoader {
               deform = weighted ? Float32List(deformLength) : vertices;
             } else {
               deform = Float32List(deformLength);
-              int start = _getInt(valueMap, 'offset', 0);
-              Float32List temp = _getFloat32List(valueMap, 'vertices');
-              for (int i = 0; i < temp.length; i++) {
+              var start = _getInt(valueMap, 'offset', 0);
+              var temp = _getFloat32List(valueMap, 'vertices');
+              for (var i = 0; i < temp.length; i++) {
                 deform[start + i] = temp[i];
               }
               if (!weighted) {
-                for (int i = 0; i < deformLength; i++) {
+                for (var i = 0; i < deformLength; i++) {
                   deform[i] += vertices[i];
                 }
               }
@@ -764,31 +764,31 @@ class SkeletonLoader {
     final drawOrderValues = (map['drawOrder'] ?? map['draworder']).getList<Json>();
 
     if (drawOrderValues.isNotEmpty) {
-      DrawOrderTimeline drawOrderTimeline = DrawOrderTimeline(drawOrderValues.length);
-      int slotCount = skeletonData.slots.length;
-      int frameIndex = 0;
+      var drawOrderTimeline = DrawOrderTimeline(drawOrderValues.length);
+      var slotCount = skeletonData.slots.length;
+      var frameIndex = 0;
 
       for (final drawOrderMap in drawOrderValues) {
-        double time = _getDouble(drawOrderMap, 'time', 0);
+        var time = _getDouble(drawOrderMap, 'time', 0);
         Int16List? drawOrder;
 
         if (drawOrderMap.containsKey('offsets')) {
           drawOrder = Int16List(slotCount);
-          for (int i = 0; i < drawOrder.length; i++) {
+          for (var i = 0; i < drawOrder.length; i++) {
             drawOrder[i] = -1;
           }
 
           final offsetMaps = drawOrderMap['offsets'].getList<Json>();
-          Int16List unchanged = Int16List(slotCount - offsetMaps.length);
-          int originalIndex = 0;
-          int unchangedIndex = 0;
+          var unchanged = Int16List(slotCount - offsetMaps.length);
+          var originalIndex = 0;
+          var unchangedIndex = 0;
 
           for (final offsetMap in offsetMaps) {
             var slotName = _getString(offsetMap, 'slot', null);
             if (slotName == null)
               continue;
 
-            int slotIndex = skeletonData.findSlotIndex(slotName);
+            var slotIndex = skeletonData.findSlotIndex(slotName);
             if (slotIndex == -1) throw StateError('Slot not found: $slotName');
             // Collect unchanged items.
             while (originalIndex != slotIndex) {
@@ -804,7 +804,7 @@ class SkeletonLoader {
           }
 
           // Fill in unchanged items.
-          for (int i = slotCount - 1; i >= 0; i--) {
+          for (var i = slotCount - 1; i >= 0; i--) {
             if (drawOrder[i] == -1) drawOrder[i] = unchanged[--unchangedIndex];
           }
         }
@@ -820,8 +820,8 @@ class SkeletonLoader {
 
     if (map.containsKey('events')) {
       final eventsMap = map['events'].getList<Json>();
-      EventTimeline eventTimeline = EventTimeline(eventsMap.length);
-      int frameIndex = 0;
+      var eventTimeline = EventTimeline(eventsMap.length);
+      var frameIndex = 0;
 
       for (final eventMap in eventsMap) {
         final name = eventMap['name'] as String?;

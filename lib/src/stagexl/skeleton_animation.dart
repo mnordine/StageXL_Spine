@@ -9,7 +9,7 @@ class SkeletonAnimation extends SkeletonDisplayObject implements Animatable {
 
   @override
   bool advanceTime(num time) {
-    double timeScaled = time * timeScale;
+    var timeScaled = time * timeScale;
     skeleton.update(timeScaled);
     state.update(timeScaled);
     state.apply(skeleton);

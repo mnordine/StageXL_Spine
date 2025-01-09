@@ -55,7 +55,7 @@ class SkeletonData {
   BoneData? findBone(String boneName) => bones.firstWhere((b) => b.name == boneName);
 
   int findBoneIndex(String boneName) {
-    for (int i = 0; i < bones.length; i++) {
+    for (var i = 0; i < bones.length; i++) {
       if (bones[i].name == boneName) return i;
     }
     return -1;
@@ -66,7 +66,7 @@ class SkeletonData {
   SlotData? findSlot(String slotName) => slots.firstWhere((s) => s.name == slotName);
 
   int findSlotIndex(String slotName) {
-    for (int i = 0; i < slots.length; i++) {
+    for (var i = 0; i < slots.length; i++) {
       if (slots[i].name == slotName) return i;
     }
     return -1;
@@ -93,7 +93,7 @@ class SkeletonData {
   TransformConstraintData? findTransformConstraint(String constraintName) => transformConstraints.firstWhere((t) => t.name == constraintName);
 
   int findTransformConstraintIndex(String constraintName) {
-    for (int i = 0; i < transformConstraints.length; i++) {
+    for (var i = 0; i < transformConstraints.length; i++) {
       if (transformConstraints[i].name == constraintName) return i;
     }
     return -1;
@@ -104,7 +104,7 @@ class SkeletonData {
   PathConstraintData? findPathConstraint(String constraintName) => pathConstraints.firstWhere((p) => p.name == constraintName);
 
   int findPathConstraintIndex(String constraintName) {
-    for (int i = 0; i < pathConstraints.length; i++) {
+    for (var i = 0; i < pathConstraints.length; i++) {
       if (pathConstraints[i].name == constraintName) return i;
     }
     return -1;

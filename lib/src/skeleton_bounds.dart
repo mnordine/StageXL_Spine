@@ -44,26 +44,26 @@ class SkeletonBounds {
   double get height => maxY - minY;
 
   void update(Skeleton skeleton, bool updateAabb) {
-    List<Slot> slots = skeleton.slots;
+    var slots = skeleton.slots;
 
-    for (int i = 0; i < verticesList.length; i++) {
+    for (var i = 0; i < verticesList.length; i++) {
       _byteBuffers.add(verticesList[i].buffer);
     }
 
     boundingBoxes.clear();
     verticesList.clear();
 
-    for (int i = 0; i < slots.length; i++) {
-      Slot slot = slots[i];
-      Attachment? attachment = slot.attachment;
+    for (var i = 0; i < slots.length; i++) {
+      var slot = slots[i];
+      var attachment = slot.attachment;
 
       if (attachment is BoundingBoxAttachment) {
-        BoundingBoxAttachment boundingBox = attachment;
+        var boundingBox = attachment;
         Float32List? vertices;
-        int verticesLength = boundingBox.worldVerticesLength;
-        int byteBufferLength = verticesLength << 2;
+        var verticesLength = boundingBox.worldVerticesLength;
+        var byteBufferLength = verticesLength << 2;
 
-        for (int i = 0; i < _byteBuffers.length; i++) {
+        for (var i = 0; i < _byteBuffers.length; i++) {
           var byteBuffer = _byteBuffers[i];
           if (byteBuffer.lengthInBytes >= byteBufferLength) {
             vertices = byteBuffer.asFloat32List(0, verticesLength);
@@ -91,16 +91,16 @@ class SkeletonBounds {
   }
 
   void aabbCompute() {
-    double minX = double.infinity;
-    double minY = double.infinity;
-    double maxX = double.negativeInfinity;
-    double maxY = double.negativeInfinity;
+    var minX = double.infinity;
+    var minY = double.infinity;
+    var maxX = double.negativeInfinity;
+    var maxY = double.negativeInfinity;
 
-    for (int i = 0; i < verticesList.length; i++) {
-      Float32List polygon = verticesList[i];
-      for (int ii = 0; ii < polygon.length - 1; ii += 2) {
-        double x = polygon[ii + 0];
-        double y = polygon[ii + 1];
+    for (var i = 0; i < verticesList.length; i++) {
+      var polygon = verticesList[i];
+      for (var ii = 0; ii < polygon.length - 1; ii += 2) {
+        var x = polygon[ii + 0];
+        var y = polygon[ii + 1];
         if (minX > x) minX = x;
         if (maxX < x) maxX = x;
         if (minY > y) minY = y;
@@ -126,15 +126,15 @@ class SkeletonBounds {
         (x1 >= maxX && x2 >= maxX) ||
         (y1 >= maxY && y2 >= maxY)) return false;
 
-    double m = (y2 - y1) / (x2 - x1);
+    var m = (y2 - y1) / (x2 - x1);
 
-    double y = m * (minX - x1) + y1;
+    var y = m * (minX - x1) + y1;
     if (y > minY && y < maxY) return true;
 
     y = m * (maxX - x1) + y1;
     if (y > minY && y < maxY) return true;
 
-    double x = (minY - y1) / m + x1;
+    var x = (minY - y1) / m + x1;
     if (x > minX && x < maxX) return true;
 
     x = (maxY - y1) / m + x1;
@@ -153,9 +153,9 @@ class SkeletonBounds {
   /// call this method if [aabbContainsPoint] returns true.
   ///
   BoundingBoxAttachment? containsPoint(double x, double y) {
-    for (int i = 0; i < verticesList.length; i++) {
-      BoundingBoxAttachment boundingBox = boundingBoxes[i];
-      Float32List vertices = verticesList[i];
+    for (var i = 0; i < verticesList.length; i++) {
+      var boundingBox = boundingBoxes[i];
+      var vertices = verticesList[i];
       if (_containsPoint(vertices, x, y)) return boundingBox;
     }
 
@@ -167,9 +167,9 @@ class SkeletonBounds {
   /// to only call this method if [aabbIntersectsSegment] returns true.
   ///
   BoundingBoxAttachment? intersectsSegment(double x1, double y1, double x2, double y2) {
-    for (int i = 0; i < verticesList.length; i++) {
-      BoundingBoxAttachment boundingBox = boundingBoxes[i];
-      Float32List vertices = verticesList[i];
+    for (var i = 0; i < verticesList.length; i++) {
+      var boundingBox = boundingBoxes[i];
+      var vertices = verticesList[i];
       if (_intersectsSegment(vertices, x1, y1, x2, y2)) return boundingBox;
     }
 
@@ -177,21 +177,21 @@ class SkeletonBounds {
   }
 
   Float32List? getVertices(BoundingBoxAttachment attachment) {
-    int index = boundingBoxes.indexOf(attachment);
+    var index = boundingBoxes.indexOf(attachment);
     return index == -1 ? null : verticesList[index];
   }
 
   //-----------------------------------------------------------------------------------------------
 
   bool _containsPoint(Float32List vertices, double x, double y) {
-    bool inside = false;
-    int prevIndex = vertices.length - 2;
+    var inside = false;
+    var prevIndex = vertices.length - 2;
 
-    for (int i = 0; i < vertices.length - 1; i += 2) {
-      double vertexX = vertices[i + 0];
-      double vertexY = vertices[i + 1];
-      double prevX = vertices[prevIndex + 0];
-      double prevY = vertices[prevIndex + 1];
+    for (var i = 0; i < vertices.length - 1; i += 2) {
+      var vertexX = vertices[i + 0];
+      var vertexY = vertices[i + 1];
+      var prevX = vertices[prevIndex + 0];
+      var prevY = vertices[prevIndex + 1];
 
       if ((vertexY < y && prevY >= y) || (prevY < y && vertexY >= y)) {
         if (vertexX + (y - vertexY) / (prevY - vertexY) * (prevX - vertexX) < x) {
@@ -206,26 +206,26 @@ class SkeletonBounds {
   }
 
   bool _intersectsSegment(Float32List vertices, double x1, double y1, double x2, double y2) {
-    double width12 = x1 - x2;
-    double height12 = y1 - y2;
-    double det1 = x1 * y2 - y1 * x2;
+    var width12 = x1 - x2;
+    var height12 = y1 - y2;
+    var det1 = x1 * y2 - y1 * x2;
 
-    double x3 = vertices[vertices.length - 2];
-    double y3 = vertices[vertices.length - 1];
+    var x3 = vertices[vertices.length - 2];
+    var y3 = vertices[vertices.length - 1];
 
-    for (int i = 0; i < vertices.length - 1; i += 2) {
-      double x4 = vertices[i + 0];
-      double y4 = vertices[i + 1];
+    for (var i = 0; i < vertices.length - 1; i += 2) {
+      var x4 = vertices[i + 0];
+      var y4 = vertices[i + 1];
 
-      double det2 = x3 * y4 - y3 * x4;
-      double width34 = x3 - x4;
-      double height34 = y3 - y4;
-      double det3 = width12 * height34 - height12 * width34;
+      var det2 = x3 * y4 - y3 * x4;
+      var width34 = x3 - x4;
+      var height34 = y3 - y4;
+      var det3 = width12 * height34 - height12 * width34;
 
-      double x = (det1 * width34 - width12 * det2) / det3;
+      var x = (det1 * width34 - width12 * det2) / det3;
       if (((x >= x3 && x <= x4) || (x >= x4 && x <= x3)) &&
           ((x >= x1 && x <= x2) || (x >= x2 && x <= x1))) {
-        double y = (det1 * height34 - height12 * det2) / det3;
+        var y = (det1 * height34 - height12 * det2) / det3;
         if (((y >= y3 && y <= y4) || (y >= y4 && y <= y3)) &&
             ((y >= y1 && y <= y2) || (y >= y2 && y <= y1))) return true;
       }

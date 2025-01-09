@@ -21,8 +21,8 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   @override
   Rectangle<num> get bounds {
-    Float32List vertices = _vertices;
-    int offset = 0;
+    var vertices = _vertices;
+    var offset = 0;
 
     if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
       for (var slot in skeleton.drawOrder) {
@@ -44,14 +44,14 @@ class SkeletonDisplayObject extends InteractiveObject {
       }
     }
 
-    double minX = double.infinity;
-    double minY = double.infinity;
-    double maxX = double.negativeInfinity;
-    double maxY = double.negativeInfinity;
+    var minX = double.infinity;
+    var minY = double.infinity;
+    var maxX = double.negativeInfinity;
+    var maxY = double.negativeInfinity;
 
-    for (int i = 0; i < offset - 1; i += 2) {
-      double x = vertices[i + 0];
-      double y = vertices[i + 1];
+    for (var i = 0; i < offset - 1; i += 2) {
+      var x = vertices[i + 0];
+      var y = vertices[i + 1];
       if (minX > x) minX = x;
       if (minY > y) minY = y;
       if (maxX < x) maxX = x;
@@ -68,9 +68,9 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   @override
   DisplayObject? hitTestInput(num localX, num localY) {
-    Float32List vertices = _vertices;
-    double sx = 0.0 + localX;
-    double sy = 0.0 - localY;
+    var vertices = _vertices;
+    var sx = 0.0 + localX;
+    var sy = 0.0 - localY;
 
     if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
       for (var slot in skeleton.drawOrder) {
@@ -122,7 +122,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     renderContext.activateRenderProgram(renderProgram);
     renderState.push(_skeletonMatrix, 1.0, renderState.globalBlendMode);
 
-    for (int s = 0; s < slots.length; s++) {
+    for (var s = 0; s < slots.length; s++) {
       var slot = slots[s];
       var attachment = slot.attachment;
 
@@ -169,7 +169,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     ClippingAttachment? clippingAttachment;
     renderState.push(_skeletonMatrix, skeleton.color.a, renderState.globalBlendMode);
 
-    for (int s = 0; s < slots.length; s++) {
+    for (var s = 0; s < slots.length; s++) {
       var slot = slots[s];
       var attachment = slot.attachment;
 
@@ -211,13 +211,13 @@ class SkeletonDisplayObject extends InteractiveObject {
   //---------------------------------------------------------------------------
 
   int _windingCount(Float32List vertices, int length, double x, double y) {
-    double ax = vertices[length - 2];
-    double ay = vertices[length - 1];
-    int wn = 0;
+    var ax = vertices[length - 2];
+    var ay = vertices[length - 1];
+    var wn = 0;
 
-    for (int i = 0; i < length - 1; i += 2) {
-      double bx = vertices[i + 0];
-      double by = vertices[i + 1];
+    for (var i = 0; i < length - 1; i += 2) {
+      var bx = vertices[i + 0];
+      var by = vertices[i + 1];
       if (ay <= y) {
         if (by > y && (bx - ax) * (y - ay) - (x - ax) * (by - ay) > 0) wn++;
       } else {

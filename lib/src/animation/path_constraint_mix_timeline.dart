@@ -61,8 +61,8 @@ class PathConstraintMixTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    PathConstraint pc = skeleton.pathConstraints[pathConstraintIndex];
-    PathConstraintData data = pc.data;
+    var pc = skeleton.pathConstraints[pathConstraintIndex];
+    var data = pc.data;
     double rot = 0;
     double tra = 0;
 
@@ -84,15 +84,15 @@ class PathConstraintMixTimeline extends CurveTimeline {
       tra = frames[frames.length + _prevTranslate];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _entries);
-      double tim0 = frames[frame + _prevTime];
-      double rot0 = frames[frame + _prevRotate];
-      double tra0 = frames[frame + _prevTranslate];
-      double tim1 = frames[frame + _time];
-      double rot1 = frames[frame + _rotate];
-      double tra1 = frames[frame + _translate];
-      double between = 1.0 - (time - tim1) / (tim0 - tim1);
-      double percent = getCurvePercent(frame ~/ _entries - 1, between);
+      var frame = Animation.binarySearch(frames, time, _entries);
+      var tim0 = frames[frame + _prevTime];
+      var rot0 = frames[frame + _prevRotate];
+      var tra0 = frames[frame + _prevTranslate];
+      var tim1 = frames[frame + _time];
+      var rot1 = frames[frame + _rotate];
+      var tra1 = frames[frame + _translate];
+      var between = 1.0 - (time - tim1) / (tim0 - tim1);
+      var percent = getCurvePercent(frame ~/ _entries - 1, between);
       rot = rot0 + (rot1 - rot0) * percent;
       tra = tra0 + (tra1 - tra0) * percent;
     }

@@ -60,7 +60,7 @@ class TranslateTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    Bone bone = skeleton.bones[boneIndex];
+    var bone = skeleton.bones[boneIndex];
     double x = 0;
     double y = 0;
 
@@ -82,15 +82,15 @@ class TranslateTimeline extends CurveTimeline {
       y = frames[frames.length + _prevY];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _entries);
-      double t0 = frames[frame + _prevTime];
-      double x0 = frames[frame + _prevX];
-      double y0 = frames[frame + _prevY];
-      double t1 = frames[frame + _time];
-      double x1 = frames[frame + _x];
-      double y1 = frames[frame + _y];
-      double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _entries - 1, between);
+      var frame = Animation.binarySearch(frames, time, _entries);
+      var t0 = frames[frame + _prevTime];
+      var x0 = frames[frame + _prevX];
+      var y0 = frames[frame + _prevY];
+      var t1 = frames[frame + _time];
+      var x1 = frames[frame + _x];
+      var y1 = frames[frame + _y];
+      var between = 1.0 - (time - t1) / (t0 - t1);
+      var percent = getCurvePercent(frame ~/ _entries - 1, between);
       x = x0 + (x1 - x0) * percent;
       y = y0 + (y1 - y0) * percent;
     }

@@ -69,14 +69,14 @@ class AnimationState extends EventDispatcher {
   void update(double delta) {
     delta *= timeScale;
 
-    for (int i = 0; i < _tracks.length; i++) {
-      TrackEntry? current = _tracks[i];
+    for (var i = 0; i < _tracks.length; i++) {
+      var current = _tracks[i];
       if (current == null) continue;
 
       current.animationLast = current.nextAnimationLast;
       current.trackLast = current.nextTrackLast;
 
-      double currentDelta = delta * current.timeScale;
+      var currentDelta = delta * current.timeScale;
 
       if (current.delay > 0.0) {
         current.delay -= currentDelta;
@@ -85,10 +85,10 @@ class AnimationState extends EventDispatcher {
         current.delay = 0.0;
       }
 
-      TrackEntry? next = current.next;
+      var next = current.next;
       if (next != null) {
         // When the next entry's delay is passed, change to the next entry, preserving leftover time.
-        double nextTime = current.trackLast - next.delay;
+        var nextTime = current.trackLast - next.delay;
         if (nextTime >= 0.0) {
           next.delay = 0.0;
           next.trackTime = nextTime + delta * next.timeScale;
@@ -127,7 +127,7 @@ class AnimationState extends EventDispatcher {
   }
 
   bool _updateMixingFrom(TrackEntry to, double delta) {
-    TrackEntry? from = to.mixingFrom;
+    var from = to.mixingFrom;
     if (from == null) return true;
 
     var finished = _updateMixingFrom(from, delta);
@@ -153,17 +153,17 @@ class AnimationState extends EventDispatcher {
   bool apply(Skeleton skeleton) {
     if (_animationsChanged) _animationsHasChanged();
 
-    List<SpineEvent> events = _events;
-    bool applied = false;
+    var events = _events;
+    var applied = false;
 
-    for (int i = 0; i < _tracks.length; i++) {
-      TrackEntry? current = _tracks[i];
+    for (var i = 0; i < _tracks.length; i++) {
+      var current = _tracks[i];
       if (current == null || current.delay > 0.0) continue;
       applied = true;
       var currentPose = i == 0 ? MixPose.current : MixPose.currentLayered;
 
       // Apply mixing from entries first.
-      double mix = current.alpha;
+      var mix = current.alpha;
       if (current.mixingFrom != null) {
         mix *= _applyMixingFrom(current, skeleton, currentPose);
       } else if (current.trackTime >= current.trackEnd && current.next == null) {
@@ -171,13 +171,13 @@ class AnimationState extends EventDispatcher {
       }
 
       // Apply current entry.
-      double animationLast = current.animationLast;
-      double animationTime = current.getAnimationTime();
-      List<Timeline> timelines = current.animation.timelines;
-      List<num> timelinesRotation = current.timelinesRotation;
+      var animationLast = current.animationLast;
+      var animationTime = current.getAnimationTime();
+      var timelines = current.animation.timelines;
+      var timelinesRotation = current.timelinesRotation;
 
       if (mix == 1.0) {
-        for (int tl = 0; tl < timelines.length; tl++) {
+        for (var tl = 0; tl < timelines.length; tl++) {
           timelines[tl].apply(
               skeleton, animationLast, animationTime, events, 1, MixPose.setup, MixDirection.In);
         }
@@ -188,7 +188,7 @@ class AnimationState extends EventDispatcher {
           timelinesRotation = List.filled(timelines.length << 1, 0.0);
         }
 
-        for (int tl = 0; tl < timelines.length; tl++) {
+        for (var tl = 0; tl < timelines.length; tl++) {
           var timeline = timelines[tl];
           var pose = timelineData[tl] >= AnimationState.first ? MixPose.setup : currentPose;
           if (timeline is RotateTimeline) {
@@ -213,7 +213,7 @@ class AnimationState extends EventDispatcher {
   }
 
   double _applyMixingFrom(TrackEntry to, Skeleton skeleton, MixPose currentPose) {
-    TrackEntry from = to.mixingFrom!;
+    var from = to.mixingFrom!;
     if (from.mixingFrom != null) _applyMixingFrom(from, skeleton, currentPose);
 
     double mix = 0;
@@ -226,16 +226,16 @@ class AnimationState extends EventDispatcher {
       if (mix > 1.0) mix = 1.0;
     }
 
-    List<SpineEvent> events = mix < from.eventThreshold ? _events : [];
-    bool attachments = mix < from.attachmentThreshold;
-    bool drawOrder = mix < from.drawOrderThreshold;
+    var events = mix < from.eventThreshold ? _events : <SpineEvent>[];
+    var attachments = mix < from.attachmentThreshold;
+    var drawOrder = mix < from.drawOrderThreshold;
 
-    double animationLast = from.animationLast;
-    double animationTime = from.getAnimationTime();
-    List<Timeline> timelines = from.animation.timelines;
-    List<num> timelinesRotation = from.timelinesRotation;
-    List<int> timelineData = from.timelineData;
-    List<TrackEntry?> timelineDipMix = from.timelineDipMix;
+    var animationLast = from.animationLast;
+    var animationTime = from.getAnimationTime();
+    var timelines = from.animation.timelines;
+    var timelinesRotation = from.timelinesRotation;
+    var timelineData = from.timelineData;
+    var timelineDipMix = from.timelineDipMix;
 
     var firstFrame = timelinesRotation.isEmpty;
     if (firstFrame) {
@@ -243,13 +243,13 @@ class AnimationState extends EventDispatcher {
     }
 
     MixPose pose;
-    double alphaDip = from.alpha * to.interruptAlpha;
-    double alphaMix = alphaDip * (1.0 - mix);
+    var alphaDip = from.alpha * to.interruptAlpha;
+    var alphaMix = alphaDip * (1.0 - mix);
     double alpha = 0;
     from.totalAlpha = 0.0;
 
-    for (int i = 0; i < timelines.length; i++) {
-      Timeline timeline = timelines[i];
+    for (var i = 0; i < timelines.length; i++) {
+      var timeline = timelines[i];
       switch (timelineData[i]) {
         case subsequent:
           if (!attachments && timeline is AttachmentTimeline) continue;
@@ -265,7 +265,7 @@ class AnimationState extends EventDispatcher {
         default:
           pose = MixPose.setup;
           alpha = alphaDip;
-          TrackEntry dipMix = timelineDipMix[i]!;
+          var dipMix = timelineDipMix[i]!;
           alpha *= math.max(0.0, 1.0 - dipMix.mixTime / dipMix.mixDuration);
       }
       from.totalAlpha += alpha;
@@ -299,8 +299,8 @@ class AnimationState extends EventDispatcher {
       return;
     }
 
-    Float32List frames = timeline.frames;
-    Bone bone = skeleton.bones[timeline.boneIndex];
+    var frames = timeline.frames;
+    var bone = skeleton.bones[timeline.boneIndex];
     double r2 = 0;
 
     if (time < frames[0]) {
@@ -313,31 +313,31 @@ class AnimationState extends EventDispatcher {
       r2 = bone.data.rotation + frames[frames.length + RotateTimeline._prevRotation];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, RotateTimeline._entries);
-      double prevTime = frames[frame + RotateTimeline._prevTime];
-      double prevRotation = frames[frame + RotateTimeline._prevRotation];
-      double frameTime = frames[frame + RotateTimeline._time];
-      double frameRotation = frames[frame + RotateTimeline._rotation];
-      double between = 1.0 - (time - frameTime) / (prevTime - frameTime);
-      double percent = timeline.getCurvePercent((frame >> 1) - 1, between);
+      var frame = Animation.binarySearch(frames, time, RotateTimeline._entries);
+      var prevTime = frames[frame + RotateTimeline._prevTime];
+      var prevRotation = frames[frame + RotateTimeline._prevRotation];
+      var frameTime = frames[frame + RotateTimeline._time];
+      var frameRotation = frames[frame + RotateTimeline._rotation];
+      var between = 1.0 - (time - frameTime) / (prevTime - frameTime);
+      var percent = timeline.getCurvePercent((frame >> 1) - 1, between);
       r2 = _wrapRotation(frameRotation - prevRotation);
       r2 = _wrapRotation(prevRotation + r2 * percent + bone.data.rotation);
     }
 
     // Mix between rotations using the direction of the shortest route on the first frame while detecting crosses.
-    double r1 = pose == MixPose.setup ? bone.data.rotation : bone.rotation;
+    var r1 = pose == MixPose.setup ? bone.data.rotation : bone.rotation;
     num total = 0.0;
-    double diff = r2 - r1;
+    var diff = r2 - r1;
 
     if (diff == 0.0) {
       total = timelinesRotation[i];
     } else {
       diff = _wrapRotation(diff);
-      num lastTotal =
+      var lastTotal =
           firstFrame ? 0.0 : timelinesRotation[i]; // Angle and direction of mix, including loops.
-      num lastDiff = firstFrame ? diff : timelinesRotation[i + 1]; // Difference between bones.
-      bool current = diff > 0.0;
-      bool dir = lastTotal >= 0.0;
+      var lastDiff = firstFrame ? diff : timelinesRotation[i + 1]; // Difference between bones.
+      var current = diff > 0.0;
+      var dir = lastTotal >= 0.0;
       // Detect cross at 0 (not 180).
       if ((lastDiff.sign != diff.sign) && (lastDiff.abs() <= 90.0)) {
         // A cross after a 360 rotation is a loop.
@@ -355,15 +355,15 @@ class AnimationState extends EventDispatcher {
   }
 
   void _queueEvents(TrackEntry entry, double animationTime) {
-    double animationStart = entry.animationStart;
-    double animationEnd = entry.animationEnd;
-    double duration = animationEnd - animationStart;
-    double trackLastWrapped = entry.trackLast.remainder(duration);
-    int i = 0;
+    var animationStart = entry.animationStart;
+    var animationEnd = entry.animationEnd;
+    var duration = animationEnd - animationStart;
+    var trackLastWrapped = entry.trackLast.remainder(duration);
+    var i = 0;
 
     // Queue events before complete.
     for (; i < _events.length; i++) {
-      SpineEvent event = _events[i];
+      var event = _events[i];
       if (event.time < trackLastWrapped) break;
       if (event.time > animationEnd) continue;
       _enqueueTrackEntryEvent(TrackEntryEventEvent(entry, event));
@@ -378,7 +378,7 @@ class AnimationState extends EventDispatcher {
 
     // Queue events after complete.
     for (; i < _events.length; i++) {
-      SpineEvent event = _events[i];
+      var event = _events[i];
       if (event.time < animationStart) continue;
       _enqueueTrackEntryEvent(TrackEntryEventEvent(entry, _events[i]));
     }
@@ -387,7 +387,7 @@ class AnimationState extends EventDispatcher {
   void clearTracks() {
     var oldEventDispatchDisabled = _eventDispatchDisabled;
     _eventDispatchDisabled = true;
-    for (int i = 0; i < _tracks.length; i++) {
+    for (var i = 0; i < _tracks.length; i++) {
       clearTrack(i);
     }
     _tracks.clear();
@@ -397,14 +397,14 @@ class AnimationState extends EventDispatcher {
 
   void clearTrack(int trackIndex) {
     if (trackIndex >= _tracks.length) return;
-    TrackEntry? current = _tracks[trackIndex];
+    var current = _tracks[trackIndex];
     if (current == null) return;
     _enqueueTrackEntryEvent(TrackEntryEndEvent(current));
     _disposeNext(current);
-    TrackEntry entry = current;
+    var entry = current;
 
     for (;;) {
-      TrackEntry? from = entry.mixingFrom;
+      var from = entry.mixingFrom;
       if (from == null) break;
       _enqueueTrackEntryEvent(TrackEntryEndEvent(from));
       entry.mixingFrom = null;
@@ -416,7 +416,7 @@ class AnimationState extends EventDispatcher {
   }
 
   void _setCurrent(int index, TrackEntry current, bool interrupt) {
-    TrackEntry? from = _expandToIndex(index);
+    var from = _expandToIndex(index);
     _tracks[index] = current;
 
     if (from != null) {
@@ -438,13 +438,13 @@ class AnimationState extends EventDispatcher {
   }
 
   TrackEntry setAnimationByName(int trackIndex, String animationName, bool loop) {
-    Animation animation = data.skeletonData.findAnimation(animationName)!;
+    var animation = data.skeletonData.findAnimation(animationName)!;
     return setAnimation(trackIndex, animation, loop);
   }
 
   TrackEntry setAnimation(int trackIndex, Animation animation, bool loop) {
-    bool interrupt = true;
-    TrackEntry? current = _expandToIndex(trackIndex);
+    var interrupt = true;
+    var current = _expandToIndex(trackIndex);
     if (current != null) {
       if (current.nextTrackLast == -1) {
         // Don't mix from an entry that was never applied.
@@ -465,12 +465,12 @@ class AnimationState extends EventDispatcher {
   }
 
   TrackEntry addAnimationByName(int trackIndex, String animationName, bool loop, double delay) {
-    Animation animation = data.skeletonData.findAnimation(animationName)!;
+    var animation = data.skeletonData.findAnimation(animationName)!;
     return addAnimation(trackIndex, animation, loop, delay);
   }
 
   TrackEntry addAnimation(int trackIndex, Animation animation, bool loop, double delay) {
-    TrackEntry? last = _expandToIndex(trackIndex);
+    var last = _expandToIndex(trackIndex);
     if (last != null) {
       while (last!.next != null) {
         last = last.next;
@@ -485,7 +485,7 @@ class AnimationState extends EventDispatcher {
     } else {
       last.next = entry;
       if (delay <= 0.0) {
-        double duration = last.animationEnd - last.animationStart;
+        var duration = last.animationEnd - last.animationStart;
         if (duration != 0.0) {
           delay += duration * (1.0 + last.trackTime ~/ duration) -
               data.getMix(last.animation, animation);
@@ -500,7 +500,7 @@ class AnimationState extends EventDispatcher {
   }
 
   TrackEntry setEmptyAnimation(int trackIndex, double mixDuration) {
-    TrackEntry entry = setAnimation(trackIndex, _emptyAnimation, false);
+    var entry = setAnimation(trackIndex, _emptyAnimation, false);
     entry.mixDuration = mixDuration;
     entry.trackEnd = mixDuration;
     return entry;
@@ -508,7 +508,7 @@ class AnimationState extends EventDispatcher {
 
   TrackEntry addEmptyAnimation(int trackIndex, double mixDuration, double delay) {
     if (delay <= 0.0) delay -= mixDuration;
-    TrackEntry entry = addAnimation(trackIndex, _emptyAnimation, false, delay);
+    var entry = addAnimation(trackIndex, _emptyAnimation, false, delay);
     entry.mixDuration = mixDuration;
     entry.trackEnd = mixDuration;
     return entry;
@@ -517,8 +517,8 @@ class AnimationState extends EventDispatcher {
   void setEmptyAnimations(double mixDuration) {
     var oldEventDispatchDisabled = _eventDispatchDisabled;
     _eventDispatchDisabled = true;
-    for (int i = 0; i < _tracks.length; i++) {
-      TrackEntry? current = _tracks[i];
+    for (var i = 0; i < _tracks.length; i++) {
+      var current = _tracks[i];
       if (current != null) setEmptyAnimation(current.trackIndex, mixDuration);
     }
     _eventDispatchDisabled = oldEventDispatchDisabled;
@@ -532,7 +532,7 @@ class AnimationState extends EventDispatcher {
   }
 
   TrackEntry _trackEntry(int trackIndex, Animation animation, bool loop, TrackEntry? last) {
-    TrackEntry entry = TrackEntry(trackIndex, animation);
+    var entry = TrackEntry(trackIndex, animation);
     entry.loop = loop;
     entry.mixDuration = last == null ? 0.0 : data.getMix(last.animation, animation);
     return entry;
@@ -548,7 +548,7 @@ class AnimationState extends EventDispatcher {
   void _animationsHasChanged() {
     _animationsChanged = false;
     _propertyIDs.clear();
-    for (int i = 0; i < _tracks.length; i++) {
+    for (var i = 0; i < _tracks.length; i++) {
       _tracks[i]?.setTimelineData(null, _mixingTo, _propertyIDs);
     }
   }

@@ -55,15 +55,15 @@ class Skin {
   /// the old skin is currently attached.
   ///
   void attachAll(Skeleton skeleton, Skin oldSkin) {
-    int slotIndex = 0;
-    for (Slot slot in skeleton.slots) {
-      Attachment? slotAttachment = slot.attachment;
+    var slotIndex = 0;
+    for (var slot in skeleton.slots) {
+      var slotAttachment = slot.attachment;
       if (slotAttachment != null && slotIndex < oldSkin.attachments.length) {
         final map = oldSkin.attachments[slotIndex] ?? <String, Attachment?>{};
         for (var name in map.keys) {
           final skinAttachment = map[name];
           if (slotAttachment == skinAttachment) {
-            Attachment? attachment = getAttachment(slotIndex, name);
+            var attachment = getAttachment(slotIndex, name);
             if (attachment != null) slot.attachment = attachment;
             break;
           }

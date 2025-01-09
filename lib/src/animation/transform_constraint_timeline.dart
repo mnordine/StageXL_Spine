@@ -68,9 +68,9 @@ class TransformConstraintTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    List<TransformConstraint> tcs = skeleton.transformConstraints;
-    TransformConstraint tc = tcs[transformConstraintIndex];
-    TransformConstraintData data = tc.data;
+    var tcs = skeleton.transformConstraints;
+    var tc = tcs[transformConstraintIndex];
+    var data = tc.data;
     double rot = 0; // rotate
     double tra = 0; // translate
     double sca = 0; // scale
@@ -100,19 +100,19 @@ class TransformConstraintTimeline extends CurveTimeline {
       she = frames[frames.length + _prevShear];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _entries);
-      double tim0 = frames[frame + _prevTime];
-      double rot0 = frames[frame + _prevRotate];
-      double tra0 = frames[frame + _prevTranslate];
-      double sca0 = frames[frame + _prevScale];
-      double she0 = frames[frame + _prevShear];
-      double tim1 = frames[frame + _time];
-      double rot1 = frames[frame + _rotate];
-      double tra1 = frames[frame + _translate];
-      double sca1 = frames[frame + _scale];
-      double she1 = frames[frame + _shear];
-      double between = 1.0 - (time - tim1) / (tim0 - tim1);
-      double percent = getCurvePercent(frame ~/ _entries - 1, between);
+      var frame = Animation.binarySearch(frames, time, _entries);
+      var tim0 = frames[frame + _prevTime];
+      var rot0 = frames[frame + _prevRotate];
+      var tra0 = frames[frame + _prevTranslate];
+      var sca0 = frames[frame + _prevScale];
+      var she0 = frames[frame + _prevShear];
+      var tim1 = frames[frame + _time];
+      var rot1 = frames[frame + _rotate];
+      var tra1 = frames[frame + _translate];
+      var sca1 = frames[frame + _scale];
+      var she1 = frames[frame + _shear];
+      var between = 1.0 - (time - tim1) / (tim0 - tim1);
+      var percent = getCurvePercent(frame ~/ _entries - 1, between);
       rot = rot0 + (rot1 - rot0) * percent;
       tra = tra0 + (tra1 - tra0) * percent;
       sca = sca0 + (sca1 - sca0) * percent;

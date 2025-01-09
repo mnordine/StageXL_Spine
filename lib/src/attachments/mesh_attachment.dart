@@ -83,7 +83,7 @@ class MeshAttachment extends RenderAttachment {
     var mx = matrix.tx;
     var my = matrix.ty;
 
-    for (int i = 0, o = 0; i < regionUVs.length - 1; i += 2, o += 4) {
+    for (var i = 0, o = 0; i < regionUVs.length - 1; i += 2, o += 4) {
       var u = regionUVs[i + 0];
       var v = regionUVs[i + 1];
       vxList[o + 2] = u * ma + v * mc + mx;

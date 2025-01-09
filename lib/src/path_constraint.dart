@@ -54,7 +54,7 @@ class PathConstraint implements Constraint {
   final Float32List _segments = Float32List(10);
 
   PathConstraint(this.data, Skeleton skeleton) : target = skeleton.findSlot(data.target.name)! {
-    for (BoneData boneData in data.bones) {
+    for (var boneData in data.bones) {
       bones.add(skeleton.findBone(boneData.name)!);
     }
 
@@ -73,26 +73,26 @@ class PathConstraint implements Constraint {
     final attachment = target.attachment;
     if (attachment is! PathAttachment) return;
 
-    double rotateMix = this.rotateMix;
-    double translateMix = this.translateMix;
-    bool translate = translateMix > 0;
-    bool rotate = rotateMix > 0;
+    var rotateMix = this.rotateMix;
+    var translateMix = this.translateMix;
+    var translate = translateMix > 0;
+    var rotate = rotateMix > 0;
     if (!translate && !rotate) return;
 
-    PathConstraintData data = this.data;
-    SpacingMode spacingMode = data.spacingMode!;
-    bool lengthSpacing = spacingMode == SpacingMode.length;
-    RotateMode rotateMode = data.rotateMode!;
-    bool tangents = rotateMode == RotateMode.tangent;
-    bool scale = rotateMode == RotateMode.chainScale;
-    int boneCount = this.bones.length;
-    int spacesCount = tangents ? boneCount : boneCount + 1;
+    var data = this.data;
+    var spacingMode = data.spacingMode!;
+    var lengthSpacing = spacingMode == SpacingMode.length;
+    var rotateMode = data.rotateMode!;
+    var tangents = rotateMode == RotateMode.tangent;
+    var scale = rotateMode == RotateMode.chainScale;
+    var boneCount = this.bones.length;
+    var spacesCount = tangents ? boneCount : boneCount + 1;
 
-    List<Bone> bones = this.bones;
+    var bones = this.bones;
     if (_spaces.length != spacesCount) _spaces = Float32List(spacesCount);
-    Float32List spaces = _spaces;
+    var spaces = _spaces;
     late Float32List lengths;
-    double spacing = this.spacing;
+    var spacing = this.spacing;
 
     if (scale || lengthSpacing) {
       if (scale) {
@@ -100,56 +100,56 @@ class PathConstraint implements Constraint {
         lengths = _lengths;
       }
 
-      for (int i = 0; i < spacesCount - 1;) {
-        Bone bone = bones[i];
-        double setupLength = bone.data.length;
+      for (var i = 0; i < spacesCount - 1;) {
+        var bone = bones[i];
+        var setupLength = bone.data.length;
         if (setupLength < _epsilon) {
           if (scale) lengths[i] = 0.0;
           spaces[++i] = 0.0;
         } else {
-          double x = setupLength * bone.a;
-          double y = setupLength * bone.c;
-          double length = math.sqrt(x * x + y * y);
+          var x = setupLength * bone.a;
+          var y = setupLength * bone.c;
+          var length = math.sqrt(x * x + y * y);
           if (scale) lengths[i] = length;
           spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length / setupLength;
         }
       }
     } else {
-      for (int i = 1; i < spacesCount; i++) {
+      for (var i = 1; i < spacesCount; i++) {
         spaces[i] = spacing;
       }
     }
 
-    Float32List positions = _computeWorldPositions(attachment, spacesCount, tangents,
+    var positions = _computeWorldPositions(attachment, spacesCount, tangents,
         data.positionMode == PositionMode.percent, spacingMode == SpacingMode.percent);
 
-    double boneX = positions[0];
-    double boneY = positions[1];
-    double offsetRotation = data.offsetRotation;
+    var boneX = positions[0];
+    var boneY = positions[1];
+    var offsetRotation = data.offsetRotation;
 
-    bool tip = false;
+    var tip = false;
     if (offsetRotation == 0) {
       tip = rotateMode == RotateMode.chain;
     } else {
       tip = false;
-      Bone bone = target.bone;
-      double reflect = (bone.a * bone.d - bone.b * bone.c > 0) ? 1.0 : -1.0;
+      var bone = target.bone;
+      var reflect = (bone.a * bone.d - bone.b * bone.c > 0) ? 1.0 : -1.0;
       offsetRotation = _toRad(data.offsetRotation) * reflect;
     }
 
-    for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-      Bone bone = bones[i];
+    for (var i = 0, p = 3; i < boneCount; i++, p += 3) {
+      var bone = bones[i];
       bone._worldX += (boneX - bone.worldX) * translateMix;
       bone._worldY += (boneY - bone.worldY) * translateMix;
-      double x = positions[p + 0];
-      double y = positions[p + 1];
-      double dx = x - boneX;
-      double dy = y - boneY;
+      var x = positions[p + 0];
+      var y = positions[p + 1];
+      var dx = x - boneX;
+      var dy = y - boneY;
 
       if (scale) {
-        double length = lengths[i];
+        var length = lengths[i];
         if (length != 0) {
-          double s = (math.sqrt(dx * dx + dy * dy) / length - 1) * rotateMix + 1;
+          var s = (math.sqrt(dx * dx + dy * dy) / length - 1) * rotateMix + 1;
           bone._a *= s;
           bone._c *= s;
         }
@@ -159,10 +159,10 @@ class PathConstraint implements Constraint {
       boneY = y;
 
       if (rotate) {
-        double a = bone.a;
-        double b = bone.b;
-        double c = bone.c;
-        double d = bone.d;
+        var a = bone.a;
+        var b = bone.b;
+        var c = bone.c;
+        var d = bone.d;
         double r = 0;
         double cos = 0;
         double sin = 0;
@@ -180,7 +180,7 @@ class PathConstraint implements Constraint {
         if (tip) {
           cos = math.cos(r);
           sin = math.sin(r);
-          double length = bone.data.length;
+          var length = bone.data.length;
           boneX += (length * (cos * a - sin * c) - dx) * rotateMix;
           boneY += (length * (sin * a + cos * c) - dy) * rotateMix;
         } else {
@@ -207,41 +207,41 @@ class PathConstraint implements Constraint {
 
   Float32List _computeWorldPositions(PathAttachment path, int spacesCount, bool tangents,
       bool percentPosition, bool percentSpacing) {
-    Slot target = this.target;
-    double position = this.position;
-    Float32List spaces = _spaces;
+    var target = this.target;
+    var position = this.position;
+    var spaces = _spaces;
 
-    int positionCount = spacesCount * 3 + 2;
+    var positionCount = spacesCount * 3 + 2;
     if (_positions.length != positionCount) {
       _positions = Float32List(positionCount);
     }
 
-    Float32List out = _positions;
+    var out = _positions;
     Float32List world;
-    bool closed = path.closed;
-    int verticesLength = path.worldVerticesLength;
-    int curveCount = verticesLength ~/ 6;
-    int prevCurve = _none;
+    var closed = path.closed;
+    var verticesLength = path.worldVerticesLength;
+    var curveCount = verticesLength ~/ 6;
+    var prevCurve = _none;
 
     if (!path.constantSpeed) {
-      Float32List lengths = path.lengths;
+      var lengths = path.lengths;
       curveCount -= closed ? 1 : 2;
-      double pathLength = lengths[curveCount];
+      var pathLength = lengths[curveCount];
       if (percentPosition) position *= pathLength;
       if (percentSpacing) {
-        for (int i = 0; i < spacesCount; i++) { 
+        for (var i = 0; i < spacesCount; i++) { 
           spaces[i] *= pathLength;
         }
       }
 
       if (_world.length != 8) _world = Float32List(8);
       world = _world;
-      int o = 0, curve = 0;
+      var o = 0, curve = 0;
 
-      for (int i = 0; i < spacesCount; i++, o += 3) {
-        double space = spaces[i];
+      for (var i = 0; i < spacesCount; i++, o += 3) {
+        var space = spaces[i];
         position += space;
-        double p = position;
+        var p = position;
 
         if (closed) {
           p = p % pathLength;
@@ -264,12 +264,12 @@ class PathConstraint implements Constraint {
 
         // Determine curve containing position.
         for (;; curve++) {
-          double length = lengths[curve];
+          var length = lengths[curve];
           if (p > length && curve < lengths.length - 1) continue;
           if (curve == 0) {
             p /= length;
           } else {
-            double prev = lengths[curve - 1];
+            var prev = lengths[curve - 1];
             p = (p - prev) / (length - prev);
           }
           break;
@@ -313,9 +313,9 @@ class PathConstraint implements Constraint {
 
     if (_curves.length != curveCount) _curves = Float32List(curveCount);
 
-    Float32List curves = _curves;
+    var curves = _curves;
     double pathLength = 0;
-    double x1 = world[0], y1 = world[1];
+    var x1 = world[0], y1 = world[1];
     double cx1 = 0, cy1 = 0;
     double cx2 = 0, cy2 = 0;
     double x2 = 0, y2 = 0;
@@ -323,9 +323,9 @@ class PathConstraint implements Constraint {
     double dddfx = 0, dddfy = 0;
     double ddfx = 0, ddfy = 0;
     double dfx = 0, dfy = 0;
-    int w = 2;
+    var w = 2;
 
-    for (int i = 0; i < curveCount; i++, w += 6) {
+    for (var i = 0; i < curveCount; i++, w += 6) {
       cx1 = world[w];
       cy1 = world[w + 1];
       cx2 = world[w + 2];
@@ -362,21 +362,21 @@ class PathConstraint implements Constraint {
     }
 
     if (percentSpacing) {
-      for (int i = 0; i < spacesCount; i++) {
+      for (var i = 0; i < spacesCount; i++) {
         spaces[i] *= pathLength;
       }
     }
 
-    Float32List segments = _segments;
+    var segments = _segments;
     double curveLength = 0;
-    int segment = 0;
-    int o = 0;
-    int curve = 0;
+    var segment = 0;
+    var o = 0;
+    var curve = 0;
 
-    for (int i = 0; i < spacesCount; i++, o += 3) {
-      double space = spaces[i];
+    for (var i = 0; i < spacesCount; i++, o += 3) {
+      var space = spaces[i];
       position += space;
-      double p = position;
+      var p = position;
 
       if (closed) {
         p = p % pathLength;
@@ -392,12 +392,12 @@ class PathConstraint implements Constraint {
       // Determine curve containing position.
 
       for (;; curve++) {
-        double length = curves[curve];
+        var length = curves[curve];
         if (p > length && curve < curves.length - 1) continue;
         if (curve == 0) {
           p /= length;
         } else {
-          double prev = curves[curve - 1];
+          var prev = curves[curve - 1];
           p = (p - prev) / (length - prev);
         }
         break;
@@ -407,7 +407,7 @@ class PathConstraint implements Constraint {
 
       if (curve != prevCurve) {
         prevCurve = curve;
-        int ii = curve * 6;
+        var ii = curve * 6;
         x1 = world[ii];
         y1 = world[ii + 1];
         cx1 = world[ii + 2];
@@ -453,12 +453,12 @@ class PathConstraint implements Constraint {
       p *= curveLength;
 
       for (;; segment++) {
-        double length = segments[segment];
+        var length = segments[segment];
         if (p > length && segment < segments.length - 1) continue;
         if (segment == 0) {
           p /= length;
         } else {
-          double prev = segments[segment - 1];
+          var prev = segments[segment - 1];
           p = segment + (p - prev) / (length - prev);
         }
         break;
@@ -471,22 +471,22 @@ class PathConstraint implements Constraint {
   }
 
   void _addBeforePosition(double p, Float32List temp, int i, Float32List out, int o) {
-    double x1 = temp[i + 0];
-    double y1 = temp[i + 1];
-    double dx = temp[i + 2] - x1;
-    double dy = temp[i + 3] - y1;
-    double r = math.atan2(dy, dx);
+    var x1 = temp[i + 0];
+    var y1 = temp[i + 1];
+    var dx = temp[i + 2] - x1;
+    var dy = temp[i + 3] - y1;
+    var r = math.atan2(dy, dx);
     out[o + 0] = x1 + p * math.cos(r);
     out[o + 1] = y1 + p * math.sin(r);
     out[o + 2] = r;
   }
 
   void _addAfterPosition(double p, Float32List temp, int i, Float32List out, int o) {
-    double x1 = temp[i + 2];
-    double y1 = temp[i + 3];
-    double dx = x1 - temp[i];
-    double dy = y1 - temp[i + 1];
-    double r = math.atan2(dy, dx);
+    var x1 = temp[i + 2];
+    var y1 = temp[i + 3];
+    var dx = x1 - temp[i];
+    var dy = y1 - temp[i + 1];
+    var r = math.atan2(dy, dx);
     out[o + 0] = x1 + p * math.cos(r);
     out[o + 1] = y1 + p * math.sin(r);
     out[o + 2] = r;
@@ -495,17 +495,17 @@ class PathConstraint implements Constraint {
   void _addCurvePosition(double p, double x1, double y1, double cx1, double cy1, double cx2,
       double cy2, double x2, double y2, Float32List out, int o, bool tangents) {
     if (p == 0 || p.isNaN) p = 0.0001;
-    double tt = p * p;
-    double ttt = tt * p;
-    double u = 1.0 - p;
-    double uu = u * u;
-    double uuu = uu * u;
-    double ut = u * p;
-    double ut3 = ut * 3;
-    double uut3 = u * ut3;
-    double utt3 = ut3 * p;
-    double x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt;
-    double y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
+    var tt = p * p;
+    var ttt = tt * p;
+    var u = 1.0 - p;
+    var uu = u * u;
+    var uuu = uu * u;
+    var ut = u * p;
+    var ut3 = ut * 3;
+    var uut3 = u * ut3;
+    var utt3 = ut3 * p;
+    var x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt;
+    var y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
     out[o + 0] = x;
     out[o + 1] = y;
 

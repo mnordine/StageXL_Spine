@@ -45,10 +45,10 @@ class PointAttachment extends VertexAttachment {
   }
 
   double computeWorldRotation(Bone bone) {
-    double cos = _cosDeg(rotation);
-    double sin = _sinDeg(rotation);
-    double x = cos * bone.a + sin * bone.b;
-    double y = cos * bone.c + sin * bone.d;
+    var cos = _cosDeg(rotation);
+    var sin = _sinDeg(rotation);
+    var x = cos * bone.a + sin * bone.b;
+    var y = cos * bone.c + sin * bone.d;
     return _toDeg(math.atan2(y, x));
   }
 }

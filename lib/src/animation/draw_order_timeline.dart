@@ -53,11 +53,11 @@ class DrawOrderTimeline implements Timeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    List<Slot> drawOrder = skeleton.drawOrder;
-    List<Slot> slots = skeleton.slots;
+    var drawOrder = skeleton.drawOrder;
+    var slots = skeleton.slots;
 
     if (direction == MixDirection.Out && pose == MixPose.setup) {
-      for (int i = 0; i < slots.length; i++) {
+      for (var i = 0; i < slots.length; i++) {
         drawOrder[i] = slots[i];
       }
       return;
@@ -66,14 +66,14 @@ class DrawOrderTimeline implements Timeline {
     if (time < frames[0]) {
       // Time is before first frame.
       if (pose == MixPose.setup) {
-        for (int i = 0; i < slots.length; i++) {
+        for (var i = 0; i < slots.length; i++) {
           drawOrder[i] = slots[i];
         }
       }
       return;
     }
 
-    int frameIndex = 0;
+    var frameIndex = 0;
 
     if (time >= frames[frames.length - 1]) {
       // Time is after last frame.
@@ -82,14 +82,14 @@ class DrawOrderTimeline implements Timeline {
       frameIndex = Animation.binarySearch1(frames, time) - 1;
     }
 
-    Int16List? drawOrderToSetupIndex = drawOrders[frameIndex];
+    var drawOrderToSetupIndex = drawOrders[frameIndex];
 
     if (drawOrderToSetupIndex == null) {
-      for (int i = 0; i < slots.length; i++) {
+      for (var i = 0; i < slots.length; i++) {
         drawOrder[i] = slots[i];
       }
     } else {
-      for (int i = 0; i < drawOrderToSetupIndex.length; i++) {
+      for (var i = 0; i < drawOrderToSetupIndex.length; i++) {
         drawOrder[i] = slots[drawOrderToSetupIndex[i]];
       }
     }

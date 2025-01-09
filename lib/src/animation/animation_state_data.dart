@@ -38,9 +38,9 @@ class AnimationStateData {
   AnimationStateData(this.skeletonData);
 
   void setMixByName(String fromName, String toName, double duration) {
-    Animation? from = skeletonData.findAnimation(fromName);
+    var from = skeletonData.findAnimation(fromName);
     if (from == null) throw ArgumentError('Animation not found: $fromName');
-    Animation? to = skeletonData.findAnimation(toName);
+    var to = skeletonData.findAnimation(toName);
     if (to == null) throw ArgumentError('Animation not found: $toName');
     setMix(from, to, duration);
   }

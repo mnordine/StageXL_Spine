@@ -54,8 +54,8 @@ class RegionAttachment extends RenderAttachment {
   void update() {
     num sw = scaleX * width;
     num sh = scaleY * height;
-    num bw = bitmapData.width;
-    num bh = bitmapData.height;
+    var bw = bitmapData.width;
+    var bh = bitmapData.height;
     num cosR = _cosDeg(rotation);
     num sinR = _sinDeg(rotation);
 
@@ -67,11 +67,11 @@ class RegionAttachment extends RenderAttachment {
     num my = y - 0.5 * (sw * sinR - sh * cosR);
     transformationMatrix.setTo(ma, mc, mb, md, mx, my);
 
-    Float32List vxList = bitmapData.renderTextureQuad.vxList;
+    var vxList = bitmapData.renderTextureQuad.vxList;
 
-    for (int o = 0; o <= vertices.length - 2; o += 2) {
-      double x = vxList[o * 2 + 0];
-      double y = vxList[o * 2 + 1];
+    for (var o = 0; o <= vertices.length - 2; o += 2) {
+      var x = vxList[o * 2 + 0];
+      var y = vxList[o * 2 + 1];
       vertices[o + 0] = x * ma + y * mb + mx;
       vertices[o + 1] = x * mc + y * md + my;
     }
@@ -90,9 +90,9 @@ class RegionAttachment extends RenderAttachment {
     var my = slot.bone.worldY;
     var length = count >> 1;
 
-    for (int i = 0; i < length; i++, start += 2, offset += stride) {
-      double x = vertices[start + 0];
-      double y = vertices[start + 1];
+    for (var i = 0; i < length; i++, start += 2, offset += stride) {
+      var x = vertices[start + 0];
+      var y = vertices[start + 1];
       worldVertices[offset + 0] = x * ma + y * mb + mx;
       worldVertices[offset + 1] = x * mc + y * md + my;
     }

@@ -46,16 +46,16 @@ class Animation {
       if (lastTime > 0) lastTime %= duration;
     }
 
-    for (int i = 0; i < timelines.length; i++) {
+    for (var i = 0; i < timelines.length; i++) {
       timelines[i].apply(skeleton, lastTime, time, events, alpha, pose, direction);
     }
   }
 
   /// target: After the first and before the last entry.
   static int binarySearch(Float32List values, double target, int step) {
-    int low = 0;
-    int high = values.length ~/ step - 2;
-    int current = high >> 1;
+    var low = 0;
+    var high = values.length ~/ step - 2;
+    var current = high >> 1;
     if (high == 0) return step;
 
     for (;;) {
@@ -74,11 +74,11 @@ class Animation {
   }
 
   static int binarySearch1(Float32List values, double target) {
-    int low = 0;
-    int high = values.length - 2;
+    var low = 0;
+    var high = values.length - 2;
     if (high == 0) return 1;
 
-    int current = high >> 1;
+    var current = high >> 1;
     for (;;) {
       if (values[current + 1] <= target) {
         low = current + 1;
@@ -91,7 +91,7 @@ class Animation {
   }
 
   static int linearSearch(Float32List values, double target, int step) {
-    for (int i = 0; i <= values.length - step; i += step) {
+    for (var i = 0; i <= values.length - step; i += step) {
       if (values[i] > target) return i;
     }
     return -1;

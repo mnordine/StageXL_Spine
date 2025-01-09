@@ -48,7 +48,7 @@ class TransformConstraint implements Constraint {
     scaleMix = data.scaleMix;
     shearMix = data.shearMix;
 
-    for (BoneData boneData in data.bones) {
+    for (var boneData in data.bones) {
       bones.add(skeleton.findBone(boneData.name)!);
     }
   }
@@ -75,33 +75,33 @@ class TransformConstraint implements Constraint {
   }
 
   void _applyAbsoluteWorld() {
-    double rotateMix = this.rotateMix;
-    double translateMix = this.translateMix;
-    double scaleMix = this.scaleMix;
-    double shearMix = this.shearMix;
+    var rotateMix = this.rotateMix;
+    var translateMix = this.translateMix;
+    var scaleMix = this.scaleMix;
+    var shearMix = this.shearMix;
 
-    Bone target = this.target;
+    var target = this.target;
 
-    double ta = target.a;
-    double tb = target.b;
-    double tc = target.c;
-    double td = target.d;
+    var ta = target.a;
+    var tb = target.b;
+    var tc = target.c;
+    var td = target.d;
 
-    double degRadReflect = ta * td - tb * tc > 0 ? _deg2rad : -_deg2rad;
-    double offsetRotation = data.offsetRotation * degRadReflect;
-    double offsetShearY = data.offsetShearY * degRadReflect;
-    List<Bone> bones = this.bones;
+    var degRadReflect = ta * td - tb * tc > 0 ? _deg2rad : -_deg2rad;
+    var offsetRotation = data.offsetRotation * degRadReflect;
+    var offsetShearY = data.offsetShearY * degRadReflect;
+    var bones = this.bones;
 
-    for (int i = 0; i < bones.length; i++) {
+    for (var i = 0; i < bones.length; i++) {
       var bone = bones[i];
       var modified = false;
 
       if (rotateMix != 0) {
-        double a = bone.a;
-        double b = bone.b;
-        double c = bone.c;
-        double d = bone.d;
-        double r = math.atan2(tc, ta) - math.atan2(c, a) + offsetRotation;
+        var a = bone.a;
+        var b = bone.b;
+        var c = bone.c;
+        var d = bone.d;
+        var r = math.atan2(tc, ta) - math.atan2(c, a) + offsetRotation;
 
         if (r > math.pi) {
           r -= math.pi * 2;
@@ -110,8 +110,8 @@ class TransformConstraint implements Constraint {
         }
 
         r *= rotateMix;
-        double cos = math.cos(r);
-        double sin = math.sin(r);
+        var cos = math.cos(r);
+        var sin = math.sin(r);
         bone._a = cos * a - sin * c;
         bone._b = cos * b - sin * d;
         bone._c = sin * a + cos * c;
@@ -129,8 +129,8 @@ class TransformConstraint implements Constraint {
       }
 
       if (scaleMix > 0) {
-        double s = math.sqrt(bone.a * bone.a + bone.c * bone.c);
-        double ts = math.sqrt(ta * ta + tc * tc);
+        var s = math.sqrt(bone.a * bone.a + bone.c * bone.c);
+        var ts = math.sqrt(ta * ta + tc * tc);
         if (s > 0.00001) s = (s + (ts - s + data.offsetScaleX) * scaleMix) / s;
         bone._a *= s;
         bone._c *= s;
@@ -143,10 +143,10 @@ class TransformConstraint implements Constraint {
       }
 
       if (shearMix > 0) {
-        double b = bone.b;
-        double d = bone.d;
-        double by = math.atan2(d, b);
-        double r = math.atan2(td, tb) - math.atan2(tc, ta) - (by - math.atan2(bone.c, bone.a));
+        var b = bone.b;
+        var d = bone.d;
+        var by = math.atan2(d, b);
+        var r = math.atan2(td, tb) - math.atan2(tc, ta) - (by - math.atan2(bone.c, bone.a));
         
         if (r > math.pi) {
           r -= math.pi * 2;
@@ -155,7 +155,7 @@ class TransformConstraint implements Constraint {
         }
 
         r = by + (r + offsetShearY) * shearMix;
-        double s = math.sqrt(b * b + d * d);
+        var s = math.sqrt(b * b + d * d);
         bone._b = math.cos(r) * s;
         bone._d = math.sin(r) * s;
         modified = true;
@@ -181,7 +181,7 @@ class TransformConstraint implements Constraint {
     var offsetShearY = data.offsetShearY * degRadReflect;
     var bones = this.bones;
 
-    for (int i = 0; i < bones.length; i++) {
+    for (var i = 0; i < bones.length; i++) {
       var bone = bones[i];
       var modified = false;
 
@@ -259,7 +259,7 @@ class TransformConstraint implements Constraint {
     if (!target.appliedValid) target._updateAppliedTransform();
     var bones = this.bones;
 
-    for (int i = 0; i < bones.length; i++) {
+    for (var i = 0; i < bones.length; i++) {
       var bone = bones[i];
       if (!bone.appliedValid) bone._updateAppliedTransform();
 

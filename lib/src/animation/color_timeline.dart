@@ -66,7 +66,7 @@ class ColorTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    Slot slot = skeleton.slots[slotIndex];
+    var slot = skeleton.slots[slotIndex];
     double r = 0;
     double g = 0;
     double b = 0;
@@ -92,19 +92,19 @@ class ColorTimeline extends CurveTimeline {
       a = frames[frames.length + _prevA];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _entries);
-      double t0 = frames[frame + _prevTime];
-      double r0 = frames[frame + _prevR];
-      double g0 = frames[frame + _prevG];
-      double b0 = frames[frame + _prevB];
-      double a0 = frames[frame + _prevA];
-      double t1 = frames[frame + _time];
-      double r1 = frames[frame + _r];
-      double g1 = frames[frame + _g];
-      double b1 = frames[frame + _b];
-      double a1 = frames[frame + _a];
-      double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _entries - 1, between);
+      var frame = Animation.binarySearch(frames, time, _entries);
+      var t0 = frames[frame + _prevTime];
+      var r0 = frames[frame + _prevR];
+      var g0 = frames[frame + _prevG];
+      var b0 = frames[frame + _prevB];
+      var a0 = frames[frame + _prevA];
+      var t1 = frames[frame + _time];
+      var r1 = frames[frame + _r];
+      var g1 = frames[frame + _g];
+      var b1 = frames[frame + _b];
+      var a1 = frames[frame + _a];
+      var between = 1.0 - (time - t1) / (t0 - t1);
+      var percent = getCurvePercent(frame ~/ _entries - 1, between);
       r = r0 + (r1 - r0) * percent;
       g = g0 + (g1 - g0) * percent;
       b = b0 + (b1 - b0) * percent;

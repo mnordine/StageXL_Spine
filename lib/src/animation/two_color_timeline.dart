@@ -75,7 +75,7 @@ class TwoColorTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    Slot slot = skeleton.slots[slotIndex];
+    var slot = skeleton.slots[slotIndex];
     double r1 = 0;
     double g1 = 0;
     double b1 = 0;
@@ -113,28 +113,28 @@ class TwoColorTimeline extends CurveTimeline {
       b2 = frames[frames.length + _prevB2];
     } else {
       // Interpolate between the previous frame and the current frame.
-      int frame = Animation.binarySearch(frames, time, _entries);
+      var frame = Animation.binarySearch(frames, time, _entries);
 
-      double t0 = frames[frame + _prevTime];
-      double r01 = frames[frame + _prevR1];
-      double g01 = frames[frame + _prevG1];
-      double b01 = frames[frame + _prevB1];
-      double a01 = frames[frame + _prevA1];
-      double r02 = frames[frame + _prevR2];
-      double g02 = frames[frame + _prevG2];
-      double b02 = frames[frame + _prevB2];
+      var t0 = frames[frame + _prevTime];
+      var r01 = frames[frame + _prevR1];
+      var g01 = frames[frame + _prevG1];
+      var b01 = frames[frame + _prevB1];
+      var a01 = frames[frame + _prevA1];
+      var r02 = frames[frame + _prevR2];
+      var g02 = frames[frame + _prevG2];
+      var b02 = frames[frame + _prevB2];
 
-      double t1 = frames[frame + _time];
-      double r11 = frames[frame + _r1];
-      double g11 = frames[frame + _g1];
-      double b11 = frames[frame + _b1];
-      double a11 = frames[frame + _a1];
-      double r12 = frames[frame + _r2];
-      double g12 = frames[frame + _g2];
-      double b12 = frames[frame + _b2];
+      var t1 = frames[frame + _time];
+      var r11 = frames[frame + _r1];
+      var g11 = frames[frame + _g1];
+      var b11 = frames[frame + _b1];
+      var a11 = frames[frame + _a1];
+      var r12 = frames[frame + _r2];
+      var g12 = frames[frame + _g2];
+      var b12 = frames[frame + _b2];
 
-      double between = 1.0 - (time - t1) / (t0 - t1);
-      double percent = getCurvePercent(frame ~/ _entries - 1, between);
+      var between = 1.0 - (time - t1) / (t0 - t1);
+      var percent = getCurvePercent(frame ~/ _entries - 1, between);
 
       r1 = r01 + (r11 - r01) * percent;
       g1 = g01 + (g11 - g01) * percent;

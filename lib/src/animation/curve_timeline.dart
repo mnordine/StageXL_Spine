@@ -67,22 +67,22 @@ class CurveTimeline implements Timeline {
   /// the keyframe's values.
 
   void setCurve(int frameIndex, double cx1, double cy1, double cx2, double cy2) {
-    double tmpx = (-cx1 * 2 + cx2) * 0.03;
-    double tmpy = (-cy1 * 2 + cy2) * 0.03;
-    double dddfx = ((cx1 - cx2) * 3 + 1) * 0.006;
-    double dddfy = ((cy1 - cy2) * 3 + 1) * 0.006;
-    double ddfx = tmpx * 2 + dddfx;
-    double ddfy = tmpy * 2 + dddfy;
-    double dfx = cx1 * 0.3 + tmpx + dddfx * 0.16666667;
-    double dfy = cy1 * 0.3 + tmpy + dddfy * 0.16666667;
+    var tmpx = (-cx1 * 2 + cx2) * 0.03;
+    var tmpy = (-cy1 * 2 + cy2) * 0.03;
+    var dddfx = ((cx1 - cx2) * 3 + 1) * 0.006;
+    var dddfy = ((cy1 - cy2) * 3 + 1) * 0.006;
+    var ddfx = tmpx * 2 + dddfx;
+    var ddfy = tmpy * 2 + dddfy;
+    var dfx = cx1 * 0.3 + tmpx + dddfx * 0.16666667;
+    var dfy = cy1 * 0.3 + tmpy + dddfy * 0.16666667;
 
-    int i = frameIndex * _bezierSize;
+    var i = frameIndex * _bezierSize;
     _curves[i++] = _bezier;
 
-    double x = dfx;
-    double y = dfy;
+    var x = dfx;
+    var y = dfy;
 
-    for (int n = i + _bezierSize - 1; i < n; i += 2) {
+    for (var n = i + _bezierSize - 1; i < n; i += 2) {
       _curves[i + 0] = x;
       _curves[i + 1] = y;
       dfx += ddfx;
@@ -98,23 +98,23 @@ class CurveTimeline implements Timeline {
     if (percent < 0.0) percent = 0.0;
     if (percent > 1.0) percent = 1.0;
 
-    int i = frameIndex * _bezierSize;
-    double type = _curves[i];
+    var i = frameIndex * _bezierSize;
+    var type = _curves[i];
     if (type == _linear) return percent;
     if (type == _stepped) return 0;
     i++;
 
     double x = 0;
-    for (int start = i, n = i + _bezierSize - 1; i < n; i += 2) {
+    for (var start = i, n = i + _bezierSize - 1; i < n; i += 2) {
       x = _curves[i];
       if (x >= percent) {
-        double prevX = (i == start) ? 0.0 : _curves[i - 2];
-        double prevY = (i == start) ? 0.0 : _curves[i - 1];
+        var prevX = (i == start) ? 0.0 : _curves[i - 2];
+        var prevY = (i == start) ? 0.0 : _curves[i - 1];
         return prevY + (_curves[i + 1] - prevY) * (percent - prevX) / (x - prevX);
       }
     }
 
-    double y = _curves[i - 1];
+    var y = _curves[i - 1];
     return y + (1 - y) * (percent - x) / (1 - x); // Last point is 1,1.
   }
 }
