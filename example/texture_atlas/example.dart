@@ -40,7 +40,7 @@ Future<void> main() async {
   var names = ['goblins', 'hero', 'raptor', 'speedy', 'spineboy'];
   var skeletonAnimations = <SkeletonAnimation>[];
 
-  for (var name in names) {
+  for (final name in names) {
     // get spine texture atlases from combined texture atlas
 
     var bitmapData = resourceManager.getTextureAtlas('combined').getBitmapData(name);

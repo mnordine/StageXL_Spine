@@ -150,7 +150,7 @@ class SkeletonLoader {
 
       var constraintData = IkConstraintData(constraintName);
 
-      for (var boneName in constraintMap['bones'].getList<String>()) {
+      for (final boneName in constraintMap['bones'].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('IK constraint bone not found: $boneName');
         constraintData.bones.add(bone);
@@ -220,7 +220,7 @@ class SkeletonLoader {
 
       var pathConstraintData = PathConstraintData(constraintName);
 
-      for (var boneName in constraintMap['bones'].getList<String>()) {
+      for (final boneName in constraintMap['bones'].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('Path constraint bone not found: $boneName');
         pathConstraintData.bones.add(bone);
@@ -255,13 +255,13 @@ class SkeletonLoader {
 
     final skins = root['skins'].json;
 
-    for (var skinName in skins.keys) {
+    for (final skinName in skins.keys) {
       var skinMap = skins[skinName]! as Json;
       var skin = Skin(skinName);
-      for (var slotName in skinMap.keys) {
+      for (final slotName in skinMap.keys) {
         var slotIndex = skeletonData.findSlotIndex(slotName);
         var slotEntry = skinMap[slotName]! as Json;
-        for (var attachmentName in slotEntry.keys) {
+        for (final attachmentName in slotEntry.keys) {
           final map = slotEntry[attachmentName]! as Json;
           var attachment = readAttachment(map, skin, slotIndex, attachmentName, skeletonData);
           if (attachment != null) skin.addAttachment(slotIndex, attachmentName, attachment);
@@ -273,7 +273,7 @@ class SkeletonLoader {
 
     // Linked meshes.
 
-    for (var linkedMesh in _linkedMeshes) {
+    for (final linkedMesh in _linkedMeshes) {
       var parentSkin = linkedMesh.skin == null
           ? skeletonData.defaultSkin
           : skeletonData.findSkin(linkedMesh.skin!);
@@ -290,7 +290,7 @@ class SkeletonLoader {
 
     final events = root['events'].json;
 
-    for (var eventName in events.keys) {
+    for (final eventName in events.keys) {
       final eventMap = events[eventName]! as Json;
       var eventData = EventData(eventName);
       eventData.intValue = _getInt(eventMap, 'int', 0);
@@ -303,7 +303,7 @@ class SkeletonLoader {
 
     final animations = root['animations'].json;
 
-    for (var animationName in animations.keys) {
+    for (final animationName in animations.keys) {
       final map = animations[animationName]! as Json;
       _readAnimation(map, animationName, skeletonData);
     }
@@ -531,13 +531,13 @@ class SkeletonLoader {
 
     final bones = map['bones'].json;
 
-    for (var boneName in bones.keys) {
+    for (final boneName in bones.keys) {
       var boneIndex = skeletonData.findBoneIndex(boneName);
       if (boneIndex == -1) throw StateError('Bone not found: $boneName');
 
       final boneMap = bones[boneName]! as Json;
 
-      for (var timelineName in boneMap.keys) {
+      for (final timelineName in boneMap.keys) {
         final values = boneMap[timelineName].getList<Json>();
 
         if (timelineName == 'rotate') {
@@ -596,7 +596,7 @@ class SkeletonLoader {
 
     final ikMap = map['ik'].json;
 
-    for (var ikConstraintName in ikMap.keys) {
+    for (final ikConstraintName in ikMap.keys) {
       var ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
       final valueMaps = ikMap[ikConstraintName].getList<Json>();
       var ikTimeline = IkConstraintTimeline(valueMaps.length);
@@ -619,7 +619,7 @@ class SkeletonLoader {
 
     final transformMap = map['transform'].json;
 
-    for (var transformName in transformMap.keys) {
+    for (final transformName in transformMap.keys) {
       var transformConstraint =
           skeletonData.findTransformConstraint(transformName)!;
       final valueMaps = transformMap[transformName].getList<Json>();
@@ -648,12 +648,12 @@ class SkeletonLoader {
 
     final pathsMaps = map['paths'].json;
 
-    for (var pathName in pathsMaps.keys) {
+    for (final pathName in pathsMaps.keys) {
       var index = skeletonData.findPathConstraintIndex(pathName);
       if (index == -1) throw StateError('Path constraint not found: $pathName');
 
       final pathMap = pathsMaps[pathName]! as Json;
-      for (var timelineName in pathMap.keys) {
+      for (final timelineName in pathMap.keys) {
         final valueMaps = pathMap[timelineName].getList<Json>();
 
         if (timelineName == 'position' || timelineName == 'spacing') {
@@ -708,15 +708,15 @@ class SkeletonLoader {
 
     final deformMap = map['deform'].json;
 
-    for (var skinName in deformMap.keys) {
+    for (final skinName in deformMap.keys) {
       var skin = skeletonData.findSkin(skinName)!;
       final slotMap = deformMap[skinName]! as Json;
 
-      for (var slotName in slotMap.keys) {
+      for (final slotName in slotMap.keys) {
         var slotIndex = skeletonData.findSlotIndex(slotName);
         final timelineMap = slotMap[slotName]! as Json;
 
-        for (var timelineName in timelineMap.keys) {
+        for (final timelineName in timelineMap.keys) {
           final valueMaps = timelineMap[timelineName].getList<Json>();
           var attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
           if (attachment == null) throw StateError('Deform attachment not found: $timelineName');

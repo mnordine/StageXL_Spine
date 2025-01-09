@@ -48,7 +48,7 @@ class TransformConstraint implements Constraint {
     scaleMix = data.scaleMix;
     shearMix = data.shearMix;
 
-    for (var boneData in data.bones) {
+    for (final boneData in data.bones) {
       bones.add(skeleton.findBone(boneData.name)!);
     }
   }

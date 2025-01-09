@@ -54,7 +54,7 @@ class PathConstraint implements Constraint {
   final Float32List _segments = Float32List(10);
 
   PathConstraint(this.data, Skeleton skeleton) : target = skeleton.findSlot(data.target.name)! {
-    for (var boneData in data.bones) {
+    for (final boneData in data.bones) {
       bones.add(skeleton.findBone(boneData.name)!);
     }
 

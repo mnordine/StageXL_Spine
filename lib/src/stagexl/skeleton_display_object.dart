@@ -25,7 +25,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     var offset = 0;
 
     if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
-      for (var slot in skeleton.drawOrder) {
+      for (final slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
           var length = attachment.worldVerticesLength;
@@ -34,7 +34,7 @@ class SkeletonDisplayObject extends InteractiveObject {
         }
       }
     } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
-      for (var slot in skeleton.drawOrder) {
+      for (final slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is RenderAttachment) {
           var length = attachment.hullLength;
@@ -73,7 +73,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     var sy = 0.0 - localY;
 
     if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
-      for (var slot in skeleton.drawOrder) {
+      for (final slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
           var length = attachment.worldVerticesLength;
@@ -82,7 +82,7 @@ class SkeletonDisplayObject extends InteractiveObject {
         }
       }
     } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
-      for (var slot in skeleton.drawOrder) {
+      for (final slot in skeleton.drawOrder) {
         var attachment = slot.attachment;
         if (attachment is RenderAttachment) {
           var length = attachment.hullLength;

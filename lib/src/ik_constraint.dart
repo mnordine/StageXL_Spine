@@ -42,7 +42,7 @@ class IkConstraint implements Constraint {
     mix = data.mix;
     bendDirection = data.bendDirection;
 
-    for (var boneData in data.bones) {
+    for (final boneData in data.bones) {
       final bone = skeleton.findBone(boneData.name);
       if (bone != null) bones.add(bone);
     }

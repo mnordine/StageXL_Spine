@@ -49,7 +49,7 @@ class Skeleton {
   double y = 0;
 
   Skeleton(this.data) {
-    for (var boneData in data.bones) {
+    for (final boneData in data.bones) {
       if (boneData.parent == null) {
         var bone = Bone(boneData, this, null);
         bones.add(bone);
@@ -61,24 +61,24 @@ class Skeleton {
       }
     }
 
-    for (var slotData in data.slots) {
+    for (final slotData in data.slots) {
       var bone = bones[slotData.boneData.index];
       var slot = Slot(slotData, bone);
       slots.add(slot);
       drawOrder.add(slot);
     }
 
-    for (var ikConstraintData in data.ikConstraints) {
+    for (final ikConstraintData in data.ikConstraints) {
       var ikConstraint = IkConstraint(ikConstraintData, this);
       ikConstraints.add(ikConstraint);
     }
 
-    for (var transformConstraintData in data.transformConstraints) {
+    for (final transformConstraintData in data.transformConstraints) {
       var transformConstraint = TransformConstraint(transformConstraintData, this);
       transformConstraints.add(transformConstraint);
     }
 
-    for (var pathConstraintData in data.pathConstraints) {
+    for (final pathConstraintData in data.pathConstraints) {
       var pathConstraint = PathConstraint(pathConstraintData, this);
       pathConstraints.add(pathConstraint);
     }
@@ -93,7 +93,7 @@ class Skeleton {
     _updateCache.clear();
     _updateCacheReset.clear();
 
-    for (var bone in bones) {
+    for (final bone in bones) {
       bone._sorted = false;
     }
 
@@ -131,7 +131,7 @@ class Skeleton {
       }
     }
 
-    for (var bone in bones) {
+    for (final bone in bones) {
       _sortBone(bone);
     }
   }
@@ -227,7 +227,7 @@ class Skeleton {
   void _sortPathConstraintAttachment(Skin skin, int slotIndex, Bone slotBone) {
     var dict = skin.attachments[slotIndex];
     if (dict == null) return;
-    for (var value in dict.values.nonNulls) {
+    for (final value in dict.values.nonNulls) {
       _sortPathConstraintAttachment2(value, slotBone);
     }
   }
@@ -269,7 +269,7 @@ class Skeleton {
   /// Updates the world transform for each bone and applies constraints.
 
   void updateWorldTransform() {
-    for (var bone in _updateCacheReset) {
+    for (final bone in _updateCacheReset) {
       bone.ax = bone.x;
       bone.ay = bone.y;
       bone.arotation = bone.rotation;
@@ -279,7 +279,7 @@ class Skeleton {
       bone.ashearY = bone.shearY;
       bone.appliedValid = true;
     }
-    for (var updatable in _updateCache) {
+    for (final updatable in _updateCache) {
       updatable.update();
     }
   }
@@ -294,23 +294,23 @@ class Skeleton {
   /// Sets the bones and constraints to their setup pose values.
 
   void setBonesToSetupPose() {
-    for (var bone in bones) {
+    for (final bone in bones) {
       bone.setToSetupPose();
     }
 
-    for (var ikConstraint in ikConstraints) {
+    for (final ikConstraint in ikConstraints) {
       ikConstraint.bendDirection = ikConstraint.data.bendDirection;
       ikConstraint.mix = ikConstraint.data.mix;
     }
 
-    for (var transformConstraint in transformConstraints) {
+    for (final transformConstraint in transformConstraints) {
       transformConstraint.rotateMix = transformConstraint.data.rotateMix;
       transformConstraint.translateMix = transformConstraint.data.translateMix;
       transformConstraint.scaleMix = transformConstraint.data.scaleMix;
       transformConstraint.shearMix = transformConstraint.data.shearMix;
     }
 
-    for (var pathConstraint in pathConstraints) {
+    for (final pathConstraint in pathConstraints) {
       pathConstraint.position = pathConstraint.data.position;
       pathConstraint.spacing = pathConstraint.data.spacing;
       pathConstraint.rotateMix = pathConstraint.data.rotateMix;
@@ -320,7 +320,7 @@ class Skeleton {
 
   void setSlotsToSetupPose() {
     var i = 0;
-    for (var slot in slots) {
+    for (final slot in slots) {
       drawOrder[i++] = slot;
       slot.setToSetupPose();
     }
@@ -411,21 +411,21 @@ class Skeleton {
   }
 
   IkConstraint? findIkConstraint(String constraintName) {
-    for (var ikConstraint in ikConstraints) {
+    for (final ikConstraint in ikConstraints) {
       if (ikConstraint.data.name == constraintName) return ikConstraint;
     }
     return null;
   }
 
   TransformConstraint? findTransformConstraint(String constraintName) {
-    for (var transformConstraint in transformConstraints) {
+    for (final transformConstraint in transformConstraints) {
       if (transformConstraint.data.name == constraintName) return transformConstraint;
     }
     return null;
   }
 
   PathConstraint? findPathConstraint(String constraintName) {
-    for (var pathConstraint in pathConstraints) {
+    for (final pathConstraint in pathConstraints) {
       if (pathConstraint.data.name == constraintName) return pathConstraint;
     }
     return null;
