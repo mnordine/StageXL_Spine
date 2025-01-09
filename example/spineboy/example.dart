@@ -20,25 +20,25 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   var libgdxx = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("spineboy", "spine/spineboy.json");
-  resourceManager.addTextureAtlas("spineboy", "spine/spineboy.atlas", libgdxx);
+  resourceManager.addTextFile('spineboy', 'spine/spineboy.json');
+  resourceManager.addTextureAtlas('spineboy', 'spine/spineboy.atlas', libgdxx);
   await resourceManager.load();
 
   // add TextField to show user information
 
   var textField = TextField();
-  textField.defaultTextFormat = TextFormat("Arial", 24, Color.White);
+  textField.defaultTextFormat = TextFormat('Arial', 24, Color.White);
   textField.defaultTextFormat.align = TextFormatAlign.CENTER;
   textField.width = 480;
   textField.x = 0;
   textField.y = 550;
-  textField.text = "tap to change animation";
+  textField.text = 'tap to change animation';
   textField.addTo(stage);
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("spineboy");
-  var textureAtlas = resourceManager.getTextureAtlas("spineboy");
+  var spineJson = resourceManager.getTextFile('spineboy');
+  var textureAtlas = resourceManager.getTextureAtlas('spineboy');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -46,11 +46,11 @@ Future<void> main() async {
   // configure Spine animation mix
 
   var animationStateData = AnimationStateData(skeletonData);
-  animationStateData.setMixByName("portal", "idle", 0.2);
-  animationStateData.setMixByName("idle", "walk", 0.2);
-  animationStateData.setMixByName("walk", "run", 0.2);
-  animationStateData.setMixByName("run", "walk", 0.2);
-  animationStateData.setMixByName("walk", "idle", 0.2);
+  animationStateData.setMixByName('portal', 'idle', 0.2);
+  animationStateData.setMixByName('idle', 'walk', 0.2);
+  animationStateData.setMixByName('walk', 'run', 0.2);
+  animationStateData.setMixByName('run', 'walk', 0.2);
+  animationStateData.setMixByName('walk', 'idle', 0.2);
 
   // create the display object showing the skeleton animation
 
@@ -69,32 +69,32 @@ Future<void> main() async {
   // register track events
 
   skeletonAnimation.state.onTrackStart.listen((e) {
-    print("${e.trackEntry.trackIndex} start: ${e.trackEntry}");
+    print('${e.trackEntry.trackIndex} start: ${e.trackEntry}');
   });
 
   skeletonAnimation.state.onTrackEnd.listen((e) {
-    print("${e.trackEntry.trackIndex} end: ${e.trackEntry}");
+    print('${e.trackEntry.trackIndex} end: ${e.trackEntry}');
   });
 
   skeletonAnimation.state.onTrackComplete.listen((e) {
-    print("${e.trackEntry.trackIndex} complete: ${e.trackEntry}");
+    print('${e.trackEntry.trackIndex} complete: ${e.trackEntry}');
   });
 
   skeletonAnimation.state.onTrackEvent.listen((e) {
     var ev = e.event;
-    var text = "${ev.data.name}: ${ev.intValue}, ${ev.floatValue}, ${ev.stringValue}";
-    print("${e.trackEntry.trackIndex} event: ${e.trackEntry}, $text");
+    var text = '${ev.data.name}: ${ev.intValue}, ${ev.floatValue}, ${ev.stringValue}';
+    print('${e.trackEntry.trackIndex} event: ${e.trackEntry}, $text');
   });
 
   // start with the "portal" animation continue with the "idle" animation
 
-  var portalAnimation = skeletonAnimation.state.setAnimationByName(0, "portal", false);
-  skeletonAnimation.state.addAnimationByName(0, "idle", true, portalAnimation.animation.duration);
+  var portalAnimation = skeletonAnimation.state.setAnimationByName(0, 'portal', false);
+  skeletonAnimation.state.addAnimationByName(0, 'idle', true, portalAnimation.animation.duration);
   await portalAnimation.onTrackComplete.first;
 
   // change the animation on every mouse click
 
-  var animationNames = ["idle", "idle", "walk", "run", "walk"];
+  var animationNames = ['idle', 'idle', 'walk', 'run', 'walk'];
   var animationState = skeletonAnimation.state;
   var animationIndex = 0;
 
@@ -102,7 +102,7 @@ Future<void> main() async {
     animationIndex = (animationIndex + 1) % animationNames.length;
     if (animationIndex == 1) {
       animationState.setEmptyAnimation(1, 0);
-      animationState.addAnimationByName(1, "shoot", false, 0).mixDuration = 0.2;
+      animationState.addAnimationByName(1, 'shoot', false, 0).mixDuration = 0.2;
       animationState.addEmptyAnimation(1, 0.2, 0.5);
     } else {
       var animationName = animationNames[animationIndex];

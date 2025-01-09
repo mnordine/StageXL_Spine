@@ -42,7 +42,7 @@ class SlotData {
   BlendMode blendMode = BlendMode.NORMAL;
 
   SlotData(this.index, this.name, this.boneData) {
-    if (index < 0) throw ArgumentError("index must be >= 0.");
+    if (index < 0) throw ArgumentError('index must be >= 0.');
   }
 
   @override

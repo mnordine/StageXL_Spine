@@ -31,10 +31,10 @@
 part of stagexl_spine;
 
 class SkeletonData {
-  String? name = "";
-  String version = "";
-  String hash = "";
-  String imagesPath = "";
+  String? name = '';
+  String version = '';
+  String hash = '';
+  String imagesPath = '';
   double width = 0;
   double height = 0;
   double fps = 30;

@@ -20,14 +20,14 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   var libgdx = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("powerup", "spine/powerup-pro.json");
-  resourceManager.addTextureAtlas("powerup", "spine/powerup-pro.atlas", libgdx);
+  resourceManager.addTextFile('powerup', 'spine/powerup-pro.json');
+  resourceManager.addTextureAtlas('powerup', 'spine/powerup-pro.atlas', libgdx);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("powerup");
-  var textureAtlas = resourceManager.getTextureAtlas("powerup");
+  var spineJson = resourceManager.getTextFile('powerup');
+  var textureAtlas = resourceManager.getTextureAtlas('powerup');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -39,7 +39,7 @@ Future<void> main() async {
   skeletonAnimation.x = 300;
   skeletonAnimation.y = 320;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.7;
-  skeletonAnimation.state.setAnimationByName(0, "bounce", true);
+  skeletonAnimation.state.setAnimationByName(0, 'bounce', true);
   stage.addChild(skeletonAnimation);
   stage.juggler.add(skeletonAnimation);
 }

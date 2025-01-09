@@ -351,7 +351,7 @@ class Skeleton {
   set skinName(String? skinName) {
     if (skinName == null) throw ArgumentError('Cannot set skin name to null');
     Skin? skin = data.findSkin(skinName);
-    if (skin == null) throw ArgumentError("Skin not found: $skinName");
+    if (skin == null) throw ArgumentError('Skin not found: $skinName');
     this.skin = skin;
   }
 
@@ -400,14 +400,14 @@ class Skeleton {
       if (slot.data.name == slotName) {
         var attachment = getAttachmentForSlotIndex(i, attachmentName);
         if (attachment == null) {
-          throw ArgumentError("Attachment not found: $attachmentName, for slot: $slotName");
+          throw ArgumentError('Attachment not found: $attachmentName, for slot: $slotName');
         }
         slot.attachment = attachment;
         return;
       }
     }
 
-    throw ArgumentError("Slot not found: $slotName");
+    throw ArgumentError('Slot not found: $slotName');
   }
 
   IkConstraint? findIkConstraint(String constraintName) {

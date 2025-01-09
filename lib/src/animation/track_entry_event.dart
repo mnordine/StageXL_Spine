@@ -39,26 +39,26 @@ abstract class TrackEntryEvent extends stagexl.Event {
 }
 
 class TrackEntryStartEvent extends TrackEntryEvent {
-  TrackEntryStartEvent(TrackEntry trackEntry) : super("start", trackEntry);
+  TrackEntryStartEvent(TrackEntry trackEntry) : super('start', trackEntry);
 }
 
 class TrackEntryInterruptEvent extends TrackEntryEvent {
-  TrackEntryInterruptEvent(TrackEntry trackEntry) : super("interrupt", trackEntry);
+  TrackEntryInterruptEvent(TrackEntry trackEntry) : super('interrupt', trackEntry);
 }
 
 class TrackEntryEndEvent extends TrackEntryEvent {
-  TrackEntryEndEvent(TrackEntry trackEntry) : super("end", trackEntry);
+  TrackEntryEndEvent(TrackEntry trackEntry) : super('end', trackEntry);
 }
 
 class TrackEntryDisposeEvent extends TrackEntryEvent {
-  TrackEntryDisposeEvent(TrackEntry trackEntry) : super("dispose", trackEntry);
+  TrackEntryDisposeEvent(TrackEntry trackEntry) : super('dispose', trackEntry);
 }
 
 class TrackEntryCompleteEvent extends TrackEntryEvent {
-  TrackEntryCompleteEvent(TrackEntry trackEntry) : super("complete", trackEntry);
+  TrackEntryCompleteEvent(TrackEntry trackEntry) : super('complete', trackEntry);
 }
 
 class TrackEntryEventEvent extends TrackEntryEvent {
   final SpineEvent event;
-  TrackEntryEventEvent(TrackEntry trackEntry, this.event) : super("event", trackEntry);
+  TrackEntryEventEvent(TrackEntry trackEntry, this.event) : super('event', trackEntry);
 }

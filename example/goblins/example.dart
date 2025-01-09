@@ -20,14 +20,14 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   var libgdx = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("goblins", "spine/goblins.json");
-  resourceManager.addTextureAtlas("goblins", "spine/goblins.atlas", libgdx);
+  resourceManager.addTextFile('goblins', 'spine/goblins.json');
+  resourceManager.addTextureAtlas('goblins', 'spine/goblins.atlas', libgdx);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("goblins");
-  var textureAtlas = resourceManager.getTextureAtlas("goblins");
+  var spineJson = resourceManager.getTextFile('goblins');
+  var textureAtlas = resourceManager.getTextureAtlas('goblins');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -39,8 +39,8 @@ Future<void> main() async {
   skeletonAnimation.x = 240;
   skeletonAnimation.y = 560;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 1.5;
-  skeletonAnimation.state.setAnimationByName(0, "walk", true);
-  skeletonAnimation.skeleton.skinName = "goblin";
+  skeletonAnimation.state.setAnimationByName(0, 'walk', true);
+  skeletonAnimation.skeleton.skinName = 'goblin';
   stage.addChild(skeletonAnimation);
   stage.juggler.add(skeletonAnimation);
 

@@ -69,17 +69,17 @@ class TrackEntry extends EventDispatcher {
 
   //---------------------------------------------------------------------------
 
-  EventStream<TrackEntryStartEvent> get onTrackStart => const EventStreamProvider<TrackEntryStartEvent>("start").forTarget(this);
+  EventStream<TrackEntryStartEvent> get onTrackStart => const EventStreamProvider<TrackEntryStartEvent>('start').forTarget(this);
 
-  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt => const EventStreamProvider<TrackEntryInterruptEvent>("interrupt").forTarget(this);
+  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt => const EventStreamProvider<TrackEntryInterruptEvent>('interrupt').forTarget(this);
 
-  EventStream<TrackEntryEndEvent> get onTrackEnd => const EventStreamProvider<TrackEntryEndEvent>("end").forTarget(this);
+  EventStream<TrackEntryEndEvent> get onTrackEnd => const EventStreamProvider<TrackEntryEndEvent>('end').forTarget(this);
 
-  EventStream<TrackEntryDisposeEvent> get onTrackDispose => const EventStreamProvider<TrackEntryDisposeEvent>("dispose").forTarget(this);
+  EventStream<TrackEntryDisposeEvent> get onTrackDispose => const EventStreamProvider<TrackEntryDisposeEvent>('dispose').forTarget(this);
 
-  EventStream<TrackEntryCompleteEvent> get onTrackComplete => const EventStreamProvider<TrackEntryCompleteEvent>("complete").forTarget(this);
+  EventStream<TrackEntryCompleteEvent> get onTrackComplete => const EventStreamProvider<TrackEntryCompleteEvent>('complete').forTarget(this);
 
-  EventStream<TrackEntryEventEvent> get onTrackEvent => const EventStreamProvider<TrackEntryEventEvent>("event").forTarget(this);
+  EventStream<TrackEntryEventEvent> get onTrackEvent => const EventStreamProvider<TrackEntryEventEvent>('event').forTarget(this);
 
   //---------------------------------------------------------------------------
 

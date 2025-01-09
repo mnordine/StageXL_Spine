@@ -90,6 +90,7 @@ linter:
     - use_if_null_to_convert_nulls_to_bools
     - avoid_dynamic_calls
     - cast_nullable_to_non_nullable
+    - prefer_single_quotes
     # - avoid_setters_without_getters
     # - cascade_invocations
     # - avoid_positional_boolean_parameters
@@ -98,4 +99,3 @@ linter:
     # - parameter_assignments
     # - prefer_final_in_for_each
     # - prefer_final_locals
-    # - prefer_single_quotes

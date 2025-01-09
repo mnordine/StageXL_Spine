@@ -20,14 +20,14 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   var format = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("tank", "spine/tank.json");
-  resourceManager.addTextureAtlas("tank", "spine/tank.atlas", format);
+  resourceManager.addTextFile('tank', 'spine/tank.json');
+  resourceManager.addTextureAtlas('tank', 'spine/tank.atlas', format);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("tank");
-  var textureAtlas = resourceManager.getTextureAtlas("tank");
+  var spineJson = resourceManager.getTextFile('tank');
+  var textureAtlas = resourceManager.getTextureAtlas('tank');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -39,7 +39,7 @@ Future<void> main() async {
   skeletonAnimation.x = 2300;
   skeletonAnimation.y = 700;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.5;
-  skeletonAnimation.state.setAnimationByName(0, "drive", true);
+  skeletonAnimation.state.setAnimationByName(0, 'drive', true);
 
   stage.addChild(skeletonAnimation);
   stage.juggler.add(skeletonAnimation);

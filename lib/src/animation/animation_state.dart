@@ -35,7 +35,7 @@ class AnimationState extends EventDispatcher {
   static const int first = 1;
   static const int dip = 2;
   static const int dipMix = 3;
-  static final Animation _emptyAnimation = Animation("<empty>", [], 0);
+  static final Animation _emptyAnimation = Animation('<empty>', [], 0);
 
   final AnimationStateData data;
   final List<TrackEntry?> _tracks = [];
@@ -52,17 +52,17 @@ class AnimationState extends EventDispatcher {
 
   AnimationState(this.data);
 
-  EventStream<TrackEntryStartEvent> get onTrackStart => const EventStreamProvider<TrackEntryStartEvent>("start").forTarget(this);
+  EventStream<TrackEntryStartEvent> get onTrackStart => const EventStreamProvider<TrackEntryStartEvent>('start').forTarget(this);
 
-  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt => const EventStreamProvider<TrackEntryInterruptEvent>("interrupt").forTarget(this);
+  EventStream<TrackEntryInterruptEvent> get onTrackInterrupt => const EventStreamProvider<TrackEntryInterruptEvent>('interrupt').forTarget(this);
 
-  EventStream<TrackEntryEndEvent> get onTrackEnd => const EventStreamProvider<TrackEntryEndEvent>("end").forTarget(this);
+  EventStream<TrackEntryEndEvent> get onTrackEnd => const EventStreamProvider<TrackEntryEndEvent>('end').forTarget(this);
 
-  EventStream<TrackEntryDisposeEvent> get onTrackDispose => const EventStreamProvider<TrackEntryDisposeEvent>("dispose").forTarget(this);
+  EventStream<TrackEntryDisposeEvent> get onTrackDispose => const EventStreamProvider<TrackEntryDisposeEvent>('dispose').forTarget(this);
 
-  EventStream<TrackEntryCompleteEvent> get onTrackComplete => const EventStreamProvider<TrackEntryCompleteEvent>("complete").forTarget(this);
+  EventStream<TrackEntryCompleteEvent> get onTrackComplete => const EventStreamProvider<TrackEntryCompleteEvent>('complete').forTarget(this);
 
-  EventStream<TrackEntryEventEvent> get onTrackEvent => const EventStreamProvider<TrackEntryEventEvent>("event").forTarget(this);
+  EventStream<TrackEntryEventEvent> get onTrackEvent => const EventStreamProvider<TrackEntryEventEvent>('event').forTarget(this);
 
   //-----------------------------------------------------------------------------------------------
 
@@ -578,12 +578,12 @@ class AnimationState extends EventDispatcher {
   }
 
   void clearListeners() {
-    removeEventListeners("start");
-    removeEventListeners("interrupt");
-    removeEventListeners("end");
-    removeEventListeners("dispose");
-    removeEventListeners("complete");
-    removeEventListeners("event");
+    removeEventListeners('start');
+    removeEventListeners('interrupt');
+    removeEventListeners('end');
+    removeEventListeners('dispose');
+    removeEventListeners('complete');
+    removeEventListeners('event');
   }
 
   void clearListenerNotifications() {

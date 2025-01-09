@@ -23,16 +23,16 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   //var libgdx = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("raptor", "spine/raptor.json");
+  resourceManager.addTextFile('raptor', 'spine/raptor.json');
   //resourceManager.addTextureAtlas("raptor", "atlas1/raptor.atlas", libgdx);
   //resourceManager.addTextureAtlas("raptor", "atlas2/raptor.json");
-  resourceManager.addTextureAtlas("raptor", "atlas3/raptor.json");
+  resourceManager.addTextureAtlas('raptor', 'atlas3/raptor.json');
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("raptor");
-  var textureAtlas = resourceManager.getTextureAtlas("raptor");
+  var spineJson = resourceManager.getTextFile('raptor');
+  var textureAtlas = resourceManager.getTextureAtlas('raptor');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -44,14 +44,14 @@ Future<void> main() async {
   skeletonAnimation.x = 600;
   skeletonAnimation.y = 1000;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.8;
-  skeletonAnimation.state.setAnimationByName(0, "walk", true);
+  skeletonAnimation.state.setAnimationByName(0, 'walk', true);
 
   stage.onMouseClick.listen((me) {
     var state = skeletonAnimation.state;
-    var roarAnimation = state.setAnimationByName(0, "roar", false);
+    var roarAnimation = state.setAnimationByName(0, 'roar', false);
     roarAnimation.mixDuration = 0.25;
     roarAnimation.onTrackComplete.first.then((_) {
-      var walkAnimation = state.setAnimationByName(0, "walk", true);
+      var walkAnimation = state.setAnimationByName(0, 'walk', true);
       walkAnimation.mixDuration = 1.0;
     });
   });

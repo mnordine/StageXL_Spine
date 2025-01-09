@@ -20,14 +20,14 @@ Future<void> main() async {
 
   var resourceManager = ResourceManager();
   var format = TextureAtlasFormat.libGdx;
-  resourceManager.addTextFile("stretchyman", "spine/stretchyman.json");
-  resourceManager.addTextureAtlas("stretchyman", "spine/stretchyman.atlas", format);
+  resourceManager.addTextFile('stretchyman', 'spine/stretchyman.json');
+  resourceManager.addTextureAtlas('stretchyman', 'spine/stretchyman.atlas', format);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile("stretchyman");
-  var textureAtlas = resourceManager.getTextureAtlas("stretchyman");
+  var spineJson = resourceManager.getTextFile('stretchyman');
+  var textureAtlas = resourceManager.getTextureAtlas('stretchyman');
   var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
   var skeletonLoader = SkeletonLoader(attachmentLoader);
   var skeletonData = skeletonLoader.readSkeletonData(spineJson);
@@ -39,7 +39,7 @@ Future<void> main() async {
   skeletonAnimation.x = 200;
   skeletonAnimation.y = 700;
   //skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.5;
-  skeletonAnimation.state.setAnimationByName(0, "sneak", true);
+  skeletonAnimation.state.setAnimationByName(0, 'sneak', true);
 
   stage.addChild(skeletonAnimation);
   stage.juggler.add(skeletonAnimation);
