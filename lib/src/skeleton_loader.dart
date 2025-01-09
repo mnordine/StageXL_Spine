@@ -31,6 +31,7 @@
 part of stagexl_spine;
 
 extension on Object? {
+  // ignore: cast_nullable_to_non_nullable
   List<T> getList<T>() => this == null ? [] : List<T>.from(this as List);
 
   Json get json => this as Json? ?? {};
@@ -255,13 +256,13 @@ class SkeletonLoader {
     final skins = root["skins"].json;
 
     for (String skinName in skins.keys) {
-      var skinMap = skins[skinName] as Json;
+      var skinMap = skins[skinName]! as Json;
       var skin = Skin(skinName);
       for (String slotName in skinMap.keys) {
         var slotIndex = skeletonData.findSlotIndex(slotName);
-        var slotEntry = skinMap[slotName] as Json;
+        var slotEntry = skinMap[slotName]! as Json;
         for (String attachmentName in slotEntry.keys) {
-          final map = slotEntry[attachmentName] as Json;
+          final map = slotEntry[attachmentName]! as Json;
           var attachment = readAttachment(map, skin, slotIndex, attachmentName, skeletonData);
           if (attachment != null) skin.addAttachment(slotIndex, attachmentName, attachment);
         }
@@ -290,7 +291,7 @@ class SkeletonLoader {
     final events = root["events"].json;
 
     for (String eventName in events.keys) {
-      final eventMap = events[eventName] as Json;
+      final eventMap = events[eventName]! as Json;
       var eventData = EventData(eventName);
       eventData.intValue = _getInt(eventMap, "int", 0);
       eventData.floatValue = _getDouble(eventMap, "float", 0);
@@ -303,7 +304,7 @@ class SkeletonLoader {
     final animations = root["animations"].json;
 
     for (var animationName in animations.keys) {
-      final map = animations[animationName] as Json;
+      final map = animations[animationName]! as Json;
       _readAnimation(map, animationName, skeletonData);
     }
 
@@ -461,7 +462,7 @@ class SkeletonLoader {
     final slots = map["slots"].json;
 
     for (final slotName in slots.keys) {
-      final slotMap = slots[slotName] as Json;
+      final slotMap = slots[slotName]! as Json;
       int slotIndex = skeletonData.findSlotIndex(slotName);
 
       for (final timelineName in slotMap.keys) {
@@ -534,7 +535,7 @@ class SkeletonLoader {
       int boneIndex = skeletonData.findBoneIndex(boneName);
       if (boneIndex == -1) throw StateError("Bone not found: $boneName");
 
-      final boneMap = bones[boneName] as Json;
+      final boneMap = bones[boneName]! as Json;
 
       for (String timelineName in boneMap.keys) {
         final values = boneMap[timelineName].getList<Json>();
@@ -651,7 +652,7 @@ class SkeletonLoader {
       int index = skeletonData.findPathConstraintIndex(pathName);
       if (index == -1) throw StateError("Path constraint not found: $pathName");
 
-      final pathMap = pathsMaps[pathName] as Json;
+      final pathMap = pathsMaps[pathName]! as Json;
       for (String timelineName in pathMap.keys) {
         final valueMaps = pathMap[timelineName].getList<Json>();
 
@@ -709,11 +710,11 @@ class SkeletonLoader {
 
     for (String skinName in deformMap.keys) {
       Skin skin = skeletonData.findSkin(skinName)!;
-      final slotMap = deformMap[skinName] as Json;
+      final slotMap = deformMap[skinName]! as Json;
 
       for (String slotName in slotMap.keys) {
         int slotIndex = skeletonData.findSlotIndex(slotName);
-        final timelineMap = slotMap[slotName] as Json;
+        final timelineMap = slotMap[slotName]! as Json;
 
         for (String timelineName in timelineMap.keys) {
           final valueMaps = timelineMap[timelineName].getList<Json>();
@@ -794,7 +795,7 @@ class SkeletonLoader {
               unchanged[unchangedIndex++] = originalIndex++;
             }
             // Set changed items.
-            drawOrder[originalIndex + (offsetMap["offset"] as int)] = originalIndex++;
+            drawOrder[originalIndex + (offsetMap["offset"]! as int)] = originalIndex++;
           }
 
           // Collect remaining unchanged items.
@@ -823,7 +824,10 @@ class SkeletonLoader {
       int frameIndex = 0;
 
       for (final eventMap in eventsMap) {
-        var eventData = skeletonData.findEvent(eventMap["name"] as String);
+        final name = eventMap['name'] as String?;
+        if (name == null) continue;
+
+        var eventData = skeletonData.findEvent(name);
         if (eventData == null) throw StateError("Event not found: ${eventMap["name"]}");
         var eventTime = _getDouble(eventMap, "time", 0);
         var event = SpineEvent(

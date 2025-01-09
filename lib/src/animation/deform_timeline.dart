@@ -55,9 +55,9 @@ class DeformTimeline extends CurveTimeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     Slot slot = skeleton.slots[slotIndex];
-    if (slot.attachment is! VertexAttachment) return;
+    final vertexAttachment = slot.attachment;
+    if (vertexAttachment is! VertexAttachment) return;
 
-    var vertexAttachment = slot.attachment as VertexAttachment;
     if (vertexAttachment.applyDeform(attachment) == false) return;
 
     var vertexCount = frameVertices[0]!.length;

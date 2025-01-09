@@ -70,8 +70,8 @@ class PathConstraint implements Constraint {
 
   @override
   void update() {
-    if (target.attachment is! PathAttachment) return;
-    var attachment = target.attachment as PathAttachment;
+    final attachment = target.attachment;
+    if (attachment is! PathAttachment) return;
 
     double rotateMix = this.rotateMix;
     double translateMix = this.translateMix;

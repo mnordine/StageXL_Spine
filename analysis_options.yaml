@@ -23,3 +23,4 @@ linter:
     - avoid_returning_this
     - one_member_abstracts
     - avoid_classes_with_only_static_members
+    - cast_nullable_to_non_nullable
