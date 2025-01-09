@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:html' as html;
+import 'package:web/web.dart';
 import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_spine/stagexl_spine.dart';
 
@@ -12,17 +12,17 @@ Future<void> main() async {
 
   // init Stage and RenderLoop
 
-  var canvas = html.querySelector('#stage')! as html.CanvasElement;
+  var canvas = document.querySelector('#stage')! as HTMLCanvasElement;
   var stage = Stage(canvas, width: 1300, height: 1100);
   var renderLoop = RenderLoop();
   renderLoop.addStage(stage);
-  stage.console.visible = true;
-  stage.console.alpha = 0.75;
+  stage.console?.visible = true;
+  stage.console?.alpha = 0.75;
 
   // load "raptor" skeleton resources
 
   var resourceManager = ResourceManager();
-  //var libgdx = TextureAtlasFormat.LIBGDX;
+  //var libgdx = TextureAtlasFormat.libGdx;
   resourceManager.addTextFile("raptor", "spine/raptor.json");
   //resourceManager.addTextureAtlas("raptor", "atlas1/raptor.atlas", libgdx);
   //resourceManager.addTextureAtlas("raptor", "atlas2/raptor.json");

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html' as html;
+import 'package:web/web.dart';
 import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_spine/stagexl_spine.dart';
 
@@ -11,7 +11,7 @@ Future<void> main() async {
 
   // init Stage and RenderLoop
 
-  var canvas = html.querySelector('#stage')! as html.CanvasElement;
+  var canvas = document.querySelector('#stage')! as HTMLCanvasElement;
   var stage = Stage(canvas, width: 400, height: 500);
   var renderLoop = RenderLoop();
   renderLoop.addStage(stage);
@@ -19,7 +19,7 @@ Future<void> main() async {
   // load "hero" skeleton resources
 
   var resourceManager = ResourceManager();
-  var libgdx = TextureAtlasFormat.LIBGDX;
+  var libgdx = TextureAtlasFormat.libGdx;
   resourceManager.addTextFile("hero", "spine/hero.json");
   resourceManager.addTextureAtlas("hero", "spine/hero.atlas", libgdx);
   await resourceManager.load();
