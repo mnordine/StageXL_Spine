@@ -11,31 +11,31 @@ Future<void> main() async {
 
   // init Stage and RenderLoop
 
-  var canvas = document.querySelector('#stage')! as HTMLCanvasElement;
-  var stage = Stage(canvas, width: 600, height: 400);
-  var renderLoop = RenderLoop();
+  final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
+  final stage = Stage(canvas, width: 600, height: 400);
+  final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
 
   // load "powerup" skeleton resources
 
-  var resourceManager = ResourceManager();
-  var libgdx = TextureAtlasFormat.libGdx;
+  final resourceManager = ResourceManager();
+  const libgdx = TextureAtlasFormat.libGdx;
   resourceManager.addTextFile('powerup', 'spine/powerup-pro.json');
   resourceManager.addTextureAtlas('powerup', 'spine/powerup-pro.atlas', libgdx);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile('powerup');
-  var textureAtlas = resourceManager.getTextureAtlas('powerup');
-  var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
-  var skeletonLoader = SkeletonLoader(attachmentLoader);
-  var skeletonData = skeletonLoader.readSkeletonData(spineJson);
-  var animationStateData = AnimationStateData(skeletonData);
+  final spineJson = resourceManager.getTextFile('powerup');
+  final textureAtlas = resourceManager.getTextureAtlas('powerup');
+  final attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
+  final skeletonLoader = SkeletonLoader(attachmentLoader);
+  final skeletonData = skeletonLoader.readSkeletonData(spineJson);
+  final animationStateData = AnimationStateData(skeletonData);
 
   // create the display object showing the skeleton animation
 
-  var skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
+  final skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
   skeletonAnimation.x = 300;
   skeletonAnimation.y = 320;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.7;

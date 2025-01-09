@@ -67,10 +67,10 @@ class CurveTimeline implements Timeline {
   /// the keyframe's values.
 
   void setCurve(int frameIndex, double cx1, double cy1, double cx2, double cy2) {
-    var tmpx = (-cx1 * 2 + cx2) * 0.03;
-    var tmpy = (-cy1 * 2 + cy2) * 0.03;
-    var dddfx = ((cx1 - cx2) * 3 + 1) * 0.006;
-    var dddfy = ((cy1 - cy2) * 3 + 1) * 0.006;
+    final tmpx = (-cx1 * 2 + cx2) * 0.03;
+    final tmpy = (-cy1 * 2 + cy2) * 0.03;
+    final dddfx = ((cx1 - cx2) * 3 + 1) * 0.006;
+    final dddfy = ((cy1 - cy2) * 3 + 1) * 0.006;
     var ddfx = tmpx * 2 + dddfx;
     var ddfy = tmpy * 2 + dddfy;
     var dfx = cx1 * 0.3 + tmpx + dddfx * 0.16666667;
@@ -82,7 +82,7 @@ class CurveTimeline implements Timeline {
     var x = dfx;
     var y = dfy;
 
-    for (var n = i + _bezierSize - 1; i < n; i += 2) {
+    for (final n = i + _bezierSize - 1; i < n; i += 2) {
       _curves[i + 0] = x;
       _curves[i + 1] = y;
       dfx += ddfx;
@@ -99,22 +99,22 @@ class CurveTimeline implements Timeline {
     if (percent > 1.0) percent = 1.0;
 
     var i = frameIndex * _bezierSize;
-    var type = _curves[i];
+    final type = _curves[i];
     if (type == _linear) return percent;
     if (type == _stepped) return 0;
     i++;
 
     double x = 0;
-    for (var start = i, n = i + _bezierSize - 1; i < n; i += 2) {
+    for (final start = i, n = i + _bezierSize - 1; i < n; i += 2) {
       x = _curves[i];
       if (x >= percent) {
-        var prevX = (i == start) ? 0.0 : _curves[i - 2];
-        var prevY = (i == start) ? 0.0 : _curves[i - 1];
+        final prevX = (i == start) ? 0.0 : _curves[i - 2];
+        final prevY = (i == start) ? 0.0 : _curves[i - 1];
         return prevY + (_curves[i + 1] - prevY) * (percent - prevX) / (x - prevX);
       }
     }
 
-    var y = _curves[i - 1];
+    final y = _curves[i - 1];
     return y + (1 - y) * (percent - x) / (1 - x); // Last point is 1,1.
   }
 }

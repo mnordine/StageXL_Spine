@@ -51,35 +51,35 @@ class Skeleton {
   Skeleton(this.data) {
     for (final boneData in data.bones) {
       if (boneData.parent == null) {
-        var bone = Bone(boneData, this, null);
+        final bone = Bone(boneData, this, null);
         bones.add(bone);
       } else {
-        var parent = bones[boneData.parent!.index];
-        var bone = Bone(boneData, this, parent);
+        final parent = bones[boneData.parent!.index];
+        final bone = Bone(boneData, this, parent);
         parent.children.add(bone);
         bones.add(bone);
       }
     }
 
     for (final slotData in data.slots) {
-      var bone = bones[slotData.boneData.index];
-      var slot = Slot(slotData, bone);
+      final bone = bones[slotData.boneData.index];
+      final slot = Slot(slotData, bone);
       slots.add(slot);
       drawOrder.add(slot);
     }
 
     for (final ikConstraintData in data.ikConstraints) {
-      var ikConstraint = IkConstraint(ikConstraintData, this);
+      final ikConstraint = IkConstraint(ikConstraintData, this);
       ikConstraints.add(ikConstraint);
     }
 
     for (final transformConstraintData in data.transformConstraints) {
-      var transformConstraint = TransformConstraint(transformConstraintData, this);
+      final transformConstraint = TransformConstraint(transformConstraintData, this);
       transformConstraints.add(transformConstraint);
     }
 
     for (final pathConstraintData in data.pathConstraints) {
-      var pathConstraint = PathConstraint(pathConstraintData, this);
+      final pathConstraint = PathConstraint(pathConstraintData, this);
       pathConstraints.add(pathConstraint);
     }
 
@@ -98,32 +98,32 @@ class Skeleton {
     }
 
     // IK first, lowest hierarchy depth first.
-    var ikConstraints = this.ikConstraints;
-    var transformConstraints = this.transformConstraints;
-    var pathConstraints = this.pathConstraints;
-    var ikCount = ikConstraints.length;
-    var transformCount = transformConstraints.length;
-    var pathCount = pathConstraints.length;
-    var constraintCount = ikCount + transformCount + pathCount;
+    final ikConstraints = this.ikConstraints;
+    final transformConstraints = this.transformConstraints;
+    final pathConstraints = this.pathConstraints;
+    final ikCount = ikConstraints.length;
+    final transformCount = transformConstraints.length;
+    final pathCount = pathConstraints.length;
+    final constraintCount = ikCount + transformCount + pathCount;
 
     outer:
     for (var i = 0; i < constraintCount; i++) {
       for (var ii = 0; ii < ikCount; ii++) {
-        var ikConstraint = ikConstraints[ii];
+        final ikConstraint = ikConstraints[ii];
         if (ikConstraint.data.order == i) {
           _sortIkConstraint(ikConstraint);
           continue outer;
         }
       }
       for (var ii = 0; ii < transformCount; ii++) {
-        var transformConstraint = transformConstraints[ii];
+        final transformConstraint = transformConstraints[ii];
         if (transformConstraint.data.order == i) {
           _sortTransformConstraint(transformConstraint);
           continue outer;
         }
       }
       for (var ii = 0; ii < pathCount; ii++) {
-        var pathConstraint = pathConstraints[ii];
+        final pathConstraint = pathConstraints[ii];
         if (pathConstraint.data.order == i) {
           _sortPathConstraint(pathConstraint);
           continue outer;
@@ -137,15 +137,15 @@ class Skeleton {
   }
 
   void _sortIkConstraint(IkConstraint constraint) {
-    var target = constraint.target;
+    final target = constraint.target;
     _sortBone(target);
 
-    var constrained = constraint.bones;
-    var parent = constrained[0];
+    final constrained = constraint.bones;
+    final parent = constrained[0];
     _sortBone(parent);
 
     if (constrained.length > 1) {
-      var child = constrained[constrained.length - 1];
+      final child = constrained[constrained.length - 1];
       if (_updateCache.contains(child) == false) {
         _updateCacheReset.add(child);
       }
@@ -158,9 +158,9 @@ class Skeleton {
   }
 
   void _sortPathConstraint(PathConstraint constraint) {
-    var slot = constraint.target;
-    var slotIndex = slot.data.index;
-    var slotBone = slot.bone;
+    final slot = constraint.target;
+    final slotIndex = slot.data.index;
+    final slotBone = slot.bone;
 
     if (skin != null) {
       _sortPathConstraintAttachment(skin!, slotIndex, slotBone);
@@ -174,12 +174,12 @@ class Skeleton {
       _sortPathConstraintAttachment(data.skins[i], slotIndex, slotBone);
     }
 
-    var attachment = slot.attachment;
+    final attachment = slot.attachment;
     if (attachment is PathAttachment) {
       _sortPathConstraintAttachment2(attachment, slotBone);
     }
 
-    var constrained = constraint.bones;
+    final constrained = constraint.bones;
     for (var i = 0; i < constrained.length; i++) {
       _sortBone(constrained[i]);
     }
@@ -197,11 +197,11 @@ class Skeleton {
   void _sortTransformConstraint(TransformConstraint constraint) {
     _sortBone(constraint.target);
 
-    var constrained = constraint.bones;
+    final constrained = constraint.bones;
 
     if (constraint.data.local) {
       for (var i = 0; i < constrained.length; i++) {
-        var child = constrained[i];
+        final child = constrained[i];
         _sortBone(child.parent!);
         if (_updateCache.contains(child) == false) {
           _updateCacheReset.add(child);
@@ -225,7 +225,7 @@ class Skeleton {
   }
 
   void _sortPathConstraintAttachment(Skin skin, int slotIndex, Bone slotBone) {
-    var dict = skin.attachments[slotIndex];
+    final dict = skin.attachments[slotIndex];
     if (dict == null) return;
     for (final value in dict.values.nonNulls) {
       _sortPathConstraintAttachment2(value, slotBone);
@@ -234,16 +234,16 @@ class Skeleton {
 
   void _sortPathConstraintAttachment2(Attachment attachment, Bone slotBone) {
     if (attachment is! PathAttachment) return;
-    var pathAttachment = attachment;
-    var pathBones = pathAttachment.bones;
+    final pathAttachment = attachment;
+    final pathBones = pathAttachment.bones;
     if (pathBones == null) {
       _sortBone(slotBone);
     } else {
-      var bones = this.bones;
+      final bones = this.bones;
       var i = 0;
       while (i < pathBones.length) {
-        var boneCount = pathBones[i++];
-        for (var n = i + boneCount; i < n; i++) {
+        final boneCount = pathBones[i++];
+        for (final n = i + boneCount; i < n; i++) {
           _sortBone(bones[pathBones[i]]);
         }
       }
@@ -252,7 +252,7 @@ class Skeleton {
 
   void _sortBone(Bone bone) {
     if (bone._sorted) return;
-    var parent = bone.parent;
+    final parent = bone.parent;
     if (parent != null) _sortBone(parent);
     bone._sorted = true;
     _updateCache.add(bone);
@@ -260,7 +260,7 @@ class Skeleton {
 
   void _sortReset(List<Bone> bones) {
     for (var i = 0; i < bones.length; i++) {
-      var bone = bones[i];
+      final bone = bones[i];
       if (bone._sorted) _sortReset(bone.children);
       bone._sorted = false;
     }
@@ -350,7 +350,7 @@ class Skeleton {
 
   set skinName(String? skinName) {
     if (skinName == null) throw ArgumentError('Cannot set skin name to null');
-    var skin = data.findSkin(skinName);
+    final skin = data.findSkin(skinName);
     if (skin == null) throw ArgumentError('Skin not found: $skinName');
     this.skin = skin;
   }
@@ -369,10 +369,10 @@ class Skeleton {
         newSkin.attachAll(this, _skin!);
       } else {
         for (var i = 0; i < slots.length; i++) {
-          var slot = slots[i];
-          var name = slot.data.attachmentName;
+          final slot = slots[i];
+          final name = slot.data.attachmentName;
           if (name != null) {
-            var attachment = newSkin.getAttachment(i, name);
+            final attachment = newSkin.getAttachment(i, name);
             if (attachment != null) slot.attachment = attachment;
           }
         }
@@ -385,7 +385,7 @@ class Skeleton {
 
   Attachment? getAttachmentForSlotIndex(int slotIndex, String attachmentName) {
     if (_skin != null) {
-      var attachment = _skin!.getAttachment(slotIndex, attachmentName);
+      final attachment = _skin!.getAttachment(slotIndex, attachmentName);
       if (attachment != null) return attachment;
     }
     if (data.defaultSkin != null) {
@@ -396,9 +396,9 @@ class Skeleton {
 
   void setAttachment(String slotName, String attachmentName) {
     for (var i = 0; i < slots.length; i++) {
-      var slot = slots[i];
+      final slot = slots[i];
       if (slot.data.name == slotName) {
-        var attachment = getAttachmentForSlotIndex(i, attachmentName);
+        final attachment = getAttachmentForSlotIndex(i, attachmentName);
         if (attachment == null) {
           throw ArgumentError('Attachment not found: $attachmentName, for slot: $slotName');
         }

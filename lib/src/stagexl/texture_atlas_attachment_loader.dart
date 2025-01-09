@@ -8,13 +8,13 @@ class TextureAtlasAttachmentLoader implements AttachmentLoader {
 
   @override
   RegionAttachment newRegionAttachment(Skin skin, String name, String path) {
-    var bitmapData = textureAtlas.getBitmapData(namePrefix + path);
+    final bitmapData = textureAtlas.getBitmapData(namePrefix + path);
     return RegionAttachment(name, path, bitmapData);
   }
 
   @override
   MeshAttachment newMeshAttachment(Skin skin, String name, String path) {
-    var bitmapData = textureAtlas.getBitmapData(namePrefix + path);
+    final bitmapData = textureAtlas.getBitmapData(namePrefix + path);
     return MeshAttachment(name, path, bitmapData);
   }
 

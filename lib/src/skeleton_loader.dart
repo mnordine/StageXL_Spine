@@ -58,7 +58,7 @@ class SkeletonLoader {
       throw ArgumentError('object must be a String or Map.');
     }
 
-    var skeletonData = SkeletonData();
+    final skeletonData = SkeletonData();
     skeletonData.name = name;
 
     // Skeleton
@@ -79,19 +79,19 @@ class SkeletonLoader {
     for (final boneMap in root['bones'].getList<Json>()) {
       BoneData? parent;
 
-      var parentName = _getString(boneMap, 'parent', null);
+      final parentName = _getString(boneMap, 'parent', null);
       if (parentName != null) {
         parent = skeletonData.findBone(parentName);
         if (parent == null) throw StateError('Parent bone not found: $parentName');
       }
 
-      var boneIndex = skeletonData.bones.length;
-      var boneName = _getString(boneMap, 'name', null);
+      final boneIndex = skeletonData.bones.length;
+      final boneName = _getString(boneMap, 'name', null);
       if (boneName == null)
         continue;
 
-      var boneData = BoneData(boneIndex, boneName, parent);
-      var transformMode = "TransformMode.${_getString(boneMap, "transform", "normal")!}";
+      final boneData = BoneData(boneIndex, boneName, parent);
+      final transformMode = "TransformMode.${_getString(boneMap, "transform", "normal")!}";
 
       boneData.length = _getDouble(boneMap, 'length', 0);
       boneData.x = _getDouble(boneMap, 'x', 0);
@@ -109,16 +109,16 @@ class SkeletonLoader {
     // Slots
 
     for (final slotMap in root['slots'].getList<Json>()) {
-      var slotName = _getString(slotMap, 'name', null);
-      var boneName = _getString(slotMap, 'bone', null);
+      final slotName = _getString(slotMap, 'name', null);
+      final boneName = _getString(slotMap, 'bone', null);
       if (slotName == null || boneName == null)
         continue;
 
-      var boneData = skeletonData.findBone(boneName);
+      final boneData = skeletonData.findBone(boneName);
       if (boneData == null) throw StateError('Slot bone not found: $boneName');
 
-      var slotIndex = skeletonData.slots.length;
-      var slotData = SlotData(slotIndex, slotName, boneData);
+      final slotIndex = skeletonData.slots.length;
+      final slotData = SlotData(slotIndex, slotName, boneData);
       slotData.color.setFromString(_getString(slotMap, 'color', 'FFFFFFFF')!);
       slotData.attachmentName = _getString(slotMap, 'attachment', null);
 
@@ -144,23 +144,23 @@ class SkeletonLoader {
     // IK constraints.
 
     for (final constraintMap in root['ik'].getList<Json>()) {
-      var constraintName = _getString(constraintMap, 'name', null);
+      final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
 
-      var constraintData = IkConstraintData(constraintName);
+      final constraintData = IkConstraintData(constraintName);
 
       for (final boneName in constraintMap['bones'].getList<String>()) {
-        var bone = skeletonData.findBone(boneName);
+        final bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('IK constraint bone not found: $boneName');
         constraintData.bones.add(bone);
       }
 
-      var targetName = _getString(constraintMap, 'target', null);
+      final targetName = _getString(constraintMap, 'target', null);
       if (targetName == null)
         continue;
 
-      var target = skeletonData.findBone(targetName);
+      final target = skeletonData.findBone(targetName);
       if (target == null) throw StateError('Target bone not found: $targetName');
 
       constraintData.target = target;
@@ -174,23 +174,23 @@ class SkeletonLoader {
     // Transform constraints.
 
     for (final constraintMap in root['transform'].getList<Json>()) {
-      var constraintName = _getString(constraintMap, 'name', null);
+      final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
 
-      var constraintData = TransformConstraintData(constraintName);
+      final constraintData = TransformConstraintData(constraintName);
 
       for (final boneName in constraintMap['bones'].getList<String>()) {
-        var bone = skeletonData.findBone(boneName);
+        final bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('Transform constraint bone not found: $boneName');
         constraintData.bones.add(bone);
       }
 
-      var targetName = _getString(constraintMap, 'target', null);
+      final targetName = _getString(constraintMap, 'target', null);
       if (targetName == null)
         continue;
 
-      var target = skeletonData.findBone(targetName);
+      final target = skeletonData.findBone(targetName);
       if (target == null) throw StateError('Target bone not found: $targetName');
 
       constraintData.target = target;
@@ -214,23 +214,23 @@ class SkeletonLoader {
     // Path constraints.
 
     for (final constraintMap in root['path'].getList<Json>()) {
-      var constraintName = _getString(constraintMap, 'name', null);
+      final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
 
-      var pathConstraintData = PathConstraintData(constraintName);
+      final pathConstraintData = PathConstraintData(constraintName);
 
       for (final boneName in constraintMap['bones'].getList<String>()) {
-        var bone = skeletonData.findBone(boneName);
+        final bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError('Path constraint bone not found: $boneName');
         pathConstraintData.bones.add(bone);
       }
 
-      var targetName = _getString(constraintMap, 'target', null);
+      final targetName = _getString(constraintMap, 'target', null);
       if (targetName == null)
         continue;
 
-      var target = skeletonData.findSlot(targetName);
+      final target = skeletonData.findSlot(targetName);
       if (target == null) throw StateError('Path target slot not found: $targetName');
 
       final positionMode = PositionMode.fromString(constraintMap['positionMode'] as String?) ?? PositionMode.percent;
@@ -256,14 +256,14 @@ class SkeletonLoader {
     final skins = root['skins'].json;
 
     for (final skinName in skins.keys) {
-      var skinMap = skins[skinName]! as Json;
-      var skin = Skin(skinName);
+      final skinMap = skins[skinName]! as Json;
+      final skin = Skin(skinName);
       for (final slotName in skinMap.keys) {
-        var slotIndex = skeletonData.findSlotIndex(slotName);
-        var slotEntry = skinMap[slotName]! as Json;
+        final slotIndex = skeletonData.findSlotIndex(slotName);
+        final slotEntry = skinMap[slotName]! as Json;
         for (final attachmentName in slotEntry.keys) {
           final map = slotEntry[attachmentName]! as Json;
-          var attachment = readAttachment(map, skin, slotIndex, attachmentName, skeletonData);
+          final attachment = readAttachment(map, skin, slotIndex, attachmentName, skeletonData);
           if (attachment != null) skin.addAttachment(slotIndex, attachmentName, attachment);
         }
       }
@@ -274,11 +274,11 @@ class SkeletonLoader {
     // Linked meshes.
 
     for (final linkedMesh in _linkedMeshes) {
-      var parentSkin = linkedMesh.skin == null
+      final parentSkin = linkedMesh.skin == null
           ? skeletonData.defaultSkin
           : skeletonData.findSkin(linkedMesh.skin!);
       if (parentSkin == null) throw StateError('Skin not found: ${linkedMesh.skin}');
-      var parentMesh = parentSkin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
+      final parentMesh = parentSkin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
       if (parentMesh == null) throw StateError('Parent mesh not found: ${linkedMesh.parent}');
       linkedMesh.mesh.parentMesh = parentMesh as MeshAttachment;
       linkedMesh.mesh.initRenderGeometry();
@@ -292,7 +292,7 @@ class SkeletonLoader {
 
     for (final eventName in events.keys) {
       final eventMap = events[eventName]! as Json;
-      var eventData = EventData(eventName);
+      final eventData = EventData(eventName);
       eventData.intValue = _getInt(eventMap, 'int', 0);
       eventData.floatValue = _getDouble(eventMap, 'float', 0);
       eventData.stringValue = _getString(eventMap, 'string', null);
@@ -317,13 +317,13 @@ class SkeletonLoader {
       Json map, Skin skin, int slotIndex, String name, SkeletonData skeletonData) {
     name = _getString(map, 'name', name)!;
 
-    var typeName = "AttachmentType.${_getString(map, "type", "region")!}";
-    var type = AttachmentType.values.firstWhere((e) => e.toString() == typeName);
-    var path = _getString(map, 'path', name)!;
+    final typeName = "AttachmentType.${_getString(map, "type", "region")!}";
+    final type = AttachmentType.values.firstWhere((e) => e.toString() == typeName);
+    final path = _getString(map, 'path', name)!;
 
     switch (type) {
       case AttachmentType.region:
-        var region = attachmentLoader.newRegionAttachment(skin, name, path);
+        final region = attachmentLoader.newRegionAttachment(skin, name, path);
         if (region == null) return null;
 
         region.x = _getDouble(map, 'x', 0);
@@ -344,24 +344,24 @@ class SkeletonLoader {
 
       case AttachmentType.mesh:
       case AttachmentType.linkedmesh:
-        var mesh = attachmentLoader.newMeshAttachment(skin, name, path);
+        final mesh = attachmentLoader.newMeshAttachment(skin, name, path);
         if (mesh == null) return null;
 
         mesh.color.setFromString(_getString(map, 'color', 'FFFFFFFF')!);
         mesh.width = _getDouble(map, 'width', 0);
         mesh.height = _getDouble(map, 'height', 0);
 
-        var parentName = _getString(map, 'parent', null);
+        final parentName = _getString(map, 'parent', null);
 
         if (parentName != null) {
-          var skinName = _getString(map, 'skin', null);
-          var lm = _LinkedMesh(mesh, skinName, slotIndex, parentName);
+          final skinName = _getString(map, 'skin', null);
+          final lm = _LinkedMesh(mesh, skinName, slotIndex, parentName);
           _linkedMeshes.add(lm);
           mesh.inheritDeform = _getBool(map, 'deform', true);
           return mesh;
         }
 
-        var uvs = _getFloat32List(map, 'uvs');
+        final uvs = _getFloat32List(map, 'uvs');
         _readVertices(map, mesh, uvs.length);
 
         mesh.triangles = _getInt16List(map, 'triangles');
@@ -374,27 +374,27 @@ class SkeletonLoader {
         return mesh;
 
       case AttachmentType.boundingbox:
-        var box = attachmentLoader.newBoundingBoxAttachment(skin, name);
+        final box = attachmentLoader.newBoundingBoxAttachment(skin, name);
         if (box == null) return null;
-        var vertexCount = _getInt(map, 'vertexCount', 0);
+        final vertexCount = _getInt(map, 'vertexCount', 0);
         _readVertices(map, box, vertexCount << 1);
         return box;
 
       case AttachmentType.path:
-        var path = attachmentLoader.newPathAttachment(skin, name);
+        final path = attachmentLoader.newPathAttachment(skin, name);
         if (path == null) return null;
 
         path.closed = _getBool(map, 'closed', false);
         path.constantSpeed = _getBool(map, 'constantSpeed', true);
         path.lengths = _getFloat32List(map, 'lengths');
 
-        var vertexCount = _getInt(map, 'vertexCount', 0);
+        final vertexCount = _getInt(map, 'vertexCount', 0);
         _readVertices(map, path, vertexCount << 1);
 
         return path;
 
       case AttachmentType.point:
-        var point = attachmentLoader.newPointAttachment(skin, name);
+        final point = attachmentLoader.newPointAttachment(skin, name);
         if (point == null) return null;
 
         point.x = _getDouble(map, 'x', 0);
@@ -404,14 +404,14 @@ class SkeletonLoader {
         return point;
 
       case AttachmentType.clipping:
-        var clip = attachmentLoader.newClippingAttachment(skin, name);
+        final clip = attachmentLoader.newClippingAttachment(skin, name);
         if (clip == null) return null;
 
-        var end = _getString(map, 'end', null);
-        var vertexCount = _getInt(map, 'vertexCount', 0);
+        final end = _getString(map, 'end', null);
+        final vertexCount = _getInt(map, 'vertexCount', 0);
 
         if (end != null) {
-          var slot = skeletonData.findSlot(end);
+          final slot = skeletonData.findSlot(end);
           if (slot == null) throw StateError('Clipping end slot not found: $end');
           clip.endSlot = slot;
         }
@@ -427,9 +427,9 @@ class SkeletonLoader {
   void _readVertices(Json map, VertexAttachment attachment, int verticesLength) {
     attachment.worldVerticesLength = verticesLength;
 
-    var vertices = _getFloat32List(map, 'vertices');
-    var weights = <double>[];
-    var bones = <int>[];
+    final vertices = _getFloat32List(map, 'vertices');
+    final weights = <double>[];
+    final bones = <int>[];
 
     if (verticesLength == vertices.length) {
       attachment.vertices = vertices;
@@ -437,9 +437,9 @@ class SkeletonLoader {
     }
 
     for (var i = 0; i < vertices.length;) {
-      var boneCount = vertices[i++].toInt();
+      final boneCount = vertices[i++].toInt();
       bones.add(boneCount);
-      for (var nn = i + boneCount * 4; i < nn; i += 4) {
+      for (final nn = i + boneCount * 4; i < nn; i += 4) {
         bones.add(vertices[i + 0].toInt());
         weights.add(vertices[i + 1]);
         weights.add(vertices[i + 2]);
@@ -454,7 +454,7 @@ class SkeletonLoader {
   //---------------------------------------------------------------------------
 
   void _readAnimation(Json map, String name, SkeletonData skeletonData) {
-    var timelines = <Timeline>[];
+    final timelines = <Timeline>[];
     double duration = 0;
 
     //-------------------------------------
@@ -463,19 +463,19 @@ class SkeletonLoader {
 
     for (final slotName in slots.keys) {
       final slotMap = slots[slotName]! as Json;
-      var slotIndex = skeletonData.findSlotIndex(slotName);
+      final slotIndex = skeletonData.findSlotIndex(slotName);
 
       for (final timelineName in slotMap.keys) {
         final values = slotMap[timelineName].getList<Json>();
 
         if (timelineName == 'attachment') {
-          var attachmentTimeline = AttachmentTimeline(values.length);
+          final attachmentTimeline = AttachmentTimeline(values.length);
           attachmentTimeline.slotIndex = slotIndex;
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            var time = _getDouble(valueMap, 'time', 0);
-            var name = _getString(valueMap, 'name', null);
+            final time = _getDouble(valueMap, 'time', 0);
+            final name = _getString(valueMap, 'name', null);
             attachmentTimeline.setFrame(frameIndex, time, name);
             frameIndex++;
           }
@@ -484,13 +484,13 @@ class SkeletonLoader {
           duration =
               math.max(duration, attachmentTimeline.frames[attachmentTimeline.frameCount - 1]);
         } else if (timelineName == 'color') {
-          var colorTimeline = ColorTimeline(values.length);
+          final colorTimeline = ColorTimeline(values.length);
           colorTimeline.slotIndex = slotIndex;
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            var time = _getDouble(valueMap, 'time', 0);
-            var color = SpineColor(1, 1, 1, 1);
+            final time = _getDouble(valueMap, 'time', 0);
+            final color = SpineColor(1, 1, 1, 1);
             color.setFromString(_getString(valueMap, 'color', 'FFFFFFFF')!);
             colorTimeline.setFrame(frameIndex, time, color.r, color.g, color.b, color.a);
             _readCurve(valueMap, colorTimeline, frameIndex);
@@ -501,14 +501,14 @@ class SkeletonLoader {
           duration = math.max(duration,
               colorTimeline.frames[(colorTimeline.frameCount - 1) * ColorTimeline._entries]);
         } else if (timelineName == 'twoColor') {
-          var twoColorTimeline = TwoColorTimeline(values.length);
+          final twoColorTimeline = TwoColorTimeline(values.length);
           twoColorTimeline.slotIndex = slotIndex;
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            var time = _getDouble(valueMap, 'time', 0);
-            var cl = SpineColor(1, 1, 1, 1);
-            var cd = SpineColor(1, 1, 1, 1);
+            final time = _getDouble(valueMap, 'time', 0);
+            final cl = SpineColor(1, 1, 1, 1);
+            final cd = SpineColor(1, 1, 1, 1);
             cl.setFromString(_getString(valueMap, 'light', 'FFFFFFFF')!);
             cd.setFromString(_getString(valueMap, 'dark', 'FFFFFFFF')!);
             twoColorTimeline.setFrame(frameIndex, time, cl.r, cl.g, cl.b, cl.a, cd.r, cd.g, cd.b);
@@ -532,7 +532,7 @@ class SkeletonLoader {
     final bones = map['bones'].json;
 
     for (final boneName in bones.keys) {
-      var boneIndex = skeletonData.findBoneIndex(boneName);
+      final boneIndex = skeletonData.findBoneIndex(boneName);
       if (boneIndex == -1) throw StateError('Bone not found: $boneName');
 
       final boneMap = bones[boneName]! as Json;
@@ -541,13 +541,13 @@ class SkeletonLoader {
         final values = boneMap[timelineName].getList<Json>();
 
         if (timelineName == 'rotate') {
-          var rotateTimeline = RotateTimeline(values.length);
+          final rotateTimeline = RotateTimeline(values.length);
           rotateTimeline.boneIndex = boneIndex;
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            var time = _getDouble(valueMap, 'time', 0);
-            var degrees = _getDouble(valueMap, 'angle', 0);
+            final time = _getDouble(valueMap, 'time', 0);
+            final degrees = _getDouble(valueMap, 'angle', 0);
             rotateTimeline.setFrame(frameIndex, time, degrees);
             _readCurve(valueMap, rotateTimeline, frameIndex);
             frameIndex++;
@@ -573,9 +573,9 @@ class SkeletonLoader {
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            var x = _getDouble(valueMap, 'x', 0);
-            var y = _getDouble(valueMap, 'y', 0);
-            var time = _getDouble(valueMap, 'time', 0);
+            final x = _getDouble(valueMap, 'x', 0);
+            final y = _getDouble(valueMap, 'y', 0);
+            final time = _getDouble(valueMap, 'time', 0);
             translateTimeline.setFrame(frameIndex, time, x, y);
             _readCurve(valueMap, translateTimeline, frameIndex);
             frameIndex++;
@@ -597,15 +597,15 @@ class SkeletonLoader {
     final ikMap = map['ik'].json;
 
     for (final ikConstraintName in ikMap.keys) {
-      var ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
+      final ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
       final valueMaps = ikMap[ikConstraintName].getList<Json>();
-      var ikTimeline = IkConstraintTimeline(valueMaps.length);
+      final ikTimeline = IkConstraintTimeline(valueMaps.length);
       ikTimeline.ikConstraintIndex = skeletonData.ikConstraints.indexOf(ikConstraint);
       var frameIndex = 0;
       for (final valueMap in valueMaps) {
-        var time = _getDouble(valueMap, 'time', 0);
-        var mix = _getDouble(valueMap, 'mix', 1);
-        var bendDirection = _getBool(valueMap, 'bendPositive', true) ? 1 : -1;
+        final time = _getDouble(valueMap, 'time', 0);
+        final mix = _getDouble(valueMap, 'mix', 1);
+        final bendDirection = _getBool(valueMap, 'bendPositive', true) ? 1 : -1;
         ikTimeline.setFrame(frameIndex, time, mix, bendDirection);
         _readCurve(valueMap, ikTimeline, frameIndex);
         frameIndex++;
@@ -620,19 +620,19 @@ class SkeletonLoader {
     final transformMap = map['transform'].json;
 
     for (final transformName in transformMap.keys) {
-      var transformConstraint =
+      final transformConstraint =
           skeletonData.findTransformConstraint(transformName)!;
       final valueMaps = transformMap[transformName].getList<Json>();
-      var transformTimeline = TransformConstraintTimeline(valueMaps.length);
+      final transformTimeline = TransformConstraintTimeline(valueMaps.length);
       transformTimeline.transformConstraintIndex =
           skeletonData.transformConstraints.indexOf(transformConstraint);
       var frameIndex = 0;
       for (final valueMap in valueMaps) {
-        var rotateMix = _getDouble(valueMap, 'rotateMix', 1);
-        var translateMix = _getDouble(valueMap, 'translateMix', 1);
-        var scaleMix = _getDouble(valueMap, 'scaleMix', 1);
-        var shearMix = _getDouble(valueMap, 'shearMix', 1);
-        var time = _getDouble(valueMap, 'time', 0);
+        final rotateMix = _getDouble(valueMap, 'rotateMix', 1);
+        final translateMix = _getDouble(valueMap, 'translateMix', 1);
+        final scaleMix = _getDouble(valueMap, 'scaleMix', 1);
+        final shearMix = _getDouble(valueMap, 'shearMix', 1);
+        final time = _getDouble(valueMap, 'time', 0);
         transformTimeline.setFrame(frameIndex, time, rotateMix, translateMix, scaleMix, shearMix);
         _readCurve(valueMap, transformTimeline, frameIndex);
         frameIndex++;
@@ -649,7 +649,7 @@ class SkeletonLoader {
     final pathsMaps = map['paths'].json;
 
     for (final pathName in pathsMaps.keys) {
-      var index = skeletonData.findPathConstraintIndex(pathName);
+      final index = skeletonData.findPathConstraintIndex(pathName);
       if (index == -1) throw StateError('Path constraint not found: $pathName');
 
       final pathMap = pathsMaps[pathName]! as Json;
@@ -669,8 +669,8 @@ class SkeletonLoader {
           var frameIndex = 0;
 
           for (final valueMap in valueMaps) {
-            var value = _getDouble(valueMap, timelineName, 0);
-            var time = _getDouble(valueMap, 'time', 0);
+            final value = _getDouble(valueMap, timelineName, 0);
+            final time = _getDouble(valueMap, 'time', 0);
             pathTimeline.setFrame(frameIndex, time, value);
             _readCurve(valueMap, pathTimeline, frameIndex);
             frameIndex++;
@@ -682,14 +682,14 @@ class SkeletonLoader {
               pathTimeline
                   .frames[(pathTimeline.frameCount - 1) * PathConstraintPositionTimeline._entries]);
         } else if (timelineName == 'mix') {
-          var pathMixTimeline = PathConstraintMixTimeline(valueMaps.length);
+          final pathMixTimeline = PathConstraintMixTimeline(valueMaps.length);
           pathMixTimeline.pathConstraintIndex = index;
           var frameIndex = 0;
 
           for (final valueMap in valueMaps) {
-            var rotateMix = _getDouble(valueMap, 'rotateMix', 1);
-            var translateMix = _getDouble(valueMap, 'translateMix', 1);
-            var time = _getDouble(valueMap, 'time', 0);
+            final rotateMix = _getDouble(valueMap, 'rotateMix', 1);
+            final translateMix = _getDouble(valueMap, 'translateMix', 1);
+            final time = _getDouble(valueMap, 'time', 0);
             pathMixTimeline.setFrame(frameIndex, time, rotateMix, translateMix);
             _readCurve(valueMap, pathMixTimeline, frameIndex);
             frameIndex++;
@@ -709,35 +709,35 @@ class SkeletonLoader {
     final deformMap = map['deform'].json;
 
     for (final skinName in deformMap.keys) {
-      var skin = skeletonData.findSkin(skinName)!;
+      final skin = skeletonData.findSkin(skinName)!;
       final slotMap = deformMap[skinName]! as Json;
 
       for (final slotName in slotMap.keys) {
-        var slotIndex = skeletonData.findSlotIndex(slotName);
+        final slotIndex = skeletonData.findSlotIndex(slotName);
         final timelineMap = slotMap[slotName]! as Json;
 
         for (final timelineName in timelineMap.keys) {
           final valueMaps = timelineMap[timelineName].getList<Json>();
-          var attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
+          final attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
           if (attachment == null) throw StateError('Deform attachment not found: $timelineName');
 
-          var weighted = attachment.bones != null;
-          var vertices = attachment.vertices;
-          var deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
+          final weighted = attachment.bones != null;
+          final vertices = attachment.vertices;
+          final deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
           var frameIndex = 0;
 
-          var deformTimeline = DeformTimeline(valueMaps.length, attachment);
+          final deformTimeline = DeformTimeline(valueMaps.length, attachment);
           deformTimeline.slotIndex = slotIndex;
 
           for (final valueMap in valueMaps) {
             Float32List deform;
-            var verticesValue = valueMap['vertices'];
+            final verticesValue = valueMap['vertices'];
             if (verticesValue == null) {
               deform = weighted ? Float32List(deformLength) : vertices;
             } else {
               deform = Float32List(deformLength);
-              var start = _getInt(valueMap, 'offset', 0);
-              var temp = _getFloat32List(valueMap, 'vertices');
+              final start = _getInt(valueMap, 'offset', 0);
+              final temp = _getFloat32List(valueMap, 'vertices');
               for (var i = 0; i < temp.length; i++) {
                 deform[start + i] = temp[i];
               }
@@ -747,7 +747,7 @@ class SkeletonLoader {
                 }
               }
             }
-            var time = _getDouble(valueMap, 'time', 0);
+            final time = _getDouble(valueMap, 'time', 0);
             deformTimeline.setFrame(frameIndex, time, deform);
             _readCurve(valueMap, deformTimeline, frameIndex);
             frameIndex++;
@@ -764,12 +764,12 @@ class SkeletonLoader {
     final drawOrderValues = (map['drawOrder'] ?? map['draworder']).getList<Json>();
 
     if (drawOrderValues.isNotEmpty) {
-      var drawOrderTimeline = DrawOrderTimeline(drawOrderValues.length);
-      var slotCount = skeletonData.slots.length;
+      final drawOrderTimeline = DrawOrderTimeline(drawOrderValues.length);
+      final slotCount = skeletonData.slots.length;
       var frameIndex = 0;
 
       for (final drawOrderMap in drawOrderValues) {
-        var time = _getDouble(drawOrderMap, 'time', 0);
+        final time = _getDouble(drawOrderMap, 'time', 0);
         Int16List? drawOrder;
 
         if (drawOrderMap.containsKey('offsets')) {
@@ -779,16 +779,16 @@ class SkeletonLoader {
           }
 
           final offsetMaps = drawOrderMap['offsets'].getList<Json>();
-          var unchanged = Int16List(slotCount - offsetMaps.length);
+          final unchanged = Int16List(slotCount - offsetMaps.length);
           var originalIndex = 0;
           var unchangedIndex = 0;
 
           for (final offsetMap in offsetMaps) {
-            var slotName = _getString(offsetMap, 'slot', null);
+            final slotName = _getString(offsetMap, 'slot', null);
             if (slotName == null)
               continue;
 
-            var slotIndex = skeletonData.findSlotIndex(slotName);
+            final slotIndex = skeletonData.findSlotIndex(slotName);
             if (slotIndex == -1) throw StateError('Slot not found: $slotName');
             // Collect unchanged items.
             while (originalIndex != slotIndex) {
@@ -820,17 +820,17 @@ class SkeletonLoader {
 
     if (map.containsKey('events')) {
       final eventsMap = map['events'].getList<Json>();
-      var eventTimeline = EventTimeline(eventsMap.length);
+      final eventTimeline = EventTimeline(eventsMap.length);
       var frameIndex = 0;
 
       for (final eventMap in eventsMap) {
         final name = eventMap['name'] as String?;
         if (name == null) continue;
 
-        var eventData = skeletonData.findEvent(name);
+        final eventData = skeletonData.findEvent(name);
         if (eventData == null) throw StateError("Event not found: ${eventMap["name"]}");
-        var eventTime = _getDouble(eventMap, 'time', 0);
-        var event = SpineEvent(
+        final eventTime = _getDouble(eventMap, 'time', 0);
+        final event = SpineEvent(
             eventTime,
             eventData,
             _getInt(eventMap, 'int', eventData.intValue),
@@ -872,12 +872,12 @@ class SkeletonLoader {
   }
 
   String? _getString(Json map, String name, String? defaultValue) {
-    var value = map[name];
+    final value = map[name];
     return value is String ? value : defaultValue;
   }
 
   double _getDouble(Json map, String name, double defaultValue) {
-    var value = map[name];
+    final value = map[name];
     if (value is num) {
       return value.toDouble();
     } else {
@@ -886,7 +886,7 @@ class SkeletonLoader {
   }
 
   int _getInt(Json map, String name, int defaultValue) {
-    var value = map[name];
+    final value = map[name];
     if (value is int) {
       return value;
     } else {
@@ -895,7 +895,7 @@ class SkeletonLoader {
   }
 
   bool _getBool(Json map, String name, bool defaultValue) {
-    var value = map[name];
+    final value = map[name];
     if (value is bool) {
       return value;
     } else {

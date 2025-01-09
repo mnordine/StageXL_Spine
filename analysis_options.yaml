@@ -93,9 +93,9 @@ linter:
     - prefer_single_quotes
     - omit_local_variable_types
     - prefer_final_in_for_each
+    - prefer_final_locals
     # - avoid_setters_without_getters
     # - cascade_invocations
     # - avoid_positional_boolean_parameters
     # - avoid_redundant_argument_values
     # - parameter_assignments
-    # - prefer_final_locals

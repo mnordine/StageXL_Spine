@@ -47,7 +47,7 @@ class Skin {
 
   Attachment? getAttachment(int slotIndex, String name) {
     if (slotIndex >= attachments.length) return null;
-    var map = attachments[slotIndex];
+    final map = attachments[slotIndex];
     return map?[name];
   }
 
@@ -57,13 +57,13 @@ class Skin {
   void attachAll(Skeleton skeleton, Skin oldSkin) {
     var slotIndex = 0;
     for (final slot in skeleton.slots) {
-      var slotAttachment = slot.attachment;
+      final slotAttachment = slot.attachment;
       if (slotAttachment != null && slotIndex < oldSkin.attachments.length) {
         final map = oldSkin.attachments[slotIndex] ?? <String, Attachment?>{};
         for (final name in map.keys) {
           final skinAttachment = map[name];
           if (slotAttachment == skinAttachment) {
-            var attachment = getAttachment(slotIndex, name);
+            final attachment = getAttachment(slotIndex, name);
             if (attachment != null) slot.attachment = attachment;
             break;
           }

@@ -92,7 +92,7 @@ class Bone implements Updatable {
     ashearY = shearY;
     appliedValid = true;
 
-    var parent = this.parent;
+    final parent = this.parent;
     if (parent == null) {
       // Root bone.
       _a = scaleX * _cosDeg(rotation + shearX);
@@ -114,10 +114,10 @@ class Bone implements Updatable {
 
     switch (data.transformMode) {
       case TransformMode.normal:
-        var la = scaleX * _cosDeg(rotation + shearX);
-        var lb = scaleY * _cosDeg(rotation + 90 + shearY);
-        var lc = scaleX * _sinDeg(rotation + shearX);
-        var ld = scaleY * _sinDeg(rotation + 90 + shearY);
+        final la = scaleX * _cosDeg(rotation + shearX);
+        final lb = scaleY * _cosDeg(rotation + 90 + shearY);
+        final lc = scaleX * _sinDeg(rotation + shearX);
+        final ld = scaleY * _sinDeg(rotation + 90 + shearY);
         _a = pa * la + pb * lc;
         _b = pa * lb + pb * ld;
         _c = pc * la + pd * lc;
@@ -143,12 +143,12 @@ class Bone implements Updatable {
           pc = 0.0;
           prx = 90.0 - _toDeg(math.atan2(pd, pb));
         }
-        var rx = rotation + shearX - prx;
-        var ry = rotation + shearY - prx + 90.0;
-        var la = scaleX * _cosDeg(rx);
-        var lb = scaleY * _cosDeg(ry);
-        var lc = scaleX * _sinDeg(rx);
-        var ld = scaleY * _sinDeg(ry);
+        final rx = rotation + shearX - prx;
+        final ry = rotation + shearY - prx + 90.0;
+        final la = scaleX * _cosDeg(rx);
+        final lb = scaleY * _cosDeg(ry);
+        final lc = scaleX * _sinDeg(rx);
+        final ld = scaleY * _sinDeg(ry);
         _a = pa * la - pb * lc;
         _b = pa * lb - pb * ld;
         _c = pc * la + pd * lc;
@@ -156,8 +156,8 @@ class Bone implements Updatable {
 
       case TransformMode.noScale:
       case TransformMode.noScaleOrReflection:
-        var cos = _cosDeg(rotation);
-        var sin = _sinDeg(rotation);
+        final cos = _cosDeg(rotation);
+        final sin = _sinDeg(rotation);
         var za = pa * cos + pb * sin;
         var zc = pc * cos + pd * sin;
         var s = math.sqrt(za * za + zc * zc);
@@ -165,13 +165,13 @@ class Bone implements Updatable {
         za *= s;
         zc *= s;
         s = math.sqrt(za * za + zc * zc);
-        var r = math.pi / 2.0 + math.atan2(zc, za);
+        final r = math.pi / 2.0 + math.atan2(zc, za);
         var zb = math.cos(r) * s;
         var zd = math.sin(r) * s;
-        var la = scaleX * _cosDeg(shearX);
-        var lb = scaleY * _cosDeg(90.0 + shearY);
-        var lc = scaleX * _sinDeg(shearX);
-        var ld = scaleY * _sinDeg(90.0 + shearY);
+        final la = scaleX * _cosDeg(shearX);
+        final lb = scaleY * _cosDeg(90.0 + shearY);
+        final lc = scaleX * _sinDeg(shearX);
+        final ld = scaleY * _sinDeg(90.0 + shearY);
         if (data.transformMode != TransformMode.noScaleOrReflection) {
           if (pa * pd - pb * pc < 0.0) {
             zb = -zb;
@@ -208,32 +208,32 @@ class Bone implements Updatable {
   double get worldScaleY => math.sqrt(_b * _b + _d * _d);
 
   double worldToLocalRotationX() {
-    var parent = this.parent;
+    final parent = this.parent;
     if (parent == null) return arotation;
-    var pa = parent.a;
-    var pb = parent.b;
-    var pc = parent.c;
-    var pd = parent.d;
+    final pa = parent.a;
+    final pb = parent.b;
+    final pc = parent.c;
+    final pd = parent.d;
     return _toDeg(math.atan2(pa * c - pc * a, pd * a - pb * c));
   }
 
   double worldToLocalRotationY() {
-    var parent = this.parent;
+    final parent = this.parent;
     if (parent == null) return arotation;
-    var pa = parent.a;
-    var pb = parent.b;
-    var pc = parent.c;
-    var pd = parent.d;
+    final pa = parent.a;
+    final pb = parent.b;
+    final pc = parent.c;
+    final pd = parent.d;
     return _toDeg(math.atan2(pa * d - pc * b, pd * b - pb * d));
   }
 
   void rotateWorld(double degrees) {
-    var a = this.a;
-    var b = this.b;
-    var c = this.c;
-    var d = this.d;
-    var cos = _cosDeg(degrees);
-    var sin = _sinDeg(degrees);
+    final a = this.a;
+    final b = this.b;
+    final c = this.c;
+    final d = this.d;
+    final cos = _cosDeg(degrees);
+    final sin = _sinDeg(degrees);
     _a = cos * a - sin * c;
     _b = cos * b - sin * d;
     _c = sin * a + cos * c;
@@ -250,7 +250,7 @@ class Bone implements Updatable {
 
   void _updateAppliedTransform() {
     appliedValid = true;
-    var parent = this.parent;
+    final parent = this.parent;
 
     if (parent == null) {
       ax = worldX;
@@ -263,30 +263,30 @@ class Bone implements Updatable {
       return;
     }
 
-    var pa = parent.a;
-    var pb = parent.b;
-    var pc = parent.c;
-    var pd = parent.d;
-    var pid = 1.0 / (pa * pd - pb * pc);
-    var dx = worldX - parent.worldX;
-    var dy = worldY - parent.worldY;
+    final pa = parent.a;
+    final pb = parent.b;
+    final pc = parent.c;
+    final pd = parent.d;
+    final pid = 1.0 / (pa * pd - pb * pc);
+    final dx = worldX - parent.worldX;
+    final dy = worldY - parent.worldY;
     ax = (dx * pd * pid - dy * pb * pid);
     ay = (dy * pa * pid - dx * pc * pid);
 
-    var ia = pid * pd;
-    var id = pid * pa;
-    var ib = pid * pb;
-    var ic = pid * pc;
-    var ra = ia * a - ib * c;
-    var rb = ia * b - ib * d;
-    var rc = id * c - ic * a;
-    var rd = id * d - ic * b;
+    final ia = pid * pd;
+    final id = pid * pa;
+    final ib = pid * pb;
+    final ic = pid * pc;
+    final ra = ia * a - ib * c;
+    final rb = ia * b - ib * d;
+    final rc = id * c - ic * a;
+    final rd = id * d - ic * b;
 
     ashearX = 0.0;
     ascaleX = math.sqrt(ra * ra + rc * rc);
 
     if (ascaleX > 0.0001) {
-      var det = ra * rd - rb * rc;
+      final det = ra * rd - rb * rc;
       ascaleY = det / ascaleX;
       ashearY = _toDeg(math.atan2(ra * rb + rc * rd, det));
       arotation = _toDeg(math.atan2(rc, ra));
@@ -299,16 +299,16 @@ class Bone implements Updatable {
   }
 
   void worldToLocal(Float32List world) {
-    var invDet = 1.0 / (a * d - b * c);
-    var x = world[0] - worldX;
-    var y = world[1] - worldY;
+    final invDet = 1.0 / (a * d - b * c);
+    final x = world[0] - worldX;
+    final y = world[1] - worldY;
     world[0] = x * d * invDet - y * b * invDet;
     world[1] = y * a * invDet - x * c * invDet;
   }
 
   void localToWorld(Float32List local) {
-    var localX = local[0];
-    var localY = local[1];
+    final localX = local[0];
+    final localY = local[1];
     local[0] = localX * a + localY * b + worldX;
     local[1] = localX * c + localY * d + worldY;
   }

@@ -71,13 +71,13 @@ class IkConstraint implements Constraint {
   /// as possible. The target is specified in the world coordinate system.
   static void apply1(Bone bone, double targetX, double targetY, double alpha) {
     if (!bone.appliedValid) bone._updateAppliedTransform();
-    var p = bone.parent!;
-    var rad2deg = 180.0 / math.pi;
-    var id = 1.0 / (p.a * p.d - p.b * p.c);
-    var x = targetX - p.worldX;
-    var y = targetY - p.worldY;
-    var tx = (x * p.d - y * p.b) * id - bone.ax;
-    var ty = (y * p.a - x * p.c) * id - bone.ay;
+    final p = bone.parent!;
+    const rad2deg = 180.0 / math.pi;
+    final id = 1.0 / (p.a * p.d - p.b * p.c);
+    final x = targetX - p.worldX;
+    final y = targetY - p.worldY;
+    final tx = (x * p.d - y * p.b) * id - bone.ax;
+    final ty = (y * p.a - x * p.c) * id - bone.ay;
     var rotationIK = math.atan2(ty, tx) * rad2deg - bone.ashearX - bone.arotation;
     if (bone.ascaleX < 0.0) rotationIK += 180.0;
     if (rotationIK > 180.0) rotationIK -= 360.0;
@@ -101,8 +101,8 @@ class IkConstraint implements Constraint {
     if (!parent.appliedValid) parent._updateAppliedTransform();
     if (!child.appliedValid) child._updateAppliedTransform();
 
-    var px = parent.ax;
-    var py = parent.ay;
+    final px = parent.ax;
+    final py = parent.ay;
     var psx = parent.ascaleX;
     var psy = parent.ascaleY;
     var csx = child.ascaleX;
@@ -129,7 +129,7 @@ class IkConstraint implements Constraint {
       os2 = 0;
     }
 
-    var cx = child.ax;
+    final cx = child.ax;
     double cy = 0;
     double cwx = 0;
     double cwy = 0;
@@ -138,7 +138,7 @@ class IkConstraint implements Constraint {
     var c = parent.c;
     var d = parent.d;
 
-    var u = (psx - psy).abs() <= 0.0001;
+    final u = (psx - psy).abs() <= 0.0001;
     if (!u) {
       cy = 0.0;
       cwx = a * cx + parent.worldX;
@@ -149,21 +149,21 @@ class IkConstraint implements Constraint {
       cwy = c * cx + d * cy + parent.worldY;
     }
 
-    var pp = parent.parent!;
+    final pp = parent.parent!;
     a = pp.a;
     b = pp.b;
     c = pp.c;
     d = pp.d;
-    var id = 1.0 / (a * d - b * c);
+    final id = 1.0 / (a * d - b * c);
     var x = targetX - pp.worldX;
     var y = targetY - pp.worldY;
-    var tx = (x * d - y * b) * id - px;
-    var ty = (y * a - x * c) * id - py;
+    final tx = (x * d - y * b) * id - px;
+    final ty = (y * a - x * c) * id - py;
     x = cwx - pp.worldX;
     y = cwy - pp.worldY;
-    var dx = (x * d - y * b) * id - px;
-    var dy = (y * a - x * c) * id - py;
-    var l1 = math.sqrt(dx * dx + dy * dy);
+    final dx = (x * d - y * b) * id - px;
+    final dy = (y * a - x * c) * id - py;
+    final l1 = math.sqrt(dx * dx + dy * dy);
     var l2 = child.data.length * csx;
     double a1 = 0;
     double a2 = 0;
@@ -184,21 +184,21 @@ class IkConstraint implements Constraint {
     } else {
       a = psx * l2;
       b = psy * l2;
-      var aa = a * a;
-      var bb = b * b;
-      var dd = tx * tx + ty * ty;
-      var ta = math.atan2(ty, tx);
+      final aa = a * a;
+      final bb = b * b;
+      final dd = tx * tx + ty * ty;
+      final ta = math.atan2(ty, tx);
       c = bb * l1 * l1 + aa * dd - aa * bb;
-      var c1 = -2 * bb * l1;
-      var c2 = bb - aa;
+      final c1 = -2 * bb * l1;
+      final c2 = bb - aa;
       d = c1 * c1 - 4 * c2 * c;
       if (d >= 0) {
         var q = math.sqrt(d);
         if (c1 < 0) q = -q;
         q = -(c1 + q) / 2;
-        var r0 = q / c2;
-        var r1 = c / q;
-        var r = r0.abs() < r1.abs() ? r0 : r1;
+        final r0 = q / c2;
+        final r1 = c / q;
+        final r = r0.abs() < r1.abs() ? r0 : r1;
         if (r * r <= dd) {
           y = math.sqrt(dd - r * r) * bendDir;
           a1 = ta - math.atan2(y, r);
@@ -245,7 +245,7 @@ class IkConstraint implements Constraint {
       }
     }
 
-    var os = math.atan2(cy, cx) * s2;
+    final os = math.atan2(cy, cx) * s2;
     var rotation = parent.arotation;
     a1 = _wrapRotation(_toDeg(a1 - os) + os1 - rotation);
     parent.updateWorldTransformWith(

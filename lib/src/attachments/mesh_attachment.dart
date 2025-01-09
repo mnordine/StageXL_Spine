@@ -75,17 +75,17 @@ class MeshAttachment extends RenderAttachment {
     ixList = Int16List.fromList(triangles);
     vxList = Float32List(regionUVs.length * 2);
 
-    var matrix = bitmapData.renderTextureQuad.samplerMatrix;
-    var ma = matrix.a * bitmapData.width;
-    var mb = matrix.b * bitmapData.width;
-    var mc = matrix.c * bitmapData.height;
-    var md = matrix.d * bitmapData.height;
-    var mx = matrix.tx;
-    var my = matrix.ty;
+    final matrix = bitmapData.renderTextureQuad.samplerMatrix;
+    final ma = matrix.a * bitmapData.width;
+    final mb = matrix.b * bitmapData.width;
+    final mc = matrix.c * bitmapData.height;
+    final md = matrix.d * bitmapData.height;
+    final mx = matrix.tx;
+    final my = matrix.ty;
 
     for (var i = 0, o = 0; i < regionUVs.length - 1; i += 2, o += 4) {
-      var u = regionUVs[i + 0];
-      var v = regionUVs[i + 1];
+      final u = regionUVs[i + 0];
+      final v = regionUVs[i + 1];
       vxList[o + 2] = u * ma + v * mc + mx;
       vxList[o + 3] = u * mb + v * md + my;
     }

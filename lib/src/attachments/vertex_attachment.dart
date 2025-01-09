@@ -59,29 +59,29 @@ class VertexAttachment extends Attachment {
 
   void computeWorldVertices2(
       Slot slot, int start, int count, Float32List worldVertices, int offset, int stride) {
-    var skeleton = slot.skeleton;
-    var skeletonBones = skeleton.bones;
-    var deform = slot.attachmentVertices;
+    final skeleton = slot.skeleton;
+    final skeletonBones = skeleton.bones;
+    final deform = slot.attachmentVertices;
     var vertices = this.vertices;
-    var bones = this.bones;
+    final bones = this.bones;
 
     if (bones == null) {
       vertices = deform.isEmpty? vertices : deform;
 
-      var bone = slot.bone;
-      var x = bone.worldX;
-      var y = bone.worldY;
-      var a = bone.a;
-      var b = bone.b;
-      var c = bone.c;
-      var d = bone.d;
+      final bone = slot.bone;
+      final x = bone.worldX;
+      final y = bone.worldY;
+      final a = bone.a;
+      final b = bone.b;
+      final c = bone.c;
+      final d = bone.d;
 
       var vi = start;
       var wi = offset;
 
       for (var i = 0; i < count; i += 2, vi += 2, wi += stride) {
-        var vx = vertices[vi + 0];
-        var vy = vertices[vi + 1];
+        final vx = vertices[vi + 0];
+        final vy = vertices[vi + 1];
         worldVertices[wi + 0] = vx * a + vy * b + x;
         worldVertices[wi + 1] = vx * c + vy * d + y;
       }
@@ -91,7 +91,7 @@ class VertexAttachment extends Attachment {
       var wi = offset; // world vertices index
 
       for (var i = 0; i < start; i += 2) {
-        var boneCount = bones[bi];
+        final boneCount = bones[bi];
         bi += boneCount + 1;
         vi += boneCount * 3;
       }
@@ -99,13 +99,13 @@ class VertexAttachment extends Attachment {
       for (var i = 0; i < count; i += 2, wi += stride) {
         double x = 0;
         double y = 0;
-        var boneCount = bones[bi++];
-        var boneFinal = bi + boneCount;
+        final boneCount = bones[bi++];
+        final boneFinal = bi + boneCount;
         for (; bi < boneFinal; bi += 1, vi += 3) {
-          var bone = skeletonBones[bones[bi]];
-          var vx = vertices[vi + 0];
-          var vy = vertices[vi + 1];
-          var vw = vertices[vi + 2];
+          final bone = skeletonBones[bones[bi]];
+          final vx = vertices[vi + 0];
+          final vy = vertices[vi + 1];
+          final vw = vertices[vi + 2];
           x += (vx * bone.a + vy * bone.b + bone.worldX) * vw;
           y += (vx * bone.c + vy * bone.d + bone.worldY) * vw;
         }
@@ -119,7 +119,7 @@ class VertexAttachment extends Attachment {
       var wi = offset; // world vertices index
 
       for (var i = 0; i < start; i += 2) {
-        var boneCount = bones[bi];
+        final boneCount = bones[bi];
         bi += boneCount + 1;
         vi += boneCount * 3;
         di += boneCount * 2;
@@ -128,13 +128,13 @@ class VertexAttachment extends Attachment {
       for (var i = 0; i < count; i += 2, wi += stride) {
         double x = 0;
         double y = 0;
-        var boneCount = bones[bi++];
-        var boneFinal = bi + boneCount;
+        final boneCount = bones[bi++];
+        final boneFinal = bi + boneCount;
         for (; bi < boneFinal; bi += 1, vi += 3, di += 2) {
-          var bone = skeletonBones[bones[bi]];
-          var vx = vertices[vi + 0] + deform[di + 0];
-          var vy = vertices[vi + 1] + deform[di + 1];
-          var vw = vertices[vi + 2];
+          final bone = skeletonBones[bones[bi]];
+          final vx = vertices[vi + 0] + deform[di + 0];
+          final vy = vertices[vi + 1] + deform[di + 1];
+          final vw = vertices[vi + 2];
           x += (vx * bone.a + vy * bone.b + bone.worldX) * vw;
           y += (vx * bone.c + vy * bone.d + bone.worldY) * vw;
         }

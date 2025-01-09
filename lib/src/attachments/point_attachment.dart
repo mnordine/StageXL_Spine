@@ -39,16 +39,16 @@ class PointAttachment extends VertexAttachment {
   PointAttachment(super.name);
 
   Point<double> computeWorldPosition(Bone bone) {
-    var x = this.x * bone.a + this.y * bone.b + bone.worldX;
-    var y = this.x * bone.c + this.y * bone.d + bone.worldY;
+    final x = this.x * bone.a + this.y * bone.b + bone.worldX;
+    final y = this.x * bone.c + this.y * bone.d + bone.worldY;
     return Point<double>(x, y);
   }
 
   double computeWorldRotation(Bone bone) {
-    var cos = _cosDeg(rotation);
-    var sin = _sinDeg(rotation);
-    var x = cos * bone.a + sin * bone.b;
-    var y = cos * bone.c + sin * bone.d;
+    final cos = _cosDeg(rotation);
+    final sin = _sinDeg(rotation);
+    final x = cos * bone.a + sin * bone.b;
+    final y = cos * bone.c + sin * bone.d;
     return _toDeg(math.atan2(y, x));
   }
 }

@@ -54,16 +54,16 @@ class DeformTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var slot = skeleton.slots[slotIndex];
+    final slot = skeleton.slots[slotIndex];
     final vertexAttachment = slot.attachment;
     if (vertexAttachment is! VertexAttachment) return;
 
     if (vertexAttachment.applyDeform(attachment) == false) return;
 
-    var vertexCount = frameVertices[0]!.length;
+    final vertexCount = frameVertices[0]!.length;
     var targetVertices = slot.attachmentVertices;
     if (targetVertices.isEmpty) alpha = 1.0;
-    var setupVertices = vertexAttachment.vertices;
+    final setupVertices = vertexAttachment.vertices;
 
     //-----------------------
 
@@ -99,7 +99,7 @@ class DeformTimeline extends CurveTimeline {
 
     if (time >= frames[frames.length - 1]) {
       // Time is after last frame.
-      var lastVertices = frameVertices[frames.length - 1]!;
+      final lastVertices = frameVertices[frames.length - 1]!;
       if (alpha == 1.0) {
         // Vertex positions or deform offsets, no alpha.
         for (var i = 0; i < vertexCount; i++) {
@@ -108,15 +108,15 @@ class DeformTimeline extends CurveTimeline {
       } else if (pose != MixPose.setup) {
         // Vertex positions or deform offsets, with alpha.
         for (var i = 0; i < vertexCount; i++) {
-          var v0 = targetVertices[i];
-          var v1 = lastVertices[i];
+          final v0 = targetVertices[i];
+          final v1 = lastVertices[i];
           targetVertices[i] = v0 + (v1 - v0) * alpha;
         }
       } else if (vertexAttachment.bones == null) {
         // Unweighted vertex positions, with alpha.
         for (var i = 0; i < vertexCount; i++) {
-          var v0 = setupVertices[i];
-          var v1 = lastVertices[i];
+          final v0 = setupVertices[i];
+          final v1 = lastVertices[i];
           targetVertices[i] = v0 + (v1 - v0) * alpha;
         }
       } else {
@@ -131,41 +131,41 @@ class DeformTimeline extends CurveTimeline {
     //-----------------------
 
     // Interpolate between the previous frame and the current frame.
-    var frame = Animation.binarySearch1(frames, time);
-    var t0 = frames[frame - 1];
-    var t1 = frames[frame + 0];
-    var v0List = frameVertices[frame - 1]!;
-    var v1List = frameVertices[frame + 0]!;
-    var between = 1.0 - (time - t1) / (t0 - t1);
-    var percent = getCurvePercent(frame - 1, between);
+    final frame = Animation.binarySearch1(frames, time);
+    final t0 = frames[frame - 1];
+    final t1 = frames[frame + 0];
+    final v0List = frameVertices[frame - 1]!;
+    final v1List = frameVertices[frame + 0]!;
+    final between = 1.0 - (time - t1) / (t0 - t1);
+    final percent = getCurvePercent(frame - 1, between);
 
     if (alpha == 1.0) {
       // Vertex positions or deform offsets, no alpha.
       for (var i = 0; i < vertexCount; i++) {
-        var v0 = v0List[i];
+        final v0 = v0List[i];
         targetVertices[i] = v0 + (v1List[i] - v0) * percent;
       }
     } else if (pose != MixPose.setup) {
       // Vertex positions or deform offsets, with alpha.
       for (var i = 0; i < vertexCount; i++) {
-        var v0 = v0List[i];
-        var v1 = v1List[i];
-        var vx = targetVertices[i];
+        final v0 = v0List[i];
+        final v1 = v1List[i];
+        final vx = targetVertices[i];
         targetVertices[i] = vx + (v0 + (v1 - v0) * percent - vx) * alpha;
       }
     } else if (vertexAttachment.bones == null) {
       // Unweighted vertex positions, with alpha.
       for (var i = 0; i < vertexCount; i++) {
-        var v0 = v0List[i];
-        var v1 = v1List[i];
-        var vx = setupVertices[i];
+        final v0 = v0List[i];
+        final v1 = v1List[i];
+        final vx = setupVertices[i];
         targetVertices[i] = vx + (v0 + (v1 - v0) * percent - vx) * alpha;
       }
     } else {
       // Weighted deform offsets, with alpha.
       for (var i = 0; i < vertexCount; i++) {
-        var v0 = v0List[i];
-        var v1 = v1List[i];
+        final v0 = v0List[i];
+        final v1 = v1List[i];
         targetVertices[i] = (v0 + (v1 - v0) * percent) * alpha;
       }
     }
@@ -173,7 +173,7 @@ class DeformTimeline extends CurveTimeline {
 
   Float32List _resizeList(Float32List oldList, int length) {
     if (oldList.length == length) return oldList;
-    var newList = Float32List(length);
+    final newList = Float32List(length);
     for (var i = 0; i < newList.length && i < oldList.length; i++) {
       newList[i] = oldList[i];
     }

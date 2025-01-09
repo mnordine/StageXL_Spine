@@ -75,32 +75,32 @@ class TransformConstraint implements Constraint {
   }
 
   void _applyAbsoluteWorld() {
-    var rotateMix = this.rotateMix;
-    var translateMix = this.translateMix;
-    var scaleMix = this.scaleMix;
-    var shearMix = this.shearMix;
+    final rotateMix = this.rotateMix;
+    final translateMix = this.translateMix;
+    final scaleMix = this.scaleMix;
+    final shearMix = this.shearMix;
 
-    var target = this.target;
+    final target = this.target;
 
-    var ta = target.a;
-    var tb = target.b;
-    var tc = target.c;
-    var td = target.d;
+    final ta = target.a;
+    final tb = target.b;
+    final tc = target.c;
+    final td = target.d;
 
-    var degRadReflect = ta * td - tb * tc > 0 ? _deg2rad : -_deg2rad;
-    var offsetRotation = data.offsetRotation * degRadReflect;
-    var offsetShearY = data.offsetShearY * degRadReflect;
-    var bones = this.bones;
+    final degRadReflect = ta * td - tb * tc > 0 ? _deg2rad : -_deg2rad;
+    final offsetRotation = data.offsetRotation * degRadReflect;
+    final offsetShearY = data.offsetShearY * degRadReflect;
+    final bones = this.bones;
 
     for (var i = 0; i < bones.length; i++) {
-      var bone = bones[i];
+      final bone = bones[i];
       var modified = false;
 
       if (rotateMix != 0) {
-        var a = bone.a;
-        var b = bone.b;
-        var c = bone.c;
-        var d = bone.d;
+        final a = bone.a;
+        final b = bone.b;
+        final c = bone.c;
+        final d = bone.d;
         var r = math.atan2(tc, ta) - math.atan2(c, a) + offsetRotation;
 
         if (r > math.pi) {
@@ -110,8 +110,8 @@ class TransformConstraint implements Constraint {
         }
 
         r *= rotateMix;
-        var cos = math.cos(r);
-        var sin = math.sin(r);
+        final cos = math.cos(r);
+        final sin = math.sin(r);
         bone._a = cos * a - sin * c;
         bone._b = cos * b - sin * d;
         bone._c = sin * a + cos * c;
@@ -143,9 +143,9 @@ class TransformConstraint implements Constraint {
       }
 
       if (shearMix > 0) {
-        var b = bone.b;
-        var d = bone.d;
-        var by = math.atan2(d, b);
+        final b = bone.b;
+        final d = bone.d;
+        final by = math.atan2(d, b);
         var r = math.atan2(td, tb) - math.atan2(tc, ta) - (by - math.atan2(bone.c, bone.a));
         
         if (r > math.pi) {
@@ -155,7 +155,7 @@ class TransformConstraint implements Constraint {
         }
 
         r = by + (r + offsetShearY) * shearMix;
-        var s = math.sqrt(b * b + d * d);
+        final s = math.sqrt(b * b + d * d);
         bone._b = math.cos(r) * s;
         bone._d = math.sin(r) * s;
         modified = true;
@@ -166,30 +166,30 @@ class TransformConstraint implements Constraint {
   }
 
   void _applyRelativeWorld() {
-    var rotateMix = this.rotateMix;
-    var translateMix = this.translateMix;
-    var scaleMix = this.scaleMix;
-    var shearMix = this.shearMix;
-    var target = this.target;
-    var ta = target.a;
-    var tb = target.b;
-    var tc = target.c;
-    var td = target.d;
-    var degRad = math.pi / 180.0;
-    var degRadReflect = ta * td - tb * tc > 0 ? degRad : -degRad;
-    var offsetRotation = data.offsetRotation * degRadReflect;
-    var offsetShearY = data.offsetShearY * degRadReflect;
-    var bones = this.bones;
+    final rotateMix = this.rotateMix;
+    final translateMix = this.translateMix;
+    final scaleMix = this.scaleMix;
+    final shearMix = this.shearMix;
+    final target = this.target;
+    final ta = target.a;
+    final tb = target.b;
+    final tc = target.c;
+    final td = target.d;
+    const degRad = math.pi / 180.0;
+    final degRadReflect = ta * td - tb * tc > 0 ? degRad : -degRad;
+    final offsetRotation = data.offsetRotation * degRadReflect;
+    final offsetShearY = data.offsetShearY * degRadReflect;
+    final bones = this.bones;
 
     for (var i = 0; i < bones.length; i++) {
-      var bone = bones[i];
+      final bone = bones[i];
       var modified = false;
 
       if (rotateMix != 0) {
-        var a = bone.a;
-        var b = bone.b;
-        var c = bone.c;
-        var d = bone.d;
+        final a = bone.a;
+        final b = bone.b;
+        final c = bone.c;
+        final d = bone.d;
         var r = math.atan2(tc, ta) + offsetRotation;
 
         if (r > math.pi) {
@@ -199,8 +199,8 @@ class TransformConstraint implements Constraint {
         }
 
         r *= rotateMix;
-        var cos = math.cos(r);
-        var sin = math.sin(r);
+        final cos = math.cos(r);
+        final sin = math.sin(r);
         bone._a = cos * a - sin * c;
         bone._b = cos * b - sin * d;
         bone._c = sin * a + cos * c;
@@ -209,7 +209,7 @@ class TransformConstraint implements Constraint {
       }
 
       if (translateMix != 0) {
-        var temp = _temp;
+        final temp = _temp;
         temp[0] = data.offsetX;
         temp[1] = data.offsetY;
         target.localToWorld(temp);
@@ -219,9 +219,9 @@ class TransformConstraint implements Constraint {
       }
 
       if (scaleMix > 0) {
-        var st = math.sqrt(ta * ta + tc * tc) - 1.0;
-        var sx = (st + data.offsetScaleX) * scaleMix + 1.0;
-        var sy = (st + data.offsetScaleY) * scaleMix + 1.0;
+        final st = math.sqrt(ta * ta + tc * tc) - 1.0;
+        final sx = (st + data.offsetScaleX) * scaleMix + 1.0;
+        final sy = (st + data.offsetScaleY) * scaleMix + 1.0;
         bone._a *= sx;
         bone._c *= sx;
         bone._b *= sy;
@@ -237,9 +237,9 @@ class TransformConstraint implements Constraint {
           r += 2.0 * math.pi;
         }
 
-        var b = bone.b;
-        var d = bone.d;
-        var s = math.sqrt(b * b + d * d);
+        final b = bone.b;
+        final d = bone.d;
+        final s = math.sqrt(b * b + d * d);
         r = math.atan2(d, b) + (r - math.pi / 2.0 + offsetShearY) * shearMix;
         bone._b = math.cos(r) * s;
         bone._d = math.sin(r) * s;
@@ -251,21 +251,21 @@ class TransformConstraint implements Constraint {
   }
 
   void _applyAbsoluteLocal() {
-    var rotateMix = this.rotateMix;
-    var translateMix = this.translateMix;
-    var scaleMix = this.scaleMix;
-    var shearMix = this.shearMix;
-    var target = this.target;
+    final rotateMix = this.rotateMix;
+    final translateMix = this.translateMix;
+    final scaleMix = this.scaleMix;
+    final shearMix = this.shearMix;
+    final target = this.target;
     if (!target.appliedValid) target._updateAppliedTransform();
-    var bones = this.bones;
+    final bones = this.bones;
 
     for (var i = 0; i < bones.length; i++) {
-      var bone = bones[i];
+      final bone = bones[i];
       if (!bone.appliedValid) bone._updateAppliedTransform();
 
       var rotation = bone.arotation;
       if (rotateMix != 0.0) {
-        var r = target.arotation - rotation + data.offsetRotation;
+        final r = target.arotation - rotation + data.offsetRotation;
         rotation += _wrapRotation(r) * rotateMix;
       }
 
@@ -287,9 +287,9 @@ class TransformConstraint implements Constraint {
         }
       }
 
-      var shearY = bone.ashearY;
+      final shearY = bone.ashearY;
       if (shearMix > 0.0) {
-        var r = target.ashearY - shearY + data.offsetShearY;
+        final r = target.ashearY - shearY + data.offsetShearY;
         bone.shearY += _wrapRotation(r) * shearMix;
       }
 
@@ -298,16 +298,16 @@ class TransformConstraint implements Constraint {
   }
 
   void _applyRelativeLocal() {
-    var rotateMix = this.rotateMix;
-    var translateMix = this.translateMix;
-    var scaleMix = this.scaleMix;
-    var shearMix = this.shearMix;
-    var target = this.target;
+    final rotateMix = this.rotateMix;
+    final translateMix = this.translateMix;
+    final scaleMix = this.scaleMix;
+    final shearMix = this.shearMix;
+    final target = this.target;
     if (!target.appliedValid) target._updateAppliedTransform();
-    var bones = this.bones;
+    final bones = this.bones;
 
     for (var i = 0; i < bones.length; i++) {
-      var bone = bones[i];
+      final bone = bones[i];
       if (!bone.appliedValid) bone._updateAppliedTransform();
 
       var rotation = bone.arotation;

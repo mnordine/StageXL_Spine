@@ -45,8 +45,8 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var constraint = skeleton.pathConstraints[pathConstraintIndex];
-    var data = constraint.data;
+    final constraint = skeleton.pathConstraints[pathConstraintIndex];
+    final data = constraint.data;
     double s = 0;
 
     if (time < frames[0]) {
@@ -64,13 +64,13 @@ class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
       s = frames[frames.length + _prevValue];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
-      var t0 = frames[frame + _prevTime];
-      var s0 = frames[frame + _prevValue];
-      var t1 = frames[frame + _time];
-      var s1 = frames[frame + _value];
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent(frame ~/ _entries - 1, between);
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final s0 = frames[frame + _prevValue];
+      final t1 = frames[frame + _time];
+      final s1 = frames[frame + _value];
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent(frame ~/ _entries - 1, between);
       s = s0 + (s1 - s0) * percent;
     }
 

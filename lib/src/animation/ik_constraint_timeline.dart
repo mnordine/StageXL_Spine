@@ -60,8 +60,8 @@ class IkConstraintTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var constraint = skeleton.ikConstraints[ikConstraintIndex];
-    var data = constraint.data;
+    final constraint = skeleton.ikConstraints[ikConstraintIndex];
+    final data = constraint.data;
     double m = 0;
     double b = 0;
 
@@ -83,14 +83,14 @@ class IkConstraintTimeline extends CurveTimeline {
       b = frames[frames.length + _prevBendDirection];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
-      var t0 = frames[frame + _prevTime];
-      var m0 = frames[frame + _prevMix];
-      var b0 = frames[frame + _prevBendDirection];
-      var t1 = frames[frame + _time];
-      var m1 = frames[frame + _mix];
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent(frame ~/ _entries - 1, between);
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final m0 = frames[frame + _prevMix];
+      final b0 = frames[frame + _prevBendDirection];
+      final t1 = frames[frame + _time];
+      final m1 = frames[frame + _mix];
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent(frame ~/ _entries - 1, between);
       m = m0 + (m1 - m0) * percent;
       b = b0;
     }

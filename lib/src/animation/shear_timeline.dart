@@ -47,7 +47,7 @@ class ShearTimeline extends TranslateTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var bone = skeleton.bones[boneIndex];
+    final bone = skeleton.bones[boneIndex];
     double x = 0;
     double y = 0;
 
@@ -69,15 +69,15 @@ class ShearTimeline extends TranslateTimeline {
       y = frames[frames.length + _prevY];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
-      var t0 = frames[frame + _prevTime];
-      var x0 = frames[frame + _prevX];
-      var y0 = frames[frame + _prevY];
-      var t1 = frames[frame + _time];
-      var x1 = frames[frame + _x];
-      var y1 = frames[frame + _y];
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent(frame ~/ _entries - 1, between);
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final x0 = frames[frame + _prevX];
+      final y0 = frames[frame + _prevY];
+      final t1 = frames[frame + _time];
+      final x1 = frames[frame + _x];
+      final y1 = frames[frame + _y];
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent(frame ~/ _entries - 1, between);
       x = x0 + (x1 - x0) * percent;
       y = y0 + (y1 - y0) * percent;
     }

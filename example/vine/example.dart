@@ -11,31 +11,31 @@ Future<void> main() async {
 
   // init Stage and RenderLoop
 
-  var canvas = document.querySelector('#stage')! as HTMLCanvasElement;
-  var stage = Stage(canvas, width: 600, height: 1000);
-  var renderLoop = RenderLoop();
+  final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
+  final stage = Stage(canvas, width: 600, height: 1000);
+  final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
 
   // load "raptor" skeleton resources
 
-  var resourceManager = ResourceManager();
-  var libgdx = TextureAtlasFormat.libGdx;
+  final resourceManager = ResourceManager();
+  const libgdx = TextureAtlasFormat.libGdx;
   resourceManager.addTextFile('vine', 'spine/vine.json');
   resourceManager.addTextureAtlas('vine', 'spine/vine.atlas', libgdx);
   await resourceManager.load();
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile('vine');
-  var textureAtlas = resourceManager.getTextureAtlas('vine');
-  var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
-  var skeletonLoader = SkeletonLoader(attachmentLoader);
-  var skeletonData = skeletonLoader.readSkeletonData(spineJson);
-  var animationStateData = AnimationStateData(skeletonData);
+  final spineJson = resourceManager.getTextFile('vine');
+  final textureAtlas = resourceManager.getTextureAtlas('vine');
+  final attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
+  final skeletonLoader = SkeletonLoader(attachmentLoader);
+  final skeletonData = skeletonLoader.readSkeletonData(spineJson);
+  final animationStateData = AnimationStateData(skeletonData);
 
   // create the display object showing the skeleton animation
 
-  var skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
+  final skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
   skeletonAnimation.x = 300;
   skeletonAnimation.y = 950;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.8;

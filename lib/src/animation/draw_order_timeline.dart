@@ -53,8 +53,8 @@ class DrawOrderTimeline implements Timeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var drawOrder = skeleton.drawOrder;
-    var slots = skeleton.slots;
+    final drawOrder = skeleton.drawOrder;
+    final slots = skeleton.slots;
 
     if (direction == MixDirection.Out && pose == MixPose.setup) {
       for (var i = 0; i < slots.length; i++) {
@@ -82,7 +82,7 @@ class DrawOrderTimeline implements Timeline {
       frameIndex = Animation.binarySearch1(frames, time) - 1;
     }
 
-    var drawOrderToSetupIndex = drawOrders[frameIndex];
+    final drawOrderToSetupIndex = drawOrders[frameIndex];
 
     if (drawOrderToSetupIndex == null) {
       for (var i = 0; i < slots.length; i++) {

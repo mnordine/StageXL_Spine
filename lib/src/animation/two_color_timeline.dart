@@ -75,7 +75,7 @@ class TwoColorTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var slot = skeleton.slots[slotIndex];
+    final slot = skeleton.slots[slotIndex];
     double r1 = 0;
     double g1 = 0;
     double b1 = 0;
@@ -91,10 +91,10 @@ class TwoColorTimeline extends CurveTimeline {
           slot.darkColor?.setFromColor(slot.data.darkColor!);
         }
       } else if (pose == MixPose.current && slot.darkColor != null && slot.data.darkColor != null) {
-        var l1 = slot.color;
-        var d1 = slot.darkColor!;
-        var l2 = slot.data.color;
-        var s2 = slot.data.darkColor!;
+        final l1 = slot.color;
+        final d1 = slot.darkColor!;
+        final l2 = slot.data.color;
+        final s2 = slot.data.darkColor!;
         l1.add((l2.r - l1.r) * alpha, (l2.g - l1.g) * alpha, (l2.b - l1.b) * alpha,
             (l2.a - l1.a) * alpha);
         d1.add((s2.r - d1.r) * alpha, (s2.g - d1.g) * alpha, (s2.b - d1.b) * alpha, 0);
@@ -113,28 +113,28 @@ class TwoColorTimeline extends CurveTimeline {
       b2 = frames[frames.length + _prevB2];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
+      final frame = Animation.binarySearch(frames, time, _entries);
 
-      var t0 = frames[frame + _prevTime];
-      var r01 = frames[frame + _prevR1];
-      var g01 = frames[frame + _prevG1];
-      var b01 = frames[frame + _prevB1];
-      var a01 = frames[frame + _prevA1];
-      var r02 = frames[frame + _prevR2];
-      var g02 = frames[frame + _prevG2];
-      var b02 = frames[frame + _prevB2];
+      final t0 = frames[frame + _prevTime];
+      final r01 = frames[frame + _prevR1];
+      final g01 = frames[frame + _prevG1];
+      final b01 = frames[frame + _prevB1];
+      final a01 = frames[frame + _prevA1];
+      final r02 = frames[frame + _prevR2];
+      final g02 = frames[frame + _prevG2];
+      final b02 = frames[frame + _prevB2];
 
-      var t1 = frames[frame + _time];
-      var r11 = frames[frame + _r1];
-      var g11 = frames[frame + _g1];
-      var b11 = frames[frame + _b1];
-      var a11 = frames[frame + _a1];
-      var r12 = frames[frame + _r2];
-      var g12 = frames[frame + _g2];
-      var b12 = frames[frame + _b2];
+      final t1 = frames[frame + _time];
+      final r11 = frames[frame + _r1];
+      final g11 = frames[frame + _g1];
+      final b11 = frames[frame + _b1];
+      final a11 = frames[frame + _a1];
+      final r12 = frames[frame + _r2];
+      final g12 = frames[frame + _g2];
+      final b12 = frames[frame + _b2];
 
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent(frame ~/ _entries - 1, between);
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent(frame ~/ _entries - 1, between);
 
       r1 = r01 + (r11 - r01) * percent;
       g1 = g01 + (g11 - g01) * percent;
@@ -149,8 +149,8 @@ class TwoColorTimeline extends CurveTimeline {
       slot.color.setFrom(r1, g1, b1, a1);
       slot.darkColor?.setFrom(r2, g2, b2, 1);
     } else {
-      var light = slot.color;
-      var dark = slot.darkColor;
+      final light = slot.color;
+      final dark = slot.darkColor;
       if (pose == MixPose.setup) {
         light.setFromColor(slot.data.color);
         if (slot.data.darkColor != null) {

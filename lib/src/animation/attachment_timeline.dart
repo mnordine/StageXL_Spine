@@ -55,7 +55,7 @@ class AttachmentTimeline implements Timeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     String? attachmentName;
-    var slot = skeleton.slots[slotIndex];
+    final slot = skeleton.slots[slotIndex];
 
     if (direction == MixDirection.Out && pose == MixPose.setup) {
       attachmentName = slot.data.attachmentName;
@@ -76,7 +76,7 @@ class AttachmentTimeline implements Timeline {
       return;
     }
 
-    var frameIndex = (time >= frames.last)
+    final frameIndex = (time >= frames.last)
         ? frames.length - 1 // Time is after last frame.
         : Animation.binarySearch(frames, time, 1) - 1;
 

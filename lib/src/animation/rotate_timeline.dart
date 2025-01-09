@@ -57,7 +57,7 @@ class RotateTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var bone = skeleton.bones[boneIndex];
+    final bone = skeleton.bones[boneIndex];
     double rotation = 0;
 
     if (time < frames[0]) {
@@ -76,13 +76,13 @@ class RotateTimeline extends CurveTimeline {
       rotation = frames[frames.length + _prevRotation];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
-      var t0 = frames[frame + _prevTime];
-      var r0 = frames[frame + _prevRotation];
-      var t1 = frames[frame + _time];
-      var r1 = frames[frame + _rotation];
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent((frame >> 1) - 1, between);
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final r0 = frames[frame + _prevRotation];
+      final t1 = frames[frame + _time];
+      final r1 = frames[frame + _rotation];
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent((frame >> 1) - 1, between);
       rotation = r0 + _wrapRotation(r1 - r0) * percent;
     }
 

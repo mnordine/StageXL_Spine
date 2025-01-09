@@ -66,7 +66,7 @@ class ColorTimeline extends CurveTimeline {
   @override
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
-    var slot = skeleton.slots[slotIndex];
+    final slot = skeleton.slots[slotIndex];
     double r = 0;
     double g = 0;
     double b = 0;
@@ -76,8 +76,8 @@ class ColorTimeline extends CurveTimeline {
       if (pose == MixPose.setup) {
         slot.color.setFromColor(slot.data.color);
       } else if (pose == MixPose.current) {
-        var color = slot.color;
-        var setup = slot.data.color;
+        final color = slot.color;
+        final setup = slot.data.color;
         color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha,
             (setup.b - color.b) * alpha, (setup.a - color.a) * alpha);
       }
@@ -92,19 +92,19 @@ class ColorTimeline extends CurveTimeline {
       a = frames[frames.length + _prevA];
     } else {
       // Interpolate between the previous frame and the current frame.
-      var frame = Animation.binarySearch(frames, time, _entries);
-      var t0 = frames[frame + _prevTime];
-      var r0 = frames[frame + _prevR];
-      var g0 = frames[frame + _prevG];
-      var b0 = frames[frame + _prevB];
-      var a0 = frames[frame + _prevA];
-      var t1 = frames[frame + _time];
-      var r1 = frames[frame + _r];
-      var g1 = frames[frame + _g];
-      var b1 = frames[frame + _b];
-      var a1 = frames[frame + _a];
-      var between = 1.0 - (time - t1) / (t0 - t1);
-      var percent = getCurvePercent(frame ~/ _entries - 1, between);
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final r0 = frames[frame + _prevR];
+      final g0 = frames[frame + _prevG];
+      final b0 = frames[frame + _prevB];
+      final a0 = frames[frame + _prevA];
+      final t1 = frames[frame + _time];
+      final r1 = frames[frame + _r];
+      final g1 = frames[frame + _g];
+      final b1 = frames[frame + _b];
+      final a1 = frames[frame + _a];
+      final between = 1.0 - (time - t1) / (t0 - t1);
+      final percent = getCurvePercent(frame ~/ _entries - 1, between);
       r = r0 + (r1 - r0) * percent;
       g = g0 + (g1 - g0) * percent;
       b = b0 + (b1 - b0) * percent;

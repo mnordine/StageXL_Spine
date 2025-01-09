@@ -11,22 +11,22 @@ Future<void> main() async {
 
   // init Stage and RenderLoop
 
-  var canvas = document.querySelector('#stage')! as HTMLCanvasElement;
-  var stage = Stage(canvas, width: 480, height: 600);
-  var renderLoop = RenderLoop();
+  final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
+  final stage = Stage(canvas, width: 480, height: 600);
+  final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
 
   // load "spineboy" skeleton resources
 
-  var resourceManager = ResourceManager();
-  var libgdxx = TextureAtlasFormat.libGdx;
+  final resourceManager = ResourceManager();
+  const libgdxx = TextureAtlasFormat.libGdx;
   resourceManager.addTextFile('spineboy', 'spine/spineboy.json');
   resourceManager.addTextureAtlas('spineboy', 'spine/spineboy.atlas', libgdxx);
   await resourceManager.load();
 
   // add TextField to show user information
 
-  var textField = TextField();
+  final textField = TextField();
   textField.defaultTextFormat = TextFormat('Arial', 24, Color.White);
   textField.defaultTextFormat.align = TextFormatAlign.CENTER;
   textField.width = 480;
@@ -37,15 +37,15 @@ Future<void> main() async {
 
   // load Spine skeleton
 
-  var spineJson = resourceManager.getTextFile('spineboy');
-  var textureAtlas = resourceManager.getTextureAtlas('spineboy');
-  var attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
-  var skeletonLoader = SkeletonLoader(attachmentLoader);
-  var skeletonData = skeletonLoader.readSkeletonData(spineJson);
+  final spineJson = resourceManager.getTextFile('spineboy');
+  final textureAtlas = resourceManager.getTextureAtlas('spineboy');
+  final attachmentLoader = TextureAtlasAttachmentLoader(textureAtlas);
+  final skeletonLoader = SkeletonLoader(attachmentLoader);
+  final skeletonData = skeletonLoader.readSkeletonData(spineJson);
 
   // configure Spine animation mix
 
-  var animationStateData = AnimationStateData(skeletonData);
+  final animationStateData = AnimationStateData(skeletonData);
   animationStateData.setMixByName('portal', 'idle', 0.2);
   animationStateData.setMixByName('idle', 'walk', 0.2);
   animationStateData.setMixByName('walk', 'run', 0.2);
@@ -54,13 +54,13 @@ Future<void> main() async {
 
   // create the display object showing the skeleton animation
 
-  var skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
+  final skeletonAnimation = SkeletonAnimation(skeletonData, animationStateData);
   skeletonAnimation.x = 240;
   skeletonAnimation.y = 520;
   skeletonAnimation.scaleX = skeletonAnimation.scaleY = 0.7;
   skeletonAnimation.boundsCalculation = SkeletonBoundsCalculation.hull;
 
-  var mouseContainer = Sprite();
+  final mouseContainer = Sprite();
   mouseContainer.addChild(skeletonAnimation);
   mouseContainer.mouseCursor = MouseCursor.CROSSHAIR;
   stage.juggler.add(skeletonAnimation);
@@ -81,21 +81,21 @@ Future<void> main() async {
   });
 
   skeletonAnimation.state.onTrackEvent.listen((e) {
-    var ev = e.event;
-    var text = '${ev.data.name}: ${ev.intValue}, ${ev.floatValue}, ${ev.stringValue}';
+    final ev = e.event;
+    final text = '${ev.data.name}: ${ev.intValue}, ${ev.floatValue}, ${ev.stringValue}';
     print('${e.trackEntry.trackIndex} event: ${e.trackEntry}, $text');
   });
 
   // start with the "portal" animation continue with the "idle" animation
 
-  var portalAnimation = skeletonAnimation.state.setAnimationByName(0, 'portal', false);
+  final portalAnimation = skeletonAnimation.state.setAnimationByName(0, 'portal', false);
   skeletonAnimation.state.addAnimationByName(0, 'idle', true, portalAnimation.animation.duration);
   await portalAnimation.onTrackComplete.first;
 
   // change the animation on every mouse click
 
-  var animationNames = ['idle', 'idle', 'walk', 'run', 'walk'];
-  var animationState = skeletonAnimation.state;
+  final animationNames = ['idle', 'idle', 'walk', 'run', 'walk'];
+  final animationState = skeletonAnimation.state;
   var animationIndex = 0;
 
   stage.onMouseClick.listen((me) {
@@ -105,7 +105,7 @@ Future<void> main() async {
       animationState.addAnimationByName(1, 'shoot', false, 0).mixDuration = 0.2;
       animationState.addEmptyAnimation(1, 0.2, 0.5);
     } else {
-      var animationName = animationNames[animationIndex];
+      final animationName = animationNames[animationIndex];
       animationState.setAnimationByName(0, animationName, true);
     }
   });
