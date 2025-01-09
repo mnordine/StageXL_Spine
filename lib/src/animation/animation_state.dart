@@ -31,10 +31,10 @@
 part of stagexl_spine;
 
 class AnimationState extends EventDispatcher {
-  static const int subsequent = 0;
-  static const int first = 1;
-  static const int dip = 2;
-  static const int dipMix = 3;
+  static const subsequent = 0;
+  static const first = 1;
+  static const dip = 2;
+  static const dipMix = 3;
   static final Animation _emptyAnimation = Animation('<empty>', [], 0);
 
   final AnimationStateData data;

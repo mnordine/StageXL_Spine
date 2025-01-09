@@ -31,11 +31,11 @@
 part of stagexl_spine;
 
 class PathConstraint implements Constraint {
-  static const int _none = -1;
-  static const int _before = -2;
-  static const int _after = -3;
+  static const _none = -1;
+  static const _before = -2;
+  static const _after = -3;
 
-  static const double _epsilon = 0.00001;
+  static const _epsilon = 0.00001;
 
   final PathConstraintData data;
   final List<Bone> bones = [];

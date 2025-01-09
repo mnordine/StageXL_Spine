@@ -36,7 +36,7 @@ class CurveTimeline implements Timeline {
   static const double _linear = 0;
   static const double _stepped = 1;
   static const double _bezier = 2;
-  static const int _bezierSize = 10 * 2 - 1;
+  static const _bezierSize = 10 * 2 - 1;
 
   final Float32List _curves; // type, x, y, ...
 

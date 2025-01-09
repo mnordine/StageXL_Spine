@@ -31,11 +31,11 @@
 part of stagexl_spine;
 
 class RotateTimeline extends CurveTimeline {
-  static const int _entries = 2;
-  static const int _prevTime = -2;
-  static const int _prevRotation = -1;
-  static const int _time = 0;
-  static const int _rotation = 1;
+  static const _entries = 2;
+  static const _prevTime = -2;
+  static const _prevRotation = -1;
+  static const _time = 0;
+  static const _rotation = 1;
 
   final Float32List frames; // time, degrees, ...
   int boneIndex = 0;

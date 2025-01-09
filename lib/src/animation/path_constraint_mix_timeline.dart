@@ -31,13 +31,13 @@
 part of stagexl_spine;
 
 class PathConstraintMixTimeline extends CurveTimeline {
-  static const int _entries = 3;
-  static const int _prevTime = -3;
-  static const int _prevRotate = -2;
-  static const int _prevTranslate = -1;
-  static const int _time = 0;
-  static const int _rotate = 1;
-  static const int _translate = 2;
+  static const _entries = 3;
+  static const _prevTime = -3;
+  static const _prevRotate = -2;
+  static const _prevTranslate = -1;
+  static const _time = 0;
+  static const _rotate = 1;
+  static const _translate = 2;
 
   int pathConstraintIndex = 0;
 

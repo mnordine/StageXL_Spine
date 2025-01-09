@@ -31,11 +31,11 @@
 part of stagexl_spine;
 
 class PathConstraintPositionTimeline extends CurveTimeline {
-  static const int _entries = 2;
-  static const int _prevTime = -2;
-  static const int _prevValue = -1;
-  static const int _time = 0;
-  static const int _value = 1;
+  static const _entries = 2;
+  static const _prevTime = -2;
+  static const _prevValue = -1;
+  static const _time = 0;
+  static const _value = 1;
 
   int pathConstraintIndex = 0;
 

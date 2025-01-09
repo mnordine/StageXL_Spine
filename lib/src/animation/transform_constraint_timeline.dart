@@ -31,17 +31,17 @@
 part of stagexl_spine;
 
 class TransformConstraintTimeline extends CurveTimeline {
-  static const int _entries = 5;
-  static const int _prevTime = -5;
-  static const int _prevRotate = -4;
-  static const int _prevTranslate = -3;
-  static const int _prevScale = -2;
-  static const int _prevShear = -1;
-  static const int _time = 0;
-  static const int _rotate = 1;
-  static const int _translate = 2;
-  static const int _scale = 3;
-  static const int _shear = 4;
+  static const _entries = 5;
+  static const _prevTime = -5;
+  static const _prevRotate = -4;
+  static const _prevTranslate = -3;
+  static const _prevScale = -2;
+  static const _prevShear = -1;
+  static const _time = 0;
+  static const _rotate = 1;
+  static const _translate = 2;
+  static const _scale = 3;
+  static const _shear = 4;
 
   int transformConstraintIndex = 0;
 

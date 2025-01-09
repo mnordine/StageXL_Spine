@@ -31,13 +31,13 @@
 part of stagexl_spine;
 
 class IkConstraintTimeline extends CurveTimeline {
-  static const int _entries = 3;
-  static const int _prevTime = -3;
-  static const int _prevMix = -2;
-  static const int _prevBendDirection = -1;
-  static const int _time = 0;
-  static const int _mix = 1;
-  static const int _bendDirection = 2;
+  static const _entries = 3;
+  static const _prevTime = -3;
+  static const _prevMix = -2;
+  static const _prevBendDirection = -1;
+  static const _time = 0;
+  static const _mix = 1;
+  static const _bendDirection = 2;
 
   final Float32List frames; // time, mix, bendDirection, ...
   int ikConstraintIndex = 0;

@@ -31,23 +31,23 @@
 part of stagexl_spine;
 
 class TwoColorTimeline extends CurveTimeline {
-  static const int _entries = 8;
-  static const int _prevTime = -8;
-  static const int _prevR1 = -7;
-  static const int _prevG1 = -6;
-  static const int _prevB1 = -5;
-  static const int _prevA1 = -4;
-  static const int _prevR2 = -3;
-  static const int _prevG2 = -2;
-  static const int _prevB2 = -1;
-  static const int _time = 0;
-  static const int _r1 = 1;
-  static const int _g1 = 2;
-  static const int _b1 = 3;
-  static const int _a1 = 4;
-  static const int _r2 = 5;
-  static const int _g2 = 6;
-  static const int _b2 = 7;
+  static const _entries = 8;
+  static const _prevTime = -8;
+  static const _prevR1 = -7;
+  static const _prevG1 = -6;
+  static const _prevB1 = -5;
+  static const _prevA1 = -4;
+  static const _prevR2 = -3;
+  static const _prevG2 = -2;
+  static const _prevB2 = -1;
+  static const _time = 0;
+  static const _r1 = 1;
+  static const _g1 = 2;
+  static const _b1 = 3;
+  static const _a1 = 4;
+  static const _r2 = 5;
+  static const _g2 = 6;
+  static const _b2 = 7;
 
   int slotIndex = 0;
   final Float32List frames; // time, r, g, b, a, ...

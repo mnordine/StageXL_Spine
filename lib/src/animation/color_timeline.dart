@@ -31,17 +31,17 @@
 part of stagexl_spine;
 
 class ColorTimeline extends CurveTimeline {
-  static const int _entries = 5;
-  static const int _prevTime = -5;
-  static const int _prevR = -4;
-  static const int _prevG = -3;
-  static const int _prevB = -2;
-  static const int _prevA = -1;
-  static const int _time = 0;
-  static const int _r = 1;
-  static const int _g = 2;
-  static const int _b = 3;
-  static const int _a = 4;
+  static const _entries = 5;
+  static const _prevTime = -5;
+  static const _prevR = -4;
+  static const _prevG = -3;
+  static const _prevB = -2;
+  static const _prevA = -1;
+  static const _time = 0;
+  static const _r = 1;
+  static const _g = 2;
+  static const _b = 3;
+  static const _a = 4;
 
   final Float32List frames; // time, r, g, b, a, ...
   int slotIndex = 0;

@@ -31,13 +31,13 @@
 part of stagexl_spine;
 
 class ScaleTimeline extends TranslateTimeline {
-  static const int _entries = 3;
-  static const int _prevTime = -3;
-  static const int _prevX = -2;
-  static const int _prevY = -1;
-  static const int _time = 0;
-  static const int _x = 1;
-  static const int _y = 2;
+  static const _entries = 3;
+  static const _prevTime = -3;
+  static const _prevX = -2;
+  static const _prevY = -1;
+  static const _time = 0;
+  static const _x = 1;
+  static const _y = 2;
 
   ScaleTimeline(super.frameCount);
 
