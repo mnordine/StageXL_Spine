@@ -30,6 +30,12 @@
 
 part of stagexl_spine;
 
+extension on Object? {
+  List<T> getList<T>() => this == null ? [] : List<T>.from(this as List);
+
+  Json get json => this as Json? ?? {};
+}
+
 class SkeletonLoader {
   final AttachmentLoader attachmentLoader;
   final List<_LinkedMesh> _linkedMeshes = [];
@@ -69,7 +75,7 @@ class SkeletonLoader {
 
     // Bones
 
-    for (final boneMap in (root["bones"] as List? ?? []).cast<Json>()) {
+    for (final boneMap in root["bones"].getList<Json>()) {
       BoneData? parent;
 
       String? parentName = _getString(boneMap, "parent", null);
@@ -101,7 +107,7 @@ class SkeletonLoader {
 
     // Slots
 
-    for (final slotMap in (root["slots"] as List? ?? []).cast<Json>()) {
+    for (final slotMap in root["slots"].getList<Json>()) {
       var slotName = _getString(slotMap, "name", null);
       var boneName = _getString(slotMap, "bone", null);
       if (slotName == null || boneName == null)
@@ -136,14 +142,14 @@ class SkeletonLoader {
 
     // IK constraints.
 
-    for (final constraintMap in (root["ik"] as List? ?? []).cast<Json>()) {
+    for (final constraintMap in root["ik"].getList<Json>()) {
       var constraintName = _getString(constraintMap, "name", null);
       if (constraintName == null)
         continue;
 
       var constraintData = IkConstraintData(constraintName);
 
-      for (var boneName in (constraintMap["bones"] as List<String>)) {
+      for (var boneName in constraintMap["bones"].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError("IK constraint bone not found: $boneName");
         constraintData.bones.add(bone);
@@ -166,14 +172,14 @@ class SkeletonLoader {
 
     // Transform constraints.
 
-    for (final constraintMap in (root["transform"] as List? ?? []).cast<Json>()) {
+    for (final constraintMap in root["transform"].getList<Json>()) {
       var constraintName = _getString(constraintMap, "name", null);
       if (constraintName == null)
         continue;
 
       var constraintData = TransformConstraintData(constraintName);
 
-      for (String boneName in constraintMap["bones"] as List<String>) {
+      for (final boneName in constraintMap["bones"].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError("Transform constraint bone not found: $boneName");
         constraintData.bones.add(bone);
@@ -206,14 +212,14 @@ class SkeletonLoader {
 
     // Path constraints.
 
-    for (final constraintMap in (root["path"] as List? ?? []).cast<Json>()) {
+    for (final constraintMap in root["path"].getList<Json>()) {
       var constraintName = _getString(constraintMap, "name", null);
       if (constraintName == null)
         continue;
 
       var pathConstraintData = PathConstraintData(constraintName);
 
-      for (String boneName in constraintMap["bones"] as List<String>) {
+      for (String boneName in constraintMap["bones"].getList<String>()) {
         var bone = skeletonData.findBone(boneName);
         if (bone == null) throw StateError("Path constraint bone not found: $boneName");
         pathConstraintData.bones.add(bone);
@@ -246,7 +252,7 @@ class SkeletonLoader {
 
     // Skins
 
-    final skins = root["skins"] as Json? ?? <String, Object?>{};
+    final skins = root["skins"].json;
 
     for (String skinName in skins.keys) {
       var skinMap = skins[skinName] as Json;
@@ -281,7 +287,7 @@ class SkeletonLoader {
 
     // Events
 
-    final events = root["events"] as Json? ?? <String, Object?>{};
+    final events = root["events"].json;
 
     for (String eventName in events.keys) {
       final eventMap = events[eventName] as Json;
@@ -294,7 +300,7 @@ class SkeletonLoader {
 
     // Animations
 
-    final animations = root["animations"] as Json? ?? <String, Object?>{};
+    final animations = root["animations"].json;
 
     for (var animationName in animations.keys) {
       final map = animations[animationName] as Json;
@@ -452,14 +458,14 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final slots = map["slots"] as Json? ?? <String, Object?>{};
+    final slots = map["slots"].json;
 
-    for (String slotName in slots.keys) {
+    for (final slotName in slots.keys) {
       final slotMap = slots[slotName] as Json;
       int slotIndex = skeletonData.findSlotIndex(slotName);
 
-      for (String timelineName in slotMap.keys) {
-        final values = (slotMap[timelineName] as List).cast<Json>();
+      for (final timelineName in slotMap.keys) {
+        final values = slotMap[timelineName].getList<Json>();
 
         if (timelineName == "attachment") {
           AttachmentTimeline attachmentTimeline = AttachmentTimeline(values.length);
@@ -522,7 +528,7 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final bones = map["bones"] as Json? ?? <String, Object?>{};
+    final bones = map["bones"].json;
 
     for (String boneName in bones.keys) {
       int boneIndex = skeletonData.findBoneIndex(boneName);
@@ -531,7 +537,7 @@ class SkeletonLoader {
       final boneMap = bones[boneName] as Json;
 
       for (String timelineName in boneMap.keys) {
-        final values = (boneMap[timelineName] as List).cast<Json>();
+        final values = boneMap[timelineName].getList<Json>();
 
         if (timelineName == "rotate") {
           RotateTimeline rotateTimeline = RotateTimeline(values.length);
@@ -587,11 +593,11 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final ikMap = map["ik"] as Json? ?? <String, Object?>{};
+    final ikMap = map["ik"].json;
 
     for (String ikConstraintName in ikMap.keys) {
       IkConstraintData ikConstraint = skeletonData.findIkConstraint(ikConstraintName)!;
-      final valueMaps = (ikMap[ikConstraintName] as List).cast<Json>();
+      final valueMaps = ikMap[ikConstraintName].getList<Json>();
       IkConstraintTimeline ikTimeline = IkConstraintTimeline(valueMaps.length);
       ikTimeline.ikConstraintIndex = skeletonData.ikConstraints.indexOf(ikConstraint);
       int frameIndex = 0;
@@ -610,12 +616,12 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final transformMap = map["transform"] as Json? ?? <String, Object?>{};
+    final transformMap = map["transform"].json;
 
     for (String transformName in transformMap.keys) {
       TransformConstraintData transformConstraint =
           skeletonData.findTransformConstraint(transformName)!;
-      final valueMaps = (transformMap[transformName] as List).cast<Json>();
+      final valueMaps = transformMap[transformName].getList<Json>();
       TransformConstraintTimeline transformTimeline = TransformConstraintTimeline(valueMaps.length);
       transformTimeline.transformConstraintIndex =
           skeletonData.transformConstraints.indexOf(transformConstraint);
@@ -639,7 +645,7 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final pathsMaps = map["paths"] as Json? ?? <String, Object?>{};
+    final pathsMaps = map["paths"].json;
 
     for (String pathName in pathsMaps.keys) {
       int index = skeletonData.findPathConstraintIndex(pathName);
@@ -647,7 +653,7 @@ class SkeletonLoader {
 
       final pathMap = pathsMaps[pathName] as Json;
       for (String timelineName in pathMap.keys) {
-        final valueMaps = (pathMap[timelineName] as List).cast<Json>();
+        final valueMaps = pathMap[timelineName].getList<Json>();
 
         if (timelineName == "position" || timelineName == "spacing") {
           PathConstraintPositionTimeline pathTimeline;
@@ -699,7 +705,7 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final deformMap = map["deform"] as Json? ?? <String, Object?>{};
+    final deformMap = map["deform"].json;
 
     for (String skinName in deformMap.keys) {
       Skin skin = skeletonData.findSkin(skinName)!;
@@ -710,7 +716,7 @@ class SkeletonLoader {
         final timelineMap = slotMap[slotName] as Json;
 
         for (String timelineName in timelineMap.keys) {
-          final valueMaps = (timelineMap[timelineName] as List).cast<Json>();
+          final valueMaps = timelineMap[timelineName].getList<Json>();
           var attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
           if (attachment == null) throw StateError("Deform attachment not found: $timelineName");
 
@@ -754,9 +760,9 @@ class SkeletonLoader {
 
     //-------------------------------------
 
-    final drawOrderValues = ((map["drawOrder"] ?? map["draworder"]) as List?)?.cast<Json>();
+    final drawOrderValues = (map["drawOrder"] ?? map["draworder"]).getList<Json>();
 
-    if (drawOrderValues != null) {
+    if (drawOrderValues.isNotEmpty) {
       DrawOrderTimeline drawOrderTimeline = DrawOrderTimeline(drawOrderValues.length);
       int slotCount = skeletonData.slots.length;
       int frameIndex = 0;
@@ -771,7 +777,7 @@ class SkeletonLoader {
             drawOrder[i] = -1;
           }
 
-          final offsetMaps = (drawOrderMap["offsets"] as List).cast<Json>();
+          final offsetMaps = drawOrderMap["offsets"].getList<Json>();
           Int16List unchanged = Int16List(slotCount - offsetMaps.length);
           int originalIndex = 0;
           int unchangedIndex = 0;
@@ -812,7 +818,7 @@ class SkeletonLoader {
     //-------------------------------------
 
     if (map.containsKey("events")) {
-      final eventsMap = (map["events"] as List).cast<Json>();
+      final eventsMap = map["events"].getList<Json>();
       EventTimeline eventTimeline = EventTimeline(eventsMap.length);
       int frameIndex = 0;
 
@@ -852,12 +858,12 @@ class SkeletonLoader {
   }
 
   Float32List _getFloat32List(Json map, String name) {
-    final values = (map[name] as List).cast<double>();
+    final values = map[name].getList<double>();
     return Float32List.fromList(values);
   }
 
   Int16List _getInt16List(Json map, String name) {
-    final values = (map[name] as List).cast<int>();
+    final values = map[name].getList<int>();
     return Int16List.fromList(values);
   }
 
