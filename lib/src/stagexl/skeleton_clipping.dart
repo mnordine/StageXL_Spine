@@ -36,7 +36,7 @@ class _SkeletonClippingCommand extends GraphicsCommand {
 
   @override
   void updateContext(GraphicsContext context) {
-    for (int i = 0; i < vertices.length - 1; i += 2) {
+    for (var i = 0; i < vertices.length - 1; i += 2) {
       context.lineTo(vertices[i], vertices[i + 1]);
     }
   }

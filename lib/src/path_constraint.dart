@@ -1,60 +1,60 @@
-/******************************************************************************
- * Spine Runtimes Software License v2.5
- *
- * Copyright (c) 2013-2016, Esoteric Software
- * All rights reserved.
- *
- * You are granted a perpetual, non-exclusive, non-sublicensable, and
- * non-transferable license to use, install, execute, and perform the Spine
- * Runtimes software and derivative works solely for personal or internal
- * use. Without the written permission of Esoteric Software (see Section 2 of
- * the Spine Software License Agreement), you may not (a) modify, translate,
- * adapt, or develop new applications using the Spine Runtimes or otherwise
- * create derivative works or improvements of the Spine Runtimes or (b) remove,
- * delete, alter, or obscure any trademarks or any copyright, trademark, patent,
- * or other intellectual property or proprietary rights notices on or in the
- * Software, including any copy thereof. Redistributions in binary or source
- * form must include this license and terms.
- *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
- * USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+/// ****************************************************************************
+/// Spine Runtimes Software License v2.5
+///
+/// Copyright (c) 2013-2016, Esoteric Software
+/// All rights reserved.
+///
+/// You are granted a perpetual, non-exclusive, non-sublicensable, and
+/// non-transferable license to use, install, execute, and perform the Spine
+/// Runtimes software and derivative works solely for personal or internal
+/// use. Without the written permission of Esoteric Software (see Section 2 of
+/// the Spine Software License Agreement), you may not (a) modify, translate,
+/// adapt, or develop new applications using the Spine Runtimes or otherwise
+/// create derivative works or improvements of the Spine Runtimes or (b) remove,
+/// delete, alter, or obscure any trademarks or any copyright, trademark, patent,
+/// or other intellectual property or proprietary rights notices on or in the
+/// Software, including any copy thereof. Redistributions in binary or source
+/// form must include this license and terms.
+///
+/// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+/// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+/// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+/// EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+/// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+/// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
+/// USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+/// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+/// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+/// POSSIBILITY OF SUCH DAMAGE.
+///***************************************************************************
 
 part of stagexl_spine;
 
 class PathConstraint implements Constraint {
-  static const int _NONE = -1;
-  static const int _BEFORE = -2;
-  static const int _AFTER = -3;
+  static const _none = -1;
+  static const _before = -2;
+  static const _after = -3;
 
-  static const double _epsilon = 0.00001;
+  static const _epsilon = 0.00001;
 
   final PathConstraintData data;
   final List<Bone> bones = [];
 
   Slot target;
-  double position = 0.0;
-  double spacing = 0.0;
-  double rotateMix = 0.0;
-  double translateMix = 0.0;
+  double position = 0;
+  double spacing = 0;
+  double rotateMix = 0;
+  double translateMix = 0;
 
   Float32List _spaces = Float32List(0);
   Float32List _positions = Float32List(0);
   Float32List _world = Float32List(0);
   Float32List _curves = Float32List(0);
   Float32List _lengths = Float32List(0);
-  Float32List _segments = Float32List(10);
+  final Float32List _segments = Float32List(10);
 
   PathConstraint(this.data, Skeleton skeleton) : target = skeleton.findSlot(data.target.name)! {
-    for (BoneData boneData in data.bones) {
+    for (final boneData in data.bones) {
       bones.add(skeleton.findBone(boneData.name)!);
     }
 
@@ -70,31 +70,29 @@ class PathConstraint implements Constraint {
 
   @override
   void update() {
-    if (target.attachment is! PathAttachment) return;
-    var attachment = target.attachment as PathAttachment;
+    final attachment = target.attachment;
+    if (attachment is! PathAttachment) return;
 
-    double rotateMix = this.rotateMix;
-    double translateMix = this.translateMix;
-    bool translate = translateMix > 0;
-    bool rotate = rotateMix > 0;
+    final rotateMix = this.rotateMix;
+    final translateMix = this.translateMix;
+    final translate = translateMix > 0;
+    final rotate = rotateMix > 0;
     if (!translate && !rotate) return;
 
-    PathConstraintData data = this.data;
-    //SpacingMode spacingMode = data.spacingMode;
-    // Workaround for https://github.com/dart-lang/build/issues/1521
-    String spacingMode = data.spacingMode!;
-    bool lengthSpacing = spacingMode == SpacingMode.length;
-    RotateMode rotateMode = data.rotateMode!;
-    bool tangents = rotateMode == RotateMode.tangent;
-    bool scale = rotateMode == RotateMode.chainScale;
-    int boneCount = this.bones.length;
-    int spacesCount = tangents ? boneCount : boneCount + 1;
+    final data = this.data;
+    final spacingMode = data.spacingMode!;
+    final lengthSpacing = spacingMode == SpacingMode.length;
+    final rotateMode = data.rotateMode!;
+    final tangents = rotateMode == RotateMode.tangent;
+    final scale = rotateMode == RotateMode.chainScale;
+    final boneCount = this.bones.length;
+    final spacesCount = tangents ? boneCount : boneCount + 1;
 
-    List<Bone> bones = this.bones;
+    final bones = this.bones;
     if (_spaces.length != spacesCount) _spaces = Float32List(spacesCount);
-    Float32List spaces = _spaces;
+    final spaces = _spaces;
     late Float32List lengths;
-    double spacing = this.spacing;
+    final spacing = this.spacing;
 
     if (scale || lengthSpacing) {
       if (scale) {
@@ -102,56 +100,56 @@ class PathConstraint implements Constraint {
         lengths = _lengths;
       }
 
-      for (int i = 0; i < spacesCount - 1;) {
-        Bone bone = bones[i];
-        double setupLength = bone.data.length;
+      for (var i = 0; i < spacesCount - 1;) {
+        final bone = bones[i];
+        final setupLength = bone.data.length;
         if (setupLength < _epsilon) {
           if (scale) lengths[i] = 0.0;
           spaces[++i] = 0.0;
         } else {
-          double x = setupLength * bone.a;
-          double y = setupLength * bone.c;
-          double length = math.sqrt(x * x + y * y);
+          final x = setupLength * bone.a;
+          final y = setupLength * bone.c;
+          final length = math.sqrt(x * x + y * y);
           if (scale) lengths[i] = length;
           spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length / setupLength;
         }
       }
     } else {
-      for (int i = 1; i < spacesCount; i++) {
+      for (var i = 1; i < spacesCount; i++) {
         spaces[i] = spacing;
       }
     }
 
-    Float32List positions = _computeWorldPositions(attachment, spacesCount, tangents,
+    final positions = _computeWorldPositions(attachment, spacesCount, tangents,
         data.positionMode == PositionMode.percent, spacingMode == SpacingMode.percent);
 
-    double boneX = positions[0];
-    double boneY = positions[1];
-    double offsetRotation = data.offsetRotation;
+    var boneX = positions[0];
+    var boneY = positions[1];
+    var offsetRotation = data.offsetRotation;
 
-    bool tip = false;
+    var tip = false;
     if (offsetRotation == 0) {
       tip = rotateMode == RotateMode.chain;
     } else {
       tip = false;
-      Bone bone = target.bone;
-      double reflect = (bone.a * bone.d - bone.b * bone.c > 0) ? 1.0 : -1.0;
+      final bone = target.bone;
+      final reflect = (bone.a * bone.d - bone.b * bone.c > 0) ? 1.0 : -1.0;
       offsetRotation = _toRad(data.offsetRotation) * reflect;
     }
 
-    for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-      Bone bone = bones[i];
+    for (var i = 0, p = 3; i < boneCount; i++, p += 3) {
+      final bone = bones[i];
       bone._worldX += (boneX - bone.worldX) * translateMix;
       bone._worldY += (boneY - bone.worldY) * translateMix;
-      double x = positions[p + 0];
-      double y = positions[p + 1];
-      double dx = x - boneX;
-      double dy = y - boneY;
+      final x = positions[p + 0];
+      final y = positions[p + 1];
+      final dx = x - boneX;
+      final dy = y - boneY;
 
       if (scale) {
-        double length = lengths[i];
+        final length = lengths[i];
         if (length != 0) {
-          double s = (math.sqrt(dx * dx + dy * dy) / length - 1) * rotateMix + 1;
+          final s = (math.sqrt(dx * dx + dy * dy) / length - 1) * rotateMix + 1;
           bone._a *= s;
           bone._c *= s;
         }
@@ -161,13 +159,13 @@ class PathConstraint implements Constraint {
       boneY = y;
 
       if (rotate) {
-        double a = bone.a;
-        double b = bone.b;
-        double c = bone.c;
-        double d = bone.d;
-        double r = 0.0;
-        double cos = 0.0;
-        double sin = 0.0;
+        final a = bone.a;
+        final b = bone.b;
+        final c = bone.c;
+        final d = bone.d;
+        double r = 0;
+        double cos = 0;
+        double sin = 0;
 
         if (tangents) {
           r = positions[p - 1];
@@ -182,7 +180,7 @@ class PathConstraint implements Constraint {
         if (tip) {
           cos = math.cos(r);
           sin = math.sin(r);
-          double length = bone.data.length;
+          final length = bone.data.length;
           boneX += (length * (cos * a - sin * c) - dx) * rotateMix;
           boneY += (length * (sin * a + cos * c) - dy) * rotateMix;
         } else {
@@ -209,55 +207,55 @@ class PathConstraint implements Constraint {
 
   Float32List _computeWorldPositions(PathAttachment path, int spacesCount, bool tangents,
       bool percentPosition, bool percentSpacing) {
-    Slot target = this.target;
-    double position = this.position;
-    Float32List spaces = _spaces;
+    final target = this.target;
+    var position = this.position;
+    final spaces = _spaces;
 
-    int positionCount = spacesCount * 3 + 2;
+    final positionCount = spacesCount * 3 + 2;
     if (_positions.length != positionCount) {
       _positions = Float32List(positionCount);
     }
 
-    Float32List out = _positions;
+    final out = _positions;
     Float32List world;
-    bool closed = path.closed;
-    int verticesLength = path.worldVerticesLength;
-    int curveCount = verticesLength ~/ 6;
-    int prevCurve = _NONE;
+    final closed = path.closed;
+    var verticesLength = path.worldVerticesLength;
+    var curveCount = verticesLength ~/ 6;
+    var prevCurve = _none;
 
     if (!path.constantSpeed) {
-      Float32List lengths = path.lengths;
+      final lengths = path.lengths;
       curveCount -= closed ? 1 : 2;
-      double pathLength = lengths[curveCount];
+      final pathLength = lengths[curveCount];
       if (percentPosition) position *= pathLength;
       if (percentSpacing) {
-        for (int i = 0; i < spacesCount; i++) { 
+        for (var i = 0; i < spacesCount; i++) { 
           spaces[i] *= pathLength;
         }
       }
 
       if (_world.length != 8) _world = Float32List(8);
       world = _world;
-      int o = 0, curve = 0;
+      var o = 0, curve = 0;
 
-      for (int i = 0; i < spacesCount; i++, o += 3) {
-        double space = spaces[i];
+      for (var i = 0; i < spacesCount; i++, o += 3) {
+        final space = spaces[i];
         position += space;
-        double p = position;
+        var p = position;
 
         if (closed) {
           p = p % pathLength;
           curve = 0;
         } else if (p < 0) {
-          if (prevCurve != _BEFORE) {
-            prevCurve = _BEFORE;
+          if (prevCurve != _before) {
+            prevCurve = _before;
             path.computeWorldVertices2(target, 2, 4, world, 0, 2);
           }
           _addBeforePosition(p, world, 0, out, o);
           continue;
         } else if (p > pathLength) {
-          if (prevCurve != _AFTER) {
-            prevCurve = _AFTER;
+          if (prevCurve != _after) {
+            prevCurve = _after;
             path.computeWorldVertices2(target, verticesLength - 6, 4, world, 0, 2);
           }
           _addAfterPosition(p - pathLength, world, 0, out, o);
@@ -266,12 +264,12 @@ class PathConstraint implements Constraint {
 
         // Determine curve containing position.
         for (;; curve++) {
-          double length = lengths[curve];
+          final length = lengths[curve];
           if (p > length && curve < lengths.length - 1) continue;
           if (curve == 0) {
             p /= length;
           } else {
-            double prev = lengths[curve - 1];
+            final prev = lengths[curve - 1];
             p = (p - prev) / (length - prev);
           }
           break;
@@ -315,19 +313,19 @@ class PathConstraint implements Constraint {
 
     if (_curves.length != curveCount) _curves = Float32List(curveCount);
 
-    Float32List curves = _curves;
-    double pathLength = 0.0;
-    double x1 = world[0], y1 = world[1];
-    double cx1 = 0.0, cy1 = 0.0;
-    double cx2 = 0.0, cy2 = 0.0;
-    double x2 = 0.0, y2 = 0.0;
-    double tmpx = 0.0, tmpy = 0.0;
-    double dddfx = 0.0, dddfy = 0.0;
-    double ddfx = 0.0, ddfy = 0.0;
-    double dfx = 0.0, dfy = 0.0;
-    int w = 2;
+    final curves = _curves;
+    double pathLength = 0;
+    var x1 = world[0], y1 = world[1];
+    double cx1 = 0, cy1 = 0;
+    double cx2 = 0, cy2 = 0;
+    double x2 = 0, y2 = 0;
+    double tmpx = 0, tmpy = 0;
+    double dddfx = 0, dddfy = 0;
+    double ddfx = 0, ddfy = 0;
+    double dfx = 0, dfy = 0;
+    var w = 2;
 
-    for (int i = 0; i < curveCount; i++, w += 6) {
+    for (var i = 0; i < curveCount; i++, w += 6) {
       cx1 = world[w];
       cy1 = world[w + 1];
       cx2 = world[w + 2];
@@ -364,21 +362,21 @@ class PathConstraint implements Constraint {
     }
 
     if (percentSpacing) {
-      for (int i = 0; i < spacesCount; i++) {
+      for (var i = 0; i < spacesCount; i++) {
         spaces[i] *= pathLength;
       }
     }
 
-    Float32List segments = _segments;
-    double curveLength = 0.0;
-    int segment = 0;
-    int o = 0;
-    int curve = 0;
+    final segments = _segments;
+    double curveLength = 0;
+    var segment = 0;
+    var o = 0;
+    var curve = 0;
 
-    for (int i = 0; i < spacesCount; i++, o += 3) {
-      double space = spaces[i];
+    for (var i = 0; i < spacesCount; i++, o += 3) {
+      final space = spaces[i];
       position += space;
-      double p = position;
+      var p = position;
 
       if (closed) {
         p = p % pathLength;
@@ -394,12 +392,12 @@ class PathConstraint implements Constraint {
       // Determine curve containing position.
 
       for (;; curve++) {
-        double length = curves[curve];
+        final length = curves[curve];
         if (p > length && curve < curves.length - 1) continue;
         if (curve == 0) {
           p /= length;
         } else {
-          double prev = curves[curve - 1];
+          final prev = curves[curve - 1];
           p = (p - prev) / (length - prev);
         }
         break;
@@ -409,7 +407,7 @@ class PathConstraint implements Constraint {
 
       if (curve != prevCurve) {
         prevCurve = curve;
-        int ii = curve * 6;
+        var ii = curve * 6;
         x1 = world[ii];
         y1 = world[ii + 1];
         cx1 = world[ii + 2];
@@ -455,12 +453,12 @@ class PathConstraint implements Constraint {
       p *= curveLength;
 
       for (;; segment++) {
-        double length = segments[segment];
+        final length = segments[segment];
         if (p > length && segment < segments.length - 1) continue;
         if (segment == 0) {
           p /= length;
         } else {
-          double prev = segments[segment - 1];
+          final prev = segments[segment - 1];
           p = segment + (p - prev) / (length - prev);
         }
         break;
@@ -473,22 +471,22 @@ class PathConstraint implements Constraint {
   }
 
   void _addBeforePosition(double p, Float32List temp, int i, Float32List out, int o) {
-    double x1 = temp[i + 0];
-    double y1 = temp[i + 1];
-    double dx = temp[i + 2] - x1;
-    double dy = temp[i + 3] - y1;
-    double r = math.atan2(dy, dx);
+    final x1 = temp[i + 0];
+    final y1 = temp[i + 1];
+    final dx = temp[i + 2] - x1;
+    final dy = temp[i + 3] - y1;
+    final r = math.atan2(dy, dx);
     out[o + 0] = x1 + p * math.cos(r);
     out[o + 1] = y1 + p * math.sin(r);
     out[o + 2] = r;
   }
 
   void _addAfterPosition(double p, Float32List temp, int i, Float32List out, int o) {
-    double x1 = temp[i + 2];
-    double y1 = temp[i + 3];
-    double dx = x1 - temp[i];
-    double dy = y1 - temp[i + 1];
-    double r = math.atan2(dy, dx);
+    final x1 = temp[i + 2];
+    final y1 = temp[i + 3];
+    final dx = x1 - temp[i];
+    final dy = y1 - temp[i + 1];
+    final r = math.atan2(dy, dx);
     out[o + 0] = x1 + p * math.cos(r);
     out[o + 1] = y1 + p * math.sin(r);
     out[o + 2] = r;
@@ -497,17 +495,17 @@ class PathConstraint implements Constraint {
   void _addCurvePosition(double p, double x1, double y1, double cx1, double cy1, double cx2,
       double cy2, double x2, double y2, Float32List out, int o, bool tangents) {
     if (p == 0 || p.isNaN) p = 0.0001;
-    double tt = p * p;
-    double ttt = tt * p;
-    double u = 1.0 - p;
-    double uu = u * u;
-    double uuu = uu * u;
-    double ut = u * p;
-    double ut3 = ut * 3;
-    double uut3 = u * ut3;
-    double utt3 = ut3 * p;
-    double x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt;
-    double y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
+    final tt = p * p;
+    final ttt = tt * p;
+    final u = 1.0 - p;
+    final uu = u * u;
+    final uuu = uu * u;
+    final ut = u * p;
+    final ut3 = ut * 3;
+    final uut3 = u * ut3;
+    final utt3 = ut3 * p;
+    final x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt;
+    final y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
     out[o + 0] = x;
     out[o + 1] = y;
 

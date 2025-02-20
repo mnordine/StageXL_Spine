@@ -1,6 +1,6 @@
 part of stagexl_spine;
 
-enum SkeletonBoundsCalculation { None, BoundingBoxes, Hull }
+enum SkeletonBoundsCalculation { none, boundingBoxes, hull }
 
 class SkeletonDisplayObject extends InteractiveObject {
   final Skeleton skeleton;
@@ -11,7 +11,7 @@ class SkeletonDisplayObject extends InteractiveObject {
   static final Float32List _vertices = Float32List(2048);
   static final SkeletonClipping _clipping = SkeletonClipping();
 
-  SkeletonBoundsCalculation boundsCalculation = SkeletonBoundsCalculation.None;
+  SkeletonBoundsCalculation boundsCalculation = SkeletonBoundsCalculation.none;
 
   SkeletonDisplayObject(SkeletonData skeletonData) : skeleton = Skeleton(skeletonData) {
     skeleton.updateWorldTransform();
@@ -21,37 +21,37 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   @override
   Rectangle<num> get bounds {
-    Float32List vertices = _vertices;
-    int offset = 0;
+    final vertices = _vertices;
+    var offset = 0;
 
-    if (boundsCalculation == SkeletonBoundsCalculation.BoundingBoxes) {
-      for (var slot in skeleton.drawOrder) {
-        var attachment = slot.attachment;
+    if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
+      for (final slot in skeleton.drawOrder) {
+        final attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
-          var length = attachment.worldVerticesLength;
+          final length = attachment.worldVerticesLength;
           attachment.computeWorldVertices2(slot, 0, length, vertices, offset, 2);
           offset += length;
         }
       }
-    } else if (boundsCalculation == SkeletonBoundsCalculation.Hull) {
-      for (var slot in skeleton.drawOrder) {
-        var attachment = slot.attachment;
+    } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
+      for (final slot in skeleton.drawOrder) {
+        final attachment = slot.attachment;
         if (attachment is RenderAttachment) {
-          var length = attachment.hullLength;
+          final length = attachment.hullLength;
           attachment.computeWorldVertices2(slot, 0, length, vertices, offset, 2);
           offset += length;
         }
       }
     }
 
-    double minX = double.infinity;
-    double minY = double.infinity;
-    double maxX = double.negativeInfinity;
-    double maxY = double.negativeInfinity;
+    var minX = double.infinity;
+    var minY = double.infinity;
+    var maxX = double.negativeInfinity;
+    var maxY = double.negativeInfinity;
 
-    for (int i = 0; i < offset - 1; i += 2) {
-      double x = vertices[i + 0];
-      double y = vertices[i + 1];
+    for (var i = 0; i < offset - 1; i += 2) {
+      final x = vertices[i + 0];
+      final y = vertices[i + 1];
       if (minX > x) minX = x;
       if (minY > y) minY = y;
       if (maxX < x) maxX = x;
@@ -68,24 +68,24 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   @override
   DisplayObject? hitTestInput(num localX, num localY) {
-    Float32List vertices = _vertices;
-    double sx = 0.0 + localX;
-    double sy = 0.0 - localY;
+    final vertices = _vertices;
+    final sx = 0.0 + localX;
+    final sy = 0.0 - localY;
 
-    if (boundsCalculation == SkeletonBoundsCalculation.BoundingBoxes) {
-      for (var slot in skeleton.drawOrder) {
-        var attachment = slot.attachment;
+    if (boundsCalculation == SkeletonBoundsCalculation.boundingBoxes) {
+      for (final slot in skeleton.drawOrder) {
+        final attachment = slot.attachment;
         if (attachment is BoundingBoxAttachment) {
-          var length = attachment.worldVerticesLength;
+          final length = attachment.worldVerticesLength;
           attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
           if (_windingCount(vertices, length, sx, sy) != 0) return this;
         }
       }
-    } else if (boundsCalculation == SkeletonBoundsCalculation.Hull) {
-      for (var slot in skeleton.drawOrder) {
-        var attachment = slot.attachment;
+    } else if (boundsCalculation == SkeletonBoundsCalculation.hull) {
+      for (final slot in skeleton.drawOrder) {
+        final attachment = slot.attachment;
         if (attachment is RenderAttachment) {
-          var length = attachment.hullLength;
+          final length = attachment.hullLength;
           attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
           if (_windingCount(vertices, length, sx, sy) != 0) return this;
         }
@@ -97,7 +97,7 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   @override
   void render(RenderState renderState) {
-    var renderContext = renderState.renderContext;
+    final renderContext = renderState.renderContext;
     if (renderContext is RenderContextWebGL) {
       _renderWebGL(renderState);
     } else {
@@ -108,23 +108,23 @@ class SkeletonDisplayObject extends InteractiveObject {
   //---------------------------------------------------------------------------
 
   void _renderWebGL(RenderState renderState) {
-    var renderContext = renderState.renderContext as RenderContextWebGL;
-    var renderProgram = renderContext.renderProgramTinted;
-    var skeletonR = skeleton.color.r;
-    var skeletonG = skeleton.color.g;
-    var skeletonB = skeleton.color.b;
-    var skeletonA = skeleton.color.a;
-    var slots = skeleton.drawOrder;
-    var vertices = _vertices;
-    var clipping = _clipping;
+    final renderContext = renderState.renderContext as RenderContextWebGL;
+    final renderProgram = renderContext.renderProgramTinted;
+    final skeletonR = skeleton.color.r;
+    final skeletonG = skeleton.color.g;
+    final skeletonB = skeleton.color.b;
+    final skeletonA = skeleton.color.a;
+    final slots = skeleton.drawOrder;
+    final vertices = _vertices;
+    final clipping = _clipping;
 
     ClippingAttachment? clippingAttachment;
     renderContext.activateRenderProgram(renderProgram);
     renderState.push(_skeletonMatrix, 1.0, renderState.globalBlendMode);
 
-    for (int s = 0; s < slots.length; s++) {
-      var slot = slots[s];
-      var attachment = slot.attachment;
+    for (var s = 0; s < slots.length; s++) {
+      final slot = slots[s];
+      final attachment = slot.attachment;
 
       if (attachment is RenderAttachment) {
         attachment.updateRenderGeometry(slot);
@@ -139,7 +139,7 @@ class SkeletonDisplayObject extends InteractiveObject {
             attachment.color.b * skeletonB * slot.color.b,
             attachment.color.a * skeletonA * slot.color.a);
       } else if (attachment is ClippingAttachment) {
-        var length = attachment.worldVerticesLength;
+        final length = attachment.worldVerticesLength;
         attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
         clipping.vertices = vertices.buffer.asFloat32List(0, length);
         renderContext.beginRenderMask(renderState, clipping);
@@ -160,21 +160,21 @@ class SkeletonDisplayObject extends InteractiveObject {
   }
 
   void _renderCanvas(RenderState renderState) {
-    var renderContext = renderState.renderContext as RenderContextCanvas;
-    var vertices = _vertices;
-    var clipping = _clipping;
-    var transform = _transformMatrix;
-    var slots = skeleton.drawOrder;
+    final renderContext = renderState.renderContext as RenderContextCanvas;
+    final vertices = _vertices;
+    final clipping = _clipping;
+    final transform = _transformMatrix;
+    final slots = skeleton.drawOrder;
 
     ClippingAttachment? clippingAttachment;
     renderState.push(_skeletonMatrix, skeleton.color.a, renderState.globalBlendMode);
 
-    for (int s = 0; s < slots.length; s++) {
-      var slot = slots[s];
-      var attachment = slot.attachment;
+    for (var s = 0; s < slots.length; s++) {
+      final slot = slots[s];
+      final attachment = slot.attachment;
 
       if (attachment is RegionAttachment) {
-        var b = slot.bone;
+        final b = slot.bone;
         transform.setTo(b.a, b.c, b.b, b.d, b.worldX, b.worldY);
         transform.prepend(attachment.transformationMatrix);
         renderState.push(transform, attachment.color.a * slot.color.a, slot.data.blendMode);
@@ -182,15 +182,15 @@ class SkeletonDisplayObject extends InteractiveObject {
         renderState.pop();
       } else if (attachment is RenderAttachment) {
         attachment.updateRenderGeometry(slot);
-        var ixList = attachment.ixList;
-        var vxList = attachment.vxList;
-        var alpha = attachment.color.a * slot.color.a;
-        var renderTexture = attachment.bitmapData.renderTexture;
+        final ixList = attachment.ixList;
+        final vxList = attachment.vxList;
+        final alpha = attachment.color.a * slot.color.a;
+        final renderTexture = attachment.bitmapData.renderTexture;
         renderState.push(_identityMatrix, alpha, slot.data.blendMode);
         renderState.renderTextureMesh(renderTexture, ixList, vxList);
         renderState.pop();
       } else if (attachment is ClippingAttachment) {
-        var length = attachment.worldVerticesLength;
+        final length = attachment.worldVerticesLength;
         attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
         clipping.vertices = vertices.buffer.asFloat32List(0, length);
         renderContext.beginRenderMask(renderState, clipping);
@@ -211,13 +211,13 @@ class SkeletonDisplayObject extends InteractiveObject {
   //---------------------------------------------------------------------------
 
   int _windingCount(Float32List vertices, int length, double x, double y) {
-    double ax = vertices[length - 2];
-    double ay = vertices[length - 1];
-    int wn = 0;
+    var ax = vertices[length - 2];
+    var ay = vertices[length - 1];
+    var wn = 0;
 
-    for (int i = 0; i < length - 1; i += 2) {
-      double bx = vertices[i + 0];
-      double by = vertices[i + 1];
+    for (var i = 0; i < length - 1; i += 2) {
+      final bx = vertices[i + 0];
+      final by = vertices[i + 1];
       if (ay <= y) {
         if (by > y && (bx - ax) * (y - ay) - (x - ax) * (by - ay) > 0) wn++;
       } else {

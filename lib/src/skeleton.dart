@@ -1,32 +1,32 @@
-/******************************************************************************
- * Spine Runtimes Software License v2.5
- *
- * Copyright (c) 2013-2016, Esoteric Software
- * All rights reserved.
- *
- * You are granted a perpetual, non-exclusive, non-sublicensable, and
- * non-transferable license to use, install, execute, and perform the Spine
- * Runtimes software and derivative works solely for personal or internal
- * use. Without the written permission of Esoteric Software (see Section 2 of
- * the Spine Software License Agreement), you may not (a) modify, translate,
- * adapt, or develop new applications using the Spine Runtimes or otherwise
- * create derivative works or improvements of the Spine Runtimes or (b) remove,
- * delete, alter, or obscure any trademarks or any copyright, trademark, patent,
- * or other intellectual property or proprietary rights notices on or in the
- * Software, including any copy thereof. Redistributions in binary or source
- * form must include this license and terms.
- *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
- * USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+/// ****************************************************************************
+/// Spine Runtimes Software License v2.5
+///
+/// Copyright (c) 2013-2016, Esoteric Software
+/// All rights reserved.
+///
+/// You are granted a perpetual, non-exclusive, non-sublicensable, and
+/// non-transferable license to use, install, execute, and perform the Spine
+/// Runtimes software and derivative works solely for personal or internal
+/// use. Without the written permission of Esoteric Software (see Section 2 of
+/// the Spine Software License Agreement), you may not (a) modify, translate,
+/// adapt, or develop new applications using the Spine Runtimes or otherwise
+/// create derivative works or improvements of the Spine Runtimes or (b) remove,
+/// delete, alter, or obscure any trademarks or any copyright, trademark, patent,
+/// or other intellectual property or proprietary rights notices on or in the
+/// Software, including any copy thereof. Redistributions in binary or source
+/// form must include this license and terms.
+///
+/// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+/// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+/// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+/// EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+/// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+/// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
+/// USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+/// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+/// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+/// POSSIBILITY OF SUCH DAMAGE.
+///***************************************************************************
 
 part of stagexl_spine;
 
@@ -43,43 +43,43 @@ class Skeleton {
 
   Skin? _skin;
 
-  SpineColor color = SpineColor(1.0, 1.0, 1.0, 1.0);
-  double time = 0.0;
-  double x = 0.0;
-  double y = 0.0;
+  SpineColor color = SpineColor(1, 1, 1, 1);
+  double time = 0;
+  double x = 0;
+  double y = 0;
 
   Skeleton(this.data) {
-    for (BoneData boneData in data.bones) {
+    for (final boneData in data.bones) {
       if (boneData.parent == null) {
-        Bone bone = Bone(boneData, this, null);
+        final bone = Bone(boneData, this, null);
         bones.add(bone);
       } else {
-        Bone parent = bones[boneData.parent!.index];
-        Bone bone = Bone(boneData, this, parent);
+        final parent = bones[boneData.parent!.index];
+        final bone = Bone(boneData, this, parent);
         parent.children.add(bone);
         bones.add(bone);
       }
     }
 
-    for (SlotData slotData in data.slots) {
-      Bone bone = this.bones[slotData.boneData.index];
-      Slot slot = Slot(slotData, bone);
-      this.slots.add(slot);
-      this.drawOrder.add(slot);
+    for (final slotData in data.slots) {
+      final bone = bones[slotData.boneData.index];
+      final slot = Slot(slotData, bone);
+      slots.add(slot);
+      drawOrder.add(slot);
     }
 
-    for (IkConstraintData ikConstraintData in data.ikConstraints) {
-      var ikConstraint = IkConstraint(ikConstraintData, this);
+    for (final ikConstraintData in data.ikConstraints) {
+      final ikConstraint = IkConstraint(ikConstraintData, this);
       ikConstraints.add(ikConstraint);
     }
 
-    for (TransformConstraintData transformConstraintData in data.transformConstraints) {
-      var transformConstraint = TransformConstraint(transformConstraintData, this);
+    for (final transformConstraintData in data.transformConstraints) {
+      final transformConstraint = TransformConstraint(transformConstraintData, this);
       transformConstraints.add(transformConstraint);
     }
 
-    for (PathConstraintData pathConstraintData in data.pathConstraints) {
-      var pathConstraint = PathConstraint(pathConstraintData, this);
+    for (final pathConstraintData in data.pathConstraints) {
+      final pathConstraint = PathConstraint(pathConstraintData, this);
       pathConstraints.add(pathConstraint);
     }
 
@@ -93,37 +93,37 @@ class Skeleton {
     _updateCache.clear();
     _updateCacheReset.clear();
 
-    for (var bone in this.bones) {
+    for (final bone in bones) {
       bone._sorted = false;
     }
 
     // IK first, lowest hierarchy depth first.
-    List<IkConstraint> ikConstraints = this.ikConstraints;
-    List<TransformConstraint> transformConstraints = this.transformConstraints;
-    List<PathConstraint> pathConstraints = this.pathConstraints;
-    int ikCount = ikConstraints.length;
-    int transformCount = transformConstraints.length;
-    int pathCount = pathConstraints.length;
-    int constraintCount = ikCount + transformCount + pathCount;
+    final ikConstraints = this.ikConstraints;
+    final transformConstraints = this.transformConstraints;
+    final pathConstraints = this.pathConstraints;
+    final ikCount = ikConstraints.length;
+    final transformCount = transformConstraints.length;
+    final pathCount = pathConstraints.length;
+    final constraintCount = ikCount + transformCount + pathCount;
 
     outer:
-    for (int i = 0; i < constraintCount; i++) {
-      for (int ii = 0; ii < ikCount; ii++) {
-        IkConstraint ikConstraint = ikConstraints[ii];
+    for (var i = 0; i < constraintCount; i++) {
+      for (var ii = 0; ii < ikCount; ii++) {
+        final ikConstraint = ikConstraints[ii];
         if (ikConstraint.data.order == i) {
           _sortIkConstraint(ikConstraint);
           continue outer;
         }
       }
-      for (int ii = 0; ii < transformCount; ii++) {
-        TransformConstraint transformConstraint = transformConstraints[ii];
+      for (var ii = 0; ii < transformCount; ii++) {
+        final transformConstraint = transformConstraints[ii];
         if (transformConstraint.data.order == i) {
           _sortTransformConstraint(transformConstraint);
           continue outer;
         }
       }
-      for (int ii = 0; ii < pathCount; ii++) {
-        PathConstraint pathConstraint = pathConstraints[ii];
+      for (var ii = 0; ii < pathCount; ii++) {
+        final pathConstraint = pathConstraints[ii];
         if (pathConstraint.data.order == i) {
           _sortPathConstraint(pathConstraint);
           continue outer;
@@ -131,21 +131,21 @@ class Skeleton {
       }
     }
 
-    for (var bone in this.bones) {
+    for (final bone in bones) {
       _sortBone(bone);
     }
   }
 
   void _sortIkConstraint(IkConstraint constraint) {
-    Bone target = constraint.target;
+    final target = constraint.target;
     _sortBone(target);
 
-    List<Bone> constrained = constraint.bones;
-    Bone parent = constrained[0];
+    final constrained = constraint.bones;
+    final parent = constrained[0];
     _sortBone(parent);
 
     if (constrained.length > 1) {
-      Bone child = constrained[constrained.length - 1];
+      final child = constrained[constrained.length - 1];
       if (_updateCache.contains(child) == false) {
         _updateCacheReset.add(child);
       }
@@ -158,9 +158,9 @@ class Skeleton {
   }
 
   void _sortPathConstraint(PathConstraint constraint) {
-    Slot slot = constraint.target;
-    int slotIndex = slot.data.index;
-    Bone slotBone = slot.bone;
+    final slot = constraint.target;
+    final slotIndex = slot.data.index;
+    final slotBone = slot.bone;
 
     if (skin != null) {
       _sortPathConstraintAttachment(skin!, slotIndex, slotBone);
@@ -170,26 +170,26 @@ class Skeleton {
       _sortPathConstraintAttachment(data.defaultSkin!, slotIndex, slotBone);
     }
 
-    for (int i = 0; i < data.skins.length; i++) {
+    for (var i = 0; i < data.skins.length; i++) {
       _sortPathConstraintAttachment(data.skins[i], slotIndex, slotBone);
     }
 
-    Attachment? attachment = slot.attachment;
+    final attachment = slot.attachment;
     if (attachment is PathAttachment) {
       _sortPathConstraintAttachment2(attachment, slotBone);
     }
 
-    List<Bone> constrained = constraint.bones;
-    for (int i = 0; i < constrained.length; i++) {
+    final constrained = constraint.bones;
+    for (var i = 0; i < constrained.length; i++) {
       _sortBone(constrained[i]);
     }
 
     _updateCache.add(constraint);
 
-    for (int ii = 0; ii < constrained.length; ii++) {
+    for (var ii = 0; ii < constrained.length; ii++) {
       _sortReset(constrained[ii].children);
     }
-    for (int i = 0; i < constrained.length; i++) {
+    for (var i = 0; i < constrained.length; i++) {
       constrained[i]._sorted = true;
     }
   }
@@ -197,53 +197,53 @@ class Skeleton {
   void _sortTransformConstraint(TransformConstraint constraint) {
     _sortBone(constraint.target);
 
-    List<Bone> constrained = constraint.bones;
+    final constrained = constraint.bones;
 
     if (constraint.data.local) {
-      for (int i = 0; i < constrained.length; i++) {
-        Bone child = constrained[i];
+      for (var i = 0; i < constrained.length; i++) {
+        final child = constrained[i];
         _sortBone(child.parent!);
         if (_updateCache.contains(child) == false) {
           _updateCacheReset.add(child);
         }
       }
     } else {
-      for (int i = 0; i < constrained.length; i++) {
+      for (var i = 0; i < constrained.length; i++) {
         _sortBone(constrained[i]);
       }
     }
 
     _updateCache.add(constraint);
 
-    for (int i = 0; i < constrained.length; i++) {
+    for (var i = 0; i < constrained.length; i++) {
       _sortReset(constrained[i].children);
     }
 
-    for (int i = 0; i < constrained.length; i++) {
+    for (var i = 0; i < constrained.length; i++) {
       constrained[i]._sorted = true;
     }
   }
 
   void _sortPathConstraintAttachment(Skin skin, int slotIndex, Bone slotBone) {
-    var dict = skin.attachments[slotIndex];
+    final dict = skin.attachments[slotIndex];
     if (dict == null) return;
-    for (Attachment value in dict.values) {
+    for (final value in dict.values.nonNulls) {
       _sortPathConstraintAttachment2(value, slotBone);
     }
   }
 
   void _sortPathConstraintAttachment2(Attachment attachment, Bone slotBone) {
     if (attachment is! PathAttachment) return;
-    PathAttachment pathAttachment = attachment;
-    Int16List? pathBones = pathAttachment.bones;
+    final pathAttachment = attachment;
+    final pathBones = pathAttachment.bones;
     if (pathBones == null) {
       _sortBone(slotBone);
     } else {
-      List<Bone> bones = this.bones;
-      int i = 0;
+      final bones = this.bones;
+      var i = 0;
       while (i < pathBones.length) {
-        int boneCount = pathBones[i++];
-        for (int n = i + boneCount; i < n; i++) {
+        final boneCount = pathBones[i++];
+        for (final n = i + boneCount; i < n; i++) {
           _sortBone(bones[pathBones[i]]);
         }
       }
@@ -252,15 +252,15 @@ class Skeleton {
 
   void _sortBone(Bone bone) {
     if (bone._sorted) return;
-    Bone? parent = bone.parent;
+    final parent = bone.parent;
     if (parent != null) _sortBone(parent);
     bone._sorted = true;
     _updateCache.add(bone);
   }
 
   void _sortReset(List<Bone> bones) {
-    for (int i = 0; i < bones.length; i++) {
-      Bone bone = bones[i];
+    for (var i = 0; i < bones.length; i++) {
+      final bone = bones[i];
       if (bone._sorted) _sortReset(bone.children);
       bone._sorted = false;
     }
@@ -269,7 +269,7 @@ class Skeleton {
   /// Updates the world transform for each bone and applies constraints.
 
   void updateWorldTransform() {
-    for (Bone bone in _updateCacheReset) {
+    for (final bone in _updateCacheReset) {
       bone.ax = bone.x;
       bone.ay = bone.y;
       bone.arotation = bone.rotation;
@@ -279,7 +279,7 @@ class Skeleton {
       bone.ashearY = bone.shearY;
       bone.appliedValid = true;
     }
-    for (Updatable updatable in _updateCache) {
+    for (final updatable in _updateCache) {
       updatable.update();
     }
   }
@@ -294,23 +294,23 @@ class Skeleton {
   /// Sets the bones and constraints to their setup pose values.
 
   void setBonesToSetupPose() {
-    for (Bone bone in bones) {
+    for (final bone in bones) {
       bone.setToSetupPose();
     }
 
-    for (IkConstraint ikConstraint in ikConstraints) {
+    for (final ikConstraint in ikConstraints) {
       ikConstraint.bendDirection = ikConstraint.data.bendDirection;
       ikConstraint.mix = ikConstraint.data.mix;
     }
 
-    for (TransformConstraint transformConstraint in transformConstraints) {
+    for (final transformConstraint in transformConstraints) {
       transformConstraint.rotateMix = transformConstraint.data.rotateMix;
       transformConstraint.translateMix = transformConstraint.data.translateMix;
       transformConstraint.scaleMix = transformConstraint.data.scaleMix;
       transformConstraint.shearMix = transformConstraint.data.shearMix;
     }
 
-    for (PathConstraint pathConstraint in pathConstraints) {
+    for (final pathConstraint in pathConstraints) {
       pathConstraint.position = pathConstraint.data.position;
       pathConstraint.spacing = pathConstraint.data.spacing;
       pathConstraint.rotateMix = pathConstraint.data.rotateMix;
@@ -319,8 +319,8 @@ class Skeleton {
   }
 
   void setSlotsToSetupPose() {
-    int i = 0;
-    for (Slot slot in this.slots) {
+    var i = 0;
+    for (final slot in slots) {
       drawOrder[i++] = slot;
       slot.setToSetupPose();
     }
@@ -330,32 +330,28 @@ class Skeleton {
 
   Bone? get rootBone => bones.isEmpty ? null : bones.first;
 
-  Bone? findBone(String boneName) {
-    return this.bones.firstWhere((b) => b.data.name == boneName);
-  }
+  Bone? findBone(String boneName) => bones.firstWhere((b) => b.data.name == boneName);
 
   int findBoneIndex(String boneName) {
-    for (int i = 0; i < this.bones.length; i++) {
-      if (this.bones[i].data.name == boneName) return i;
+    for (var i = 0; i < bones.length; i++) {
+      if (bones[i].data.name == boneName) return i;
     }
     return -1;
   }
 
-  Slot? findSlot(String slotName) {
-    return this.slots.firstWhere((s) => s.data.name == slotName);
-  }
+  Slot? findSlot(String slotName) => slots.firstWhere((s) => s.data.name == slotName);
 
   int findSlotIndex(String slotName) {
-    for (int i = 0; i < this.slots.length; i++) {
-      if (this.slots[i].data.name == slotName) return i;
+    for (var i = 0; i < slots.length; i++) {
+      if (slots[i].data.name == slotName) return i;
     }
     return -1;
   }
 
   set skinName(String? skinName) {
     if (skinName == null) throw ArgumentError('Cannot set skin name to null');
-    Skin? skin = data.findSkin(skinName);
-    if (skin == null) throw ArgumentError("Skin not found: $skinName");
+    final skin = data.findSkin(skinName);
+    if (skin == null) throw ArgumentError('Skin not found: $skinName');
     this.skin = skin;
   }
 
@@ -372,11 +368,11 @@ class Skeleton {
       if (_skin != null) {
         newSkin.attachAll(this, _skin!);
       } else {
-        for (int i = 0; i < this.slots.length; i++) {
-          Slot slot = this.slots[i];
-          String? name = slot.data.attachmentName;
+        for (var i = 0; i < slots.length; i++) {
+          final slot = slots[i];
+          final name = slot.data.attachmentName;
           if (name != null) {
-            Attachment? attachment = newSkin.getAttachment(i, name);
+            final attachment = newSkin.getAttachment(i, name);
             if (attachment != null) slot.attachment = attachment;
           }
         }
@@ -385,13 +381,11 @@ class Skeleton {
     _skin = newSkin;
   }
 
-  Attachment? getAttachmentForSlotName(String slotName, String attachmentName) {
-    return getAttachmentForSlotIndex(data.findSlotIndex(slotName), attachmentName);
-  }
+  Attachment? getAttachmentForSlotName(String slotName, String attachmentName) => getAttachmentForSlotIndex(data.findSlotIndex(slotName), attachmentName);
 
   Attachment? getAttachmentForSlotIndex(int slotIndex, String attachmentName) {
     if (_skin != null) {
-      Attachment? attachment = _skin!.getAttachment(slotIndex, attachmentName);
+      final attachment = _skin!.getAttachment(slotIndex, attachmentName);
       if (attachment != null) return attachment;
     }
     if (data.defaultSkin != null) {
@@ -401,37 +395,37 @@ class Skeleton {
   }
 
   void setAttachment(String slotName, String attachmentName) {
-    for (int i = 0; i < this.slots.length; i++) {
-      Slot slot = this.slots[i];
+    for (var i = 0; i < slots.length; i++) {
+      final slot = slots[i];
       if (slot.data.name == slotName) {
-        var attachment = getAttachmentForSlotIndex(i, attachmentName);
+        final attachment = getAttachmentForSlotIndex(i, attachmentName);
         if (attachment == null) {
-          throw ArgumentError("Attachment not found: $attachmentName, for slot: $slotName");
+          throw ArgumentError('Attachment not found: $attachmentName, for slot: $slotName');
         }
         slot.attachment = attachment;
         return;
       }
     }
 
-    throw ArgumentError("Slot not found: $slotName");
+    throw ArgumentError('Slot not found: $slotName');
   }
 
   IkConstraint? findIkConstraint(String constraintName) {
-    for (IkConstraint ikConstraint in ikConstraints) {
+    for (final ikConstraint in ikConstraints) {
       if (ikConstraint.data.name == constraintName) return ikConstraint;
     }
     return null;
   }
 
   TransformConstraint? findTransformConstraint(String constraintName) {
-    for (TransformConstraint transformConstraint in transformConstraints) {
+    for (final transformConstraint in transformConstraints) {
       if (transformConstraint.data.name == constraintName) return transformConstraint;
     }
     return null;
   }
 
   PathConstraint? findPathConstraint(String constraintName) {
-    for (PathConstraint pathConstraint in pathConstraints) {
+    for (final pathConstraint in pathConstraints) {
       if (pathConstraint.data.name == constraintName) return pathConstraint;
     }
     return null;
@@ -485,5 +479,5 @@ class Skeleton {
  */
 
   @override
-  String toString() => this.data.name ?? super.toString();
+  String toString() => data.name ?? super.toString();
 }
