@@ -9,9 +9,7 @@ environment:
 
 dependencies:
   stagexl:
-    git: 
-      url: https://github.com/mnordine/StageXL.git
-      ref: package-web
+    git: https://github.com/mnordine/StageXL.git
 
 dev_dependencies:
   web: ^1.1.0
