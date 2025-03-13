@@ -862,8 +862,8 @@ class SkeletonLoader {
   }
 
   Float32List _getFloat32List(Json map, String name) {
-    final values = map[name].getList<double>();
-    return Float32List.fromList(values);
+    final values = map[name].getList<num>().map((n) => n.toDouble());
+    return Float32List.fromList(values.toList());
   }
 
   Int16List _getInt16List(Json map, String name) {
