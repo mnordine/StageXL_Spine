@@ -1,4 +1,4 @@
-part of stagexl_spine;
+part of '../stagexl_spine.dart';
 
 /// multiplier for degrees to radians conversion
 double _deg2rad = math.pi / 180.0;

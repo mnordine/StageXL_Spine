@@ -1,4 +1,4 @@
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class SkeletonAnimation extends SkeletonDisplayObject implements Animatable {
   final AnimationState state;

@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 abstract class AttachmentLoader {
   RegionAttachment? newRegionAttachment(Skin skin, String name, String path);

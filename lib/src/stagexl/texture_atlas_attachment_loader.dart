@@ -1,4 +1,4 @@
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class TextureAtlasAttachmentLoader implements AttachmentLoader {
   final TextureAtlas textureAtlas;

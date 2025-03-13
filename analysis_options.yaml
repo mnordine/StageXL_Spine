@@ -13,7 +13,7 @@ analyzer:
     unused_local_variable: error
     use_string_in_part_of_directives: ignore
     curly_braces_in_flow_control_structures: ignore
-    unnecessary_library_name: ignore
+    unnecessary_library_name:  error
 
 linter:
 
@@ -94,6 +94,7 @@ linter:
     - omit_local_variable_types
     - prefer_final_in_for_each
     - prefer_final_locals
+    - use_string_in_part_of_directives
     # - avoid_setters_without_getters
     # - cascade_invocations
     # - avoid_positional_boolean_parameters

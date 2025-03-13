@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class AnimationState extends EventDispatcher {
   static const subsequent = 0;
@@ -344,7 +344,7 @@ class AnimationState extends EventDispatcher {
         if (lastTotal.abs() > 180.0) lastTotal += 360.0 * lastTotal.sign;
         dir = current;
       }
-      // Store loops as part of lastTotal.
+      // Store loops as part of '../stagexl_spine.dart';
       total = diff + 360.0 * (lastTotal / 360.0).truncateToDouble();
       if (dir != current) total += 360.0 * lastTotal.sign;
       timelinesRotation[i] = total;

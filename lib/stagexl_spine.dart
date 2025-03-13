@@ -1,4 +1,4 @@
-library stagexl_spine;
+library;
 
 import 'dart:convert';
 import 'dart:math' as math;
