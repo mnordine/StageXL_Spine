@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class VertexAttachment extends Attachment {
   static int _nextID = 0;

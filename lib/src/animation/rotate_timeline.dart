@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class RotateTimeline extends CurveTimeline {
   static const _entries = 2;

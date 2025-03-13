@@ -28,6 +28,6 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 enum MixPose { setup, current, currentLayered }

@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 // ignore: constant_identifier_names
 enum MixDirection { In, Out }

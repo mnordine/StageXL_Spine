@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../stagexl_spine.dart';
 
 class SpineColor {
   //static final Color WHITE = new Color(1.0, 1.0, 1.0, 1.0);

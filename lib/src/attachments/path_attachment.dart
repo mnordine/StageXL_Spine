@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 class PathAttachment extends VertexAttachment {
   late final Float32List lengths;

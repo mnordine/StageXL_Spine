@@ -1,4 +1,4 @@
-part of stagexl_spine;
+part of '../../stagexl_spine.dart';
 
 enum SkeletonBoundsCalculation { none, boundingBoxes, hull }
 

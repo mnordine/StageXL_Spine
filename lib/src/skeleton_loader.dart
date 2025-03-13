@@ -28,7 +28,7 @@
 /// POSSIBILITY OF SUCH DAMAGE.
 ///***************************************************************************
 
-part of stagexl_spine;
+part of '../stagexl_spine.dart';
 
 extension on Object? {
   // ignore: cast_nullable_to_non_nullable
