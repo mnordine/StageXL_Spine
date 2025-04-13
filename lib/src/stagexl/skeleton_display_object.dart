@@ -109,7 +109,7 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   void _renderWebGL(RenderState renderState) {
     final renderContext = renderState.renderContext as RenderContextWebGL;
-    final renderProgram = renderContext.renderProgramTinted;
+    final renderProgram = renderContext.renderProgramBatch;
     final skeletonR = skeleton.color.r;
     final skeletonG = skeleton.color.g;
     final skeletonB = skeleton.color.b;
@@ -132,6 +132,8 @@ class SkeletonDisplayObject extends InteractiveObject {
         renderContext.activateBlendMode(slot.data.blendMode);
         renderProgram.renderTextureMesh(
             renderState,
+            renderContext,
+            attachment.bitmapData.renderTexture,
             attachment.ixList,
             attachment.vxList,
             attachment.color.r * skeletonR * slot.color.r,
