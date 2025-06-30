@@ -128,16 +128,22 @@ class SkeletonDisplayObject extends InteractiveObject {
 
       if (attachment is RenderAttachment) {
         attachment.updateRenderGeometry(slot);
-        renderContext.activateRenderTexture(attachment.bitmapData.renderTexture);
-        renderContext.activateBlendMode(slot.data.blendMode);
-        renderProgram.renderTextureMesh(
-            renderState,
-            attachment.ixList,
-            attachment.vxList,
-            attachment.color.r * skeletonR * slot.color.r,
-            attachment.color.g * skeletonG * slot.color.g,
-            attachment.color.b * skeletonB * slot.color.b,
-            attachment.color.a * skeletonA * slot.color.a);
+
+        final finalAlpha = attachment.color.a * skeletonA * slot.color.a;
+        if (finalAlpha > 0 && attachment.ixList.isNotEmpty) {
+          renderContext.activateRenderTexture(attachment.bitmapData.renderTexture);
+          renderContext.activateBlendMode(slot.data.blendMode);
+          renderProgram.renderTextureMesh(
+              renderState,
+              attachment.ixList,
+              attachment.vxList,
+              attachment.color.r * skeletonR * slot.color.r,
+              attachment.color.g * skeletonG * slot.color.g,
+              attachment.color.b * skeletonB * slot.color.b,
+              finalAlpha);
+        } else {
+          print('not rendering ${attachment.name}');
+        }
       } else if (attachment is ClippingAttachment) {
         final length = attachment.worldVerticesLength;
         attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
