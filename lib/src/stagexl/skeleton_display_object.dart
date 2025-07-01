@@ -141,8 +141,6 @@ class SkeletonDisplayObject extends InteractiveObject {
               attachment.color.g * skeletonG * slot.color.g,
               attachment.color.b * skeletonB * slot.color.b,
               finalAlpha);
-        } else {
-          print('not rendering ${attachment.name}');
         }
       } else if (attachment is ClippingAttachment) {
         final length = attachment.worldVerticesLength;
