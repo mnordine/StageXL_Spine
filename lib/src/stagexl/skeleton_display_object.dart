@@ -128,7 +128,9 @@ class SkeletonDisplayObject extends InteractiveObject {
 
       if (attachment is RenderAttachment) {
         attachment.updateRenderGeometry(slot);
-        renderContext.activateRenderTexture(attachment.bitmapData.renderTexture);
+        final renderTexture = attachment.bitmapData.renderTexture;
+        final textureIndex = renderProgram.getTextureIndexIfAvailable(renderTexture);
+        renderContext.activateRenderTextureAt(renderTexture, textureIndex, flush: false);
         renderContext.activateBlendMode(slot.data.blendMode);
         renderProgram.renderTextureMesh(
             renderState,

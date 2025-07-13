@@ -11,7 +11,7 @@ dependencies:
   stagexl:
     git: 
       url: https://github.com/mnordine/StageXL.git
-      ref: batch-experiment
+      ref: experimental
 
 dev_dependencies:
   web: ^1.1.0
