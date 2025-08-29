@@ -127,10 +127,10 @@ class SkeletonDisplayObject extends InteractiveObject {
       final attachment = slot.attachment;
 
       if (attachment is RenderAttachment) {
-        attachment.updateRenderGeometry(slot);
-
         final alpha = attachment.color.a * skeletonA * slot.color.a;
         if (alpha > 0 && attachment.ixList.isNotEmpty) {
+          attachment.updateRenderGeometry(slot);
+
           renderContext.activateBlendMode(slot.data.blendMode);
           renderProgram.renderTextureMesh(
               renderState,
