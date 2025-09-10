@@ -109,7 +109,7 @@ class SkeletonDisplayObject extends InteractiveObject {
 
   void _renderWebGL(RenderState renderState) {
     final renderContext = renderState.renderContext as RenderContextWebGL;
-    final renderProgram = renderContext.renderProgramTinted;
+    final renderProgram = renderContext.renderProgramBatch;
     final skeletonR = skeleton.color.r;
     final skeletonG = skeleton.color.g;
     final skeletonB = skeleton.color.b;
@@ -127,17 +127,23 @@ class SkeletonDisplayObject extends InteractiveObject {
       final attachment = slot.attachment;
 
       if (attachment is RenderAttachment) {
-        attachment.updateRenderGeometry(slot);
-        renderContext.activateRenderTexture(attachment.bitmapData.renderTexture);
-        renderContext.activateBlendMode(slot.data.blendMode);
-        renderProgram.renderTextureMesh(
-            renderState,
-            attachment.ixList,
-            attachment.vxList,
-            attachment.color.r * skeletonR * slot.color.r,
-            attachment.color.g * skeletonG * slot.color.g,
-            attachment.color.b * skeletonB * slot.color.b,
-            attachment.color.a * skeletonA * slot.color.a);
+        final alpha = attachment.color.a * skeletonA * slot.color.a;
+        if (alpha > 0 && attachment.ixList.isNotEmpty) {
+          attachment.updateRenderGeometry(slot);
+
+          renderContext.activateBlendMode(slot.data.blendMode);
+          renderProgram.renderTextureMesh(
+              renderState,
+              renderContext,
+              attachment.bitmapData.renderTexture,
+              attachment.ixList,
+              attachment.vxList,
+              attachment.color.r * skeletonR * slot.color.r,
+              attachment.color.g * skeletonG * slot.color.g,
+              attachment.color.b * skeletonB * slot.color.b,
+              attachment.color.a * skeletonA * slot.color.a,
+              blendMode: slot.data.blendMode);
+        }
       } else if (attachment is ClippingAttachment) {
         final length = attachment.worldVerticesLength;
         attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
