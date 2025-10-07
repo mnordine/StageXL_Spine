@@ -100,9 +100,69 @@ class SkeletonDisplayObject extends InteractiveObject {
     final renderContext = renderState.renderContext;
     if (renderContext is RenderContextWebGL) {
       _renderWebGL(renderState);
+    } else if (renderContext is RenderContextWebGPU) {
+      _renderWebGpu(renderState);
     } else {
       _renderCanvas(renderState);
     }
+  }
+
+  void _renderWebGpu(RenderState renderState) {
+    final renderContext = renderState.renderContext as RenderContextWebGPU;
+    final renderProgram = renderContext.renderProgramBatchWebGPU;
+    final skeletonR = skeleton.color.r;
+    final skeletonG = skeleton.color.g;
+    final skeletonB = skeleton.color.b;
+    final skeletonA = skeleton.color.a;
+    final slots = skeleton.drawOrder;
+    final vertices = _vertices;
+    final clipping = _clipping;
+
+    ClippingAttachment? clippingAttachment;
+    // renderContext.activateRenderProgram(renderProgram);
+    renderState.push(_skeletonMatrix, 1.0, renderState.globalBlendMode);
+
+    for (var s = 0; s < slots.length; s++) {
+      final slot = slots[s];
+      final attachment = slot.attachment;
+
+      if (attachment is RenderAttachment) {
+        final alpha = attachment.color.a * skeletonA * slot.color.a;
+        if (alpha > 0 && attachment.ixList.isNotEmpty) {
+          attachment.updateRenderGeometry(slot);
+
+          // renderContext.activateBlendMode(slot.data.blendMode);
+          renderProgram.renderTextureMesh(
+              renderState,
+              renderContext,
+              attachment.bitmapData.renderTexture,
+              attachment.ixList,
+              attachment.vxList,
+              attachment.color.r * skeletonR * slot.color.r,
+              attachment.color.g * skeletonG * slot.color.g,
+              attachment.color.b * skeletonB * slot.color.b,
+              attachment.color.a * skeletonA * slot.color.a,);
+              // blendMode: slot.data.blendMode);
+        }
+      } else if (attachment is ClippingAttachment) {
+        final length = attachment.worldVerticesLength;
+        attachment.computeWorldVertices2(slot, 0, length, vertices, 0, 2);
+        clipping.vertices = vertices.buffer.asFloat32List(0, length);
+        renderContext.beginRenderMask(renderState, clipping);
+        // renderContext.activateRenderProgram(renderProgram);
+        clippingAttachment = attachment;
+      }
+
+      if (clippingAttachment != null) {
+        if (s == slots.length - 1 || clippingAttachment.endSlot == slot.data) {
+          renderContext.endRenderMask(renderState, clipping);
+          // renderContext.activateRenderProgram(renderProgram);
+          clippingAttachment = null;
+        }
+      }
+    }
+
+    renderState.pop();
   }
 
   //---------------------------------------------------------------------------

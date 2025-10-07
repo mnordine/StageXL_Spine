@@ -6,13 +6,13 @@ import 'package:stagexl_spine/stagexl_spine.dart';
 Future<void> main() async {
   // configure StageXL default options
 
-  StageXL.stageOptions.renderEngine = RenderEngine.WebGL;
+  StageXL.stageOptions.renderEngine = RenderEngine.WebGPU;
   StageXL.stageOptions.backgroundColor = Color.DarkSlateGray;
 
   // init Stage and RenderLoop
 
   final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
-  final stage = Stage(canvas, width: 480, height: 600);
+  final stage = await Stage.getStage(canvas, width: 480, height: 600);
   final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
 

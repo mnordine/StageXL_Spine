@@ -12,7 +12,7 @@ Future<void> main() async {
   // init Stage and RenderLoop
 
   final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
-  final stage = Stage(canvas, width: 480, height: 600);
+  final stage = await Stage.getStage(canvas, width: 480, height: 600);
   final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
 
