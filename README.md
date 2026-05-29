@@ -26,6 +26,37 @@ This runtime supports the export format and features of Spine v3.6.
 
 <https://github.com/EsotericSoftware/spine-runtimes/tree/3.6/spine-as3>
 
+## Restricted Spine 4.3 JSON Support
+
+This package also supports a restricted subset of Spine 4.3 JSON exports. The 4.3 path is intended
+for projects that author in Spine 4.3 and need smooth animation curves in StageXL without exporting
+down to Spine 3.6, because down-exporting can flatten or lose curve information.
+
+Supported in the 4.3 subset:
+
+- Bones and slots.
+- Region attachments.
+- Existing mesh support where it is compatible with this runtime.
+- Skin arrays exported as `skins: [{ name, attachments }]`.
+- Bone timelines for rotate, translate, scale, shear, and their X/Y variants.
+- Slot attachment timelines and basic color timelines (`rgba`, `rgb`, `alpha`, `rgba2`, `rgb2`).
+- Draw order and events.
+- Linear, stepped, and Bezier curves, including separate curves per value for multi-value bone
+  timelines.
+
+Unsupported 4.3 features fail fast with `UnsupportedError` instead of silently rendering incorrectly.
+This includes physics constraints, slider constraints/timelines, sequence attachments/timelines,
+4.3 constraint arrays, draw-order folders, inverse clipping, and attachment or timeline types that
+are not listed above.
+
+Artist export rules:
+
+- Export JSON, not binary `.skel` or `.spine`.
+- Keep animation curves in the Spine 4.3 export.
+- Avoid physics, sliders, sequences, draw-order folders, inverse clipping, and advanced 4.3
+  constraint features.
+- Prefer simple region attachments for assets that must be guaranteed to work in this runtime.
+
 ## Spine License
   
 Spine Runtimes Software License v2.5    
@@ -55,4 +86,3 @@ USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  
 POSSIBILITY OF SUCH DAMAGE.  
-

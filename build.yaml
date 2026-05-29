@@ -11,6 +11,7 @@ targets:
       build_web_compilers|entrypoint:
         generate_for:
           - example/coin/example.dart
+          - example/curves/example.dart
           - example/goblins/example.dart
           - example/hero/example.dart
           - example/powerup/example.dart

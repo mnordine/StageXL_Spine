@@ -13,6 +13,7 @@ dependencies:
 
 dev_dependencies:
   web: ^1.1.0
+  test: any
   lints: any
   build_test: any
   build_runner: any

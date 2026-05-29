@@ -58,6 +58,8 @@ class SkeletonLoader {
       throw ArgumentError('object must be a String or Map.');
     }
 
+    _validateRestricted43Features(root);
+
     final skeletonData = SkeletonData();
     skeletonData.name = name;
 
@@ -253,11 +255,25 @@ class SkeletonLoader {
 
     // Skins
 
-    final skins = root['skins'].json;
+    final skinsObject = root['skins'];
+    final skinEntries = <({String name, Json attachments})>[];
 
-    for (final skinName in skins.keys) {
-      final skinMap = skins[skinName]! as Json;
-      final skin = Skin(skinName);
+    if (skinsObject is List) {
+      for (final skinObject in skinsObject) {
+        final skinMap = skinObject as Json;
+        final skinName = _getString(skinMap, 'name', 'default')!;
+        skinEntries.add((name: skinName, attachments: skinMap['attachments'].json));
+      }
+    } else {
+      final skins = skinsObject.json;
+      for (final skinName in skins.keys) {
+        skinEntries.add((name: skinName, attachments: skins[skinName]! as Json));
+      }
+    }
+
+    for (final skinEntry in skinEntries) {
+      final skin = Skin(skinEntry.name);
+      final skinMap = skinEntry.attachments;
       for (final slotName in skinMap.keys) {
         final slotIndex = skeletonData.findSlotIndex(slotName);
         final slotEntry = skinMap[slotName]! as Json;
@@ -305,7 +321,7 @@ class SkeletonLoader {
 
     for (final animationName in animations.keys) {
       final map = animations[animationName]! as Json;
-      _readAnimation(map, animationName, skeletonData);
+      _readAnimation(map, animationName, skeletonData, _isSpine43(skeletonData.version));
     }
 
     return skeletonData;
@@ -317,9 +333,16 @@ class SkeletonLoader {
       Json map, Skin skin, int slotIndex, String name, SkeletonData skeletonData) {
     name = _getString(map, 'name', name)!;
 
-    final typeName = "AttachmentType.${_getString(map, "type", "region")!}";
-    final type = AttachmentType.values.firstWhere((e) => e.toString() == typeName);
+    final typeValue = _getString(map, 'type', 'region')!;
+    final typeName = 'AttachmentType.$typeValue';
+    final type = AttachmentType.values
+        .where((e) => e.toString() == typeName)
+        .firstOrNull;
     final path = _getString(map, 'path', name)!;
+
+    if (type == null) {
+      throw UnsupportedError('Unsupported Spine 4.3 attachment type: $typeValue ($name).');
+    }
 
     switch (type) {
       case AttachmentType.region:
@@ -453,7 +476,7 @@ class SkeletonLoader {
 
   //---------------------------------------------------------------------------
 
-  void _readAnimation(Json map, String name, SkeletonData skeletonData) {
+  void _readAnimation(Json map, String name, SkeletonData skeletonData, bool spine43) {
     final timelines = <Timeline>[];
     double duration = 0;
 
@@ -483,15 +506,23 @@ class SkeletonLoader {
           timelines.add(attachmentTimeline);
           duration =
               math.max(duration, attachmentTimeline.frames[attachmentTimeline.frameCount - 1]);
-        } else if (timelineName == 'color') {
+        } else if (timelineName == 'color' || timelineName == 'rgba' || timelineName == 'rgb' ||
+            timelineName == 'alpha') {
           final colorTimeline = ColorTimeline(values.length);
           colorTimeline.slotIndex = slotIndex;
+          final setupColor = skeletonData.slots[slotIndex].color;
 
           var frameIndex = 0;
           for (final valueMap in values) {
             final time = _getDouble(valueMap, 'time', 0);
             final color = SpineColor(1, 1, 1, 1);
-            color.setFromString(_getString(valueMap, 'color', 'FFFFFFFF')!);
+            if (timelineName == 'alpha') {
+              color.setFromColor(setupColor);
+              color.a = _getDouble(valueMap, 'alpha', setupColor.a);
+            } else {
+              color.setFromString(_getString(valueMap, 'color', 'FFFFFFFF')!);
+              if (timelineName == 'rgb') color.a = setupColor.a;
+            }
             colorTimeline.setFrame(frameIndex, time, color.r, color.g, color.b, color.a);
             _readCurve(valueMap, colorTimeline, frameIndex);
             frameIndex++;
@@ -500,7 +531,7 @@ class SkeletonLoader {
           timelines.add(colorTimeline);
           duration = math.max(duration,
               colorTimeline.frames[(colorTimeline.frameCount - 1) * ColorTimeline._entries]);
-        } else if (timelineName == 'twoColor') {
+        } else if (timelineName == 'twoColor' || timelineName == 'rgba2' || timelineName == 'rgb2') {
           final twoColorTimeline = TwoColorTimeline(values.length);
           twoColorTimeline.slotIndex = slotIndex;
 
@@ -549,8 +580,13 @@ class SkeletonLoader {
             final time = _getDouble(valueMap, 'time', 0);
             final degrees = _getDouble(valueMap, 'angle', 0);
             rotateTimeline.setFrame(frameIndex, time, degrees);
-            _readCurve(valueMap, rotateTimeline, frameIndex);
+            if (!spine43) _readCurve(valueMap, rotateTimeline, frameIndex);
             frameIndex++;
+          }
+          if (spine43) {
+            for (var i = 0; i < values.length - 1; i++) {
+              _readCurve2(values[i], rotateTimeline, i, rotateTimeline.frames, 2, [1]);
+            }
           }
 
           timelines.add(rotateTimeline);
@@ -574,11 +610,16 @@ class SkeletonLoader {
           var frameIndex = 0;
           for (final valueMap in values) {
             final x = _getDouble(valueMap, 'x', 0);
-            final y = _getDouble(valueMap, 'y', 0);
+            final y = _getDouble(valueMap, 'y', timelineName == 'scale' ? 1 : 0);
             final time = _getDouble(valueMap, 'time', 0);
             translateTimeline.setFrame(frameIndex, time, x, y);
-            _readCurve(valueMap, translateTimeline, frameIndex);
+            if (!spine43) _readCurve(valueMap, translateTimeline, frameIndex);
             frameIndex++;
+          }
+          if (spine43) {
+            for (var i = 0; i < values.length - 1; i++) {
+              _readCurve2(values[i], translateTimeline, i, translateTimeline.frames, 3, [1, 2]);
+            }
           }
 
           timelines.add(translateTimeline);
@@ -586,6 +627,83 @@ class SkeletonLoader {
               duration,
               translateTimeline
                   .frames[(translateTimeline.frameCount - 1) * TranslateTimeline._entries]);
+        } else if (timelineName == 'translatex' ||
+            timelineName == 'translatey' ||
+            timelineName == 'scalex' ||
+            timelineName == 'scaley' ||
+            timelineName == 'shearx' ||
+            timelineName == 'sheary') {
+          late final CurveTimeline curveTimeline;
+          late final Timeline timeline;
+          late final Float32List frames;
+          late final int frameCount;
+          late final void Function(int frameIndex, double time, double value) setFrame;
+
+          switch (timelineName) {
+            case 'translatex':
+              final t = TranslateXTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            case 'translatey':
+              final t = TranslateYTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            case 'scalex':
+              final t = ScaleXTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            case 'scaley':
+              final t = ScaleYTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            case 'shearx':
+              final t = ShearXTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            case 'sheary':
+              final t = ShearYTimeline(values.length)..boneIndex = boneIndex;
+              curveTimeline = t;
+              timeline = t;
+              frames = t.frames;
+              frameCount = t.frameCount;
+              setFrame = t.setFrame;
+            default:
+              throw StateError('Invalid timeline type for a bone: $timelineName ($boneName)');
+          }
+
+          var frameIndex = 0;
+          for (final valueMap in values) {
+            final valueName = timelineName.endsWith('x') ? 'x' : 'y';
+            final defaultValue = timelineName.startsWith('scale') ? 1.0 : 0.0;
+            final value = _getDouble(valueMap, valueName, defaultValue);
+            final time = _getDouble(valueMap, 'time', 0);
+            setFrame(frameIndex, time, value);
+            if (!spine43) _readCurve(valueMap, curveTimeline, frameIndex);
+            frameIndex++;
+          }
+          if (spine43) {
+            for (var i = 0; i < values.length - 1; i++) {
+              _readCurve2(values[i], curveTimeline, i, frames, 2, [1]);
+            }
+          }
+
+          timelines.add(timeline);
+          duration = math.max(duration, frames[(frameCount - 1) * 2]);
         } else {
           throw StateError('Invalid timeline type for a bone: $timelineName ($boneName)');
         }
@@ -855,11 +973,166 @@ class SkeletonLoader {
       case 'stepped':
         timeline.setStepped(frameIndex);
 
-      case final List<double> curve:  
-        final [cx1, cy1, cx2, cy2, ...] = curve;
+      case final List<Object?> curve when curve.length >= 4:
+        final [cx1, cy1, cx2, cy2, ...] = curve.cast<num>().map((n) => n.toDouble()).toList();
         timeline.setCurve(frameIndex, cx1, cy1, cx2, cy2);
     }
   }
+
+  void _readCurve2(Json valueMap, CurveTimeline timeline, int frameIndex, Float32List frames,
+      int entries, List<int> valueOffsets) {
+    switch (valueMap['curve']) {
+      case 'stepped':
+        for (var i = 0; i < valueOffsets.length; i++) {
+          timeline.setSteppedValue(frameIndex, i);
+        }
+
+      case final List<Object?> curve:
+        final curveValues = curve.cast<num>().map((n) => n.toDouble()).toList();
+        final frame = frameIndex * entries;
+        final nextFrame = frame + entries;
+        for (var i = 0; i < valueOffsets.length; i++) {
+          final curveIndex = i * 4;
+          if (curveIndex + 3 >= curveValues.length) break;
+
+          final valueOffset = valueOffsets[i];
+          timeline.setBezier(
+              frameIndex,
+              i,
+              frames[frame],
+              frames[frame + valueOffset],
+              curveValues[curveIndex + 0],
+              curveValues[curveIndex + 1],
+              curveValues[curveIndex + 2],
+              curveValues[curveIndex + 3],
+              frames[nextFrame],
+              frames[nextFrame + valueOffset]);
+        }
+    }
+  }
+
+  void _validateRestricted43Features(Json root) {
+    final version = _getString(root['skeleton'].json, 'spine', '');
+    final spine43 = _isSpine43(version);
+
+    if (root['constraints'] case final List<Object?> constraints) {
+      for (final constraintObject in constraints) {
+        final constraint = constraintObject! as Json;
+        final type = _getString(constraint, 'type', 'unknown');
+        final name = _getString(constraint, 'name', 'unknown');
+        throw UnsupportedError(
+            'Unsupported Spine 4.3 feature: $type constraint "$name". Use legacy-compatible '
+            'top-level ik/path exports or remove the constraint.');
+      }
+    }
+
+    if (root['physics'] != null) {
+      throw UnsupportedError('Unsupported Spine 4.3 feature: physics constraints.');
+    }
+
+    final skinsObject = root['skins'];
+    final skinMaps = <Json>[];
+    if (skinsObject is List) {
+      for (final skinObject in skinsObject) {
+        skinMaps.add((skinObject as Json)['attachments'].json);
+      }
+    } else {
+      final skins = skinsObject.json;
+      for (final skinObject in skins.values) {
+        skinMaps.add(skinObject! as Json);
+      }
+    }
+    for (final skinMap in skinMaps) {
+      _validateAttachments(skinMap);
+    }
+
+    final animations = root['animations'].json;
+    for (final animationName in animations.keys) {
+      final animationMap = animations[animationName]! as Json;
+      _validateAnimation(animationName, animationMap, spine43);
+    }
+  }
+
+  void _validateAttachments(Json skinMap) {
+    for (final slotEntry in skinMap.values) {
+      final slotMap = slotEntry! as Json;
+      for (final attachmentEntry in slotMap.entries) {
+        final attachmentName = attachmentEntry.key;
+        final attachment = attachmentEntry.value! as Json;
+        final type = _getString(attachment, 'type', 'region')!;
+        if (attachment.containsKey('sequence') || type == 'sequence') {
+          throw UnsupportedError(
+              'Unsupported Spine 4.3 feature: sequence attachment "$attachmentName".');
+        }
+        if (!AttachmentType.values.any((e) => e.toString() == 'AttachmentType.$type')) {
+          throw UnsupportedError('Unsupported Spine 4.3 attachment type: $type ($attachmentName).');
+        }
+        if (type == 'clipping' && attachment.containsKey('inverse')) {
+          throw UnsupportedError(
+              'Unsupported Spine 4.3 feature: clipping with inverse=true ($attachmentName).');
+        }
+      }
+    }
+  }
+
+  void _validateAnimation(String animationName, Json animationMap, bool spine43) {
+    final slots = animationMap['slots'].json;
+    for (final slotName in slots.keys) {
+      final slotMap = slots[slotName]! as Json;
+      for (final timelineName in slotMap.keys) {
+        if (timelineName == 'sequence') {
+          throw UnsupportedError(
+              'Unsupported timeline type: sequence on slot "$slotName" in "$animationName".');
+        }
+        if (!{
+          'attachment',
+          'color',
+          'twoColor',
+          'rgba',
+          'rgb',
+          'alpha',
+          'rgba2',
+          'rgb2',
+        }.contains(timelineName)) {
+          throw UnsupportedError(
+              'Unsupported timeline type: $timelineName on slot "$slotName" in "$animationName".');
+        }
+      }
+    }
+
+    final bones = animationMap['bones'].json;
+    for (final boneName in bones.keys) {
+      final boneMap = bones[boneName]! as Json;
+      for (final timelineName in boneMap.keys) {
+        if (!{
+          'rotate',
+          'translate',
+          'translatex',
+          'translatey',
+          'scale',
+          'scalex',
+          'scaley',
+          'shear',
+          'shearx',
+          'sheary',
+        }.contains(timelineName)) {
+          throw UnsupportedError(
+              'Unsupported timeline type: $timelineName on bone "$boneName" in "$animationName".');
+        }
+      }
+    }
+
+    if (spine43) {
+      for (final key in ['ik', 'transform', 'paths', 'deform']) {
+        if (animationMap[key] != null) {
+          throw UnsupportedError(
+              'Unsupported Spine 4.3 timeline section: $key in animation "$animationName".');
+        }
+      }
+    }
+  }
+
+  bool _isSpine43(String? version) => version?.startsWith('4.3') ?? false;
 
   Float32List _getFloat32List(Json map, String name) {
     final values = map[name].getList<num>().map((n) => n.toDouble());

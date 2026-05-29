@@ -76,10 +76,9 @@ class ShearTimeline extends TranslateTimeline {
       final t1 = frames[frame + _time];
       final x1 = frames[frame + _x];
       final y1 = frames[frame + _y];
-      final between = 1.0 - (time - t1) / (t0 - t1);
-      final percent = getCurvePercent(frame ~/ _entries - 1, between);
-      x = x0 + (x1 - x0) * percent;
-      y = y0 + (y1 - y0) * percent;
+      final frameIndex = frame ~/ _entries - 1;
+      x = getCurveValue(frameIndex, 0, time, t0, x0, t1, x1);
+      y = getCurveValue(frameIndex, 1, time, t0, y0, t1, y1);
     }
 
     if (pose == MixPose.setup) {
@@ -87,6 +86,80 @@ class ShearTimeline extends TranslateTimeline {
       bone.shearY = bone.data.shearY + y * alpha;
     } else {
       bone.shearX = bone.shearX + (bone.data.shearX - bone.shearX + x) * alpha;
+      bone.shearY = bone.shearY + (bone.data.shearY - bone.shearY + y) * alpha;
+    }
+  }
+}
+
+class ShearXTimeline extends TranslateXTimeline {
+  ShearXTimeline(super.frameCount);
+
+  @override
+  int getPropertyId() => (TimelineType.shear.ordinal << 24) + boneIndex;
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double x = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.shearX = bone.data.shearX;
+      } else if (pose == MixPose.current) {
+        bone.shearX += (bone.data.shearX - bone.shearX) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length - 2]) {
+      x = frames[frames.length - 1];
+    } else {
+      final frame = Animation.binarySearch(frames, time, 2);
+      x = getCurveValue(frame ~/ 2 - 1, 0, time, frames[frame - 2], frames[frame - 1],
+          frames[frame], frames[frame + 1]);
+    }
+
+    if (pose == MixPose.setup) {
+      bone.shearX = bone.data.shearX + x * alpha;
+    } else {
+      bone.shearX = bone.shearX + (bone.data.shearX - bone.shearX + x) * alpha;
+    }
+  }
+}
+
+class ShearYTimeline extends TranslateYTimeline {
+  ShearYTimeline(super.frameCount);
+
+  @override
+  int getPropertyId() => (TimelineType.shear.ordinal << 24) + boneIndex;
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double y = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.shearY = bone.data.shearY;
+      } else if (pose == MixPose.current) {
+        bone.shearY += (bone.data.shearY - bone.shearY) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length - 2]) {
+      y = frames[frames.length - 1];
+    } else {
+      final frame = Animation.binarySearch(frames, time, 2);
+      y = getCurveValue(frame ~/ 2 - 1, 0, time, frames[frame - 2], frames[frame - 1],
+          frames[frame], frames[frame + 1]);
+    }
+
+    if (pose == MixPose.setup) {
+      bone.shearY = bone.data.shearY + y * alpha;
+    } else {
       bone.shearY = bone.shearY + (bone.data.shearY - bone.shearY + y) * alpha;
     }
   }

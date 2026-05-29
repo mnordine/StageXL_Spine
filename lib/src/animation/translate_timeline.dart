@@ -89,10 +89,9 @@ class TranslateTimeline extends CurveTimeline {
       final t1 = frames[frame + _time];
       final x1 = frames[frame + _x];
       final y1 = frames[frame + _y];
-      final between = 1.0 - (time - t1) / (t0 - t1);
-      final percent = getCurvePercent(frame ~/ _entries - 1, between);
-      x = x0 + (x1 - x0) * percent;
-      y = y0 + (y1 - y0) * percent;
+      final frameIndex = frame ~/ _entries - 1;
+      x = getCurveValue(frameIndex, 0, time, t0, x0, t1, x1);
+      y = getCurveValue(frameIndex, 1, time, t0, y0, t1, y1);
     }
 
     if (pose == MixPose.setup) {
@@ -100,6 +99,118 @@ class TranslateTimeline extends CurveTimeline {
       bone.y = bone.data.y + y * alpha;
     } else {
       bone.x = bone.x + (bone.data.x - bone.x + x) * alpha;
+      bone.y = bone.y + (bone.data.y - bone.y + y) * alpha;
+    }
+  }
+}
+
+class TranslateXTimeline extends CurveTimeline {
+  static const _entries = 2;
+  static const _prevTime = -2;
+  static const _prevX = -1;
+  static const _time = 0;
+  static const _x = 1;
+
+  final Float32List frames;
+  int boneIndex = 0;
+
+  TranslateXTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _entries);
+
+  @override
+  int getPropertyId() => (TimelineType.translate.ordinal << 24) + boneIndex;
+
+  void setFrame(int frameIndex, double time, double x) {
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _x] = x;
+  }
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double x = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.x = bone.data.x;
+      } else if (pose == MixPose.current) {
+        bone.x += (bone.data.x - bone.x) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length + _prevTime]) {
+      x = frames[frames.length + _prevX];
+    } else {
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final x0 = frames[frame + _prevX];
+      final t1 = frames[frame + _time];
+      final x1 = frames[frame + _x];
+      x = getCurveValue(frame ~/ _entries - 1, 0, time, t0, x0, t1, x1);
+    }
+
+    if (pose == MixPose.setup) {
+      bone.x = bone.data.x + x * alpha;
+    } else {
+      bone.x = bone.x + (bone.data.x - bone.x + x) * alpha;
+    }
+  }
+}
+
+class TranslateYTimeline extends CurveTimeline {
+  static const _entries = 2;
+  static const _prevTime = -2;
+  static const _prevY = -1;
+  static const _time = 0;
+  static const _y = 1;
+
+  final Float32List frames;
+  int boneIndex = 0;
+
+  TranslateYTimeline(super.frameCount)
+      : frames = Float32List(frameCount * _entries);
+
+  @override
+  int getPropertyId() => (TimelineType.translate.ordinal << 24) + boneIndex;
+
+  void setFrame(int frameIndex, double time, double y) {
+    frameIndex *= _entries;
+    frames[frameIndex + _time] = time;
+    frames[frameIndex + _y] = y;
+  }
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double y = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.y = bone.data.y;
+      } else if (pose == MixPose.current) {
+        bone.y += (bone.data.y - bone.y) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length + _prevTime]) {
+      y = frames[frames.length + _prevY];
+    } else {
+      final frame = Animation.binarySearch(frames, time, _entries);
+      final t0 = frames[frame + _prevTime];
+      final y0 = frames[frame + _prevY];
+      final t1 = frames[frame + _time];
+      final y1 = frames[frame + _y];
+      y = getCurveValue(frame ~/ _entries - 1, 0, time, t0, y0, t1, y1);
+    }
+
+    if (pose == MixPose.setup) {
+      bone.y = bone.data.y + y * alpha;
+    } else {
       bone.y = bone.y + (bone.data.y - bone.y + y) * alpha;
     }
   }

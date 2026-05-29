@@ -76,10 +76,9 @@ class ScaleTimeline extends TranslateTimeline {
       final t1 = frames[frame + _time];
       final x1 = frames[frame + _x];
       final y1 = frames[frame + _y];
-      final between = 1.0 - (time - t1) / (t0 - t1);
-      final percent = getCurvePercent(frame ~/ _entries - 1, between);
-      x = x0 + (x1 - x0) * percent;
-      y = y0 + (y1 - y0) * percent;
+      final frameIndex = frame ~/ _entries - 1;
+      x = getCurveValue(frameIndex, 0, time, t0, x0, t1, x1);
+      y = getCurveValue(frameIndex, 1, time, t0, y0, t1, y1);
     }
 
     if (alpha == 1.0) {
@@ -93,6 +92,86 @@ class ScaleTimeline extends TranslateTimeline {
       final mx = direction == MixDirection.Out ? x.abs() * bx.sign : bx.abs() * x.sign;
       final my = direction == MixDirection.Out ? y.abs() * by.sign : by.abs() * y.sign;
       bone.scaleX = bx + (mx - bx) * alpha;
+      bone.scaleY = by + (my - by) * alpha;
+    }
+  }
+}
+
+class ScaleXTimeline extends TranslateXTimeline {
+  ScaleXTimeline(super.frameCount);
+
+  @override
+  int getPropertyId() => (TimelineType.scale.ordinal << 24) + boneIndex;
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double x = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.scaleX = bone.data.scaleX;
+      } else if (pose == MixPose.current) {
+        bone.scaleX += (bone.data.scaleX - bone.scaleX) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length - 2]) {
+      x = frames[frames.length - 1];
+    } else {
+      final frame = Animation.binarySearch(frames, time, 2);
+      x = getCurveValue(frame ~/ 2 - 1, 0, time, frames[frame - 2], frames[frame - 1],
+          frames[frame], frames[frame + 1]);
+    }
+
+    x *= bone.data.scaleX;
+    if (alpha == 1.0) {
+      bone.scaleX = x;
+    } else {
+      final bx = pose == MixPose.setup ? bone.data.scaleX : bone.scaleX;
+      final mx = direction == MixDirection.Out ? x.abs() * bx.sign : bx.abs() * x.sign;
+      bone.scaleX = bx + (mx - bx) * alpha;
+    }
+  }
+}
+
+class ScaleYTimeline extends TranslateYTimeline {
+  ScaleYTimeline(super.frameCount);
+
+  @override
+  int getPropertyId() => (TimelineType.scale.ordinal << 24) + boneIndex;
+
+  @override
+  void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
+      double alpha, MixPose pose, MixDirection direction) {
+    final bone = skeleton.bones[boneIndex];
+    double y = 0;
+
+    if (time < frames[0]) {
+      if (pose == MixPose.setup) {
+        bone.scaleY = bone.data.scaleY;
+      } else if (pose == MixPose.current) {
+        bone.scaleY += (bone.data.scaleY - bone.scaleY) * alpha;
+      }
+      return;
+    }
+
+    if (time >= frames[frames.length - 2]) {
+      y = frames[frames.length - 1];
+    } else {
+      final frame = Animation.binarySearch(frames, time, 2);
+      y = getCurveValue(frame ~/ 2 - 1, 0, time, frames[frame - 2], frames[frame - 1],
+          frames[frame], frames[frame + 1]);
+    }
+
+    y *= bone.data.scaleY;
+    if (alpha == 1.0) {
+      bone.scaleY = y;
+    } else {
+      final by = pose == MixPose.setup ? bone.data.scaleY : bone.scaleY;
+      final my = direction == MixDirection.Out ? y.abs() * by.sign : by.abs() * y.sign;
       bone.scaleY = by + (my - by) * alpha;
     }
   }
