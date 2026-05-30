@@ -129,13 +129,13 @@ class SkeletonDisplayObject extends InteractiveObject {
       if (attachment is RenderAttachment) {
         final alpha = attachment.color.a * skeletonA * slot.color.a;
         if (alpha > 0 && attachment.ixList.isNotEmpty) {
-          attachment.updateRenderGeometry(slot);
+          final bitmapData = attachment.updateRenderGeometry(slot);
 
           renderContext.activateBlendMode(slot.data.blendMode);
           renderProgram.renderTextureMesh(
               renderState,
               renderContext,
-              attachment.bitmapData.renderTexture,
+              bitmapData.renderTexture,
               attachment.ixList,
               attachment.vxList,
               attachment.color.r * skeletonR * slot.color.r,
@@ -181,17 +181,18 @@ class SkeletonDisplayObject extends InteractiveObject {
 
       if (attachment is RegionAttachment) {
         final b = slot.bone;
+        final bitmapData = attachment.currentBitmapData(slot);
         transform.setTo(b.a, b.c, b.b, b.d, b.worldX, b.worldY);
         transform.prepend(attachment.transformationMatrix);
         renderState.push(transform, attachment.color.a * slot.color.a, slot.data.blendMode);
-        renderState.renderTextureQuad(attachment.bitmapData.renderTextureQuad);
+        renderState.renderTextureQuad(bitmapData.renderTextureQuad);
         renderState.pop();
       } else if (attachment is RenderAttachment) {
-        attachment.updateRenderGeometry(slot);
+        final bitmapData = attachment.updateRenderGeometry(slot);
         final ixList = attachment.ixList;
         final vxList = attachment.vxList;
         final alpha = attachment.color.a * slot.color.a;
-        final renderTexture = attachment.bitmapData.renderTexture;
+        final renderTexture = bitmapData.renderTexture;
         renderState.push(_identityMatrix, alpha, slot.data.blendMode);
         renderState.renderTextureMesh(renderTexture, ixList, vxList);
         renderState.pop();

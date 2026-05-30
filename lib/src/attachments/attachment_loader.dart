@@ -43,3 +43,8 @@ abstract class AttachmentLoader {
 
   ClippingAttachment? newClippingAttachment(Skin skin, String name);
 }
+
+// ignore: one_member_abstracts
+abstract class SequenceAttachmentLoader {
+  List<BitmapData> getSequenceBitmapData(String path, SpineSequence sequence);
+}

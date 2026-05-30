@@ -341,6 +341,8 @@ class SkeletonLoader {
         .where((e) => e.toString() == typeName)
         .firstOrNull;
     final path = _getString(map, 'path', name)!;
+    final sequence = _readSequence(map['sequence'].json);
+    final attachmentPath = sequence == null ? path : sequence.pathFor(path, sequence.setupIndex);
 
     if (type == null) {
       throw UnsupportedError('Unsupported Spine 4.3 attachment type: $typeValue ($name).');
@@ -348,8 +350,9 @@ class SkeletonLoader {
 
     switch (type) {
       case AttachmentType.region:
-        final region = attachmentLoader.newRegionAttachment(skin, name, path);
+        final region = attachmentLoader.newRegionAttachment(skin, name, attachmentPath);
         if (region == null) return null;
+        _attachSequence(region, path, sequence);
 
         region.x = _getDouble(map, 'x', 0);
         region.y = _getDouble(map, 'y', 0);
@@ -369,8 +372,9 @@ class SkeletonLoader {
 
       case AttachmentType.mesh:
       case AttachmentType.linkedmesh:
-        final mesh = attachmentLoader.newMeshAttachment(skin, name, path);
+        final mesh = attachmentLoader.newMeshAttachment(skin, name, attachmentPath);
         if (mesh == null) return null;
+        _attachSequence(mesh, path, sequence);
 
         mesh.color.setFromString(_getString(map, 'color', 'FFFFFFFF')!);
         mesh.width = _getDouble(map, 'width', 0);
@@ -478,6 +482,51 @@ class SkeletonLoader {
 
   //---------------------------------------------------------------------------
 
+  SpineSequence? _readSequence(Json map) {
+    if (map.isEmpty) return null;
+    return SpineSequence(
+      count: _getInt(map, 'count', 0),
+      start: _getInt(map, 'start', 1),
+      digits: _getInt(map, 'digits', 0),
+      setupIndex: _getInt(map, 'setup', 0),
+      bitmapData: <BitmapData>[],
+    );
+  }
+
+  void _attachSequence(RenderAttachment attachment, String path, SpineSequence? sequence) {
+    if (sequence == null) return;
+
+    final sequenceBitmapData = attachmentLoader is SequenceAttachmentLoader
+        ? (attachmentLoader as SequenceAttachmentLoader).getSequenceBitmapData(path, sequence)
+        : <BitmapData>[attachment.bitmapData];
+
+    sequence.bitmapData.addAll(sequenceBitmapData);
+    attachment.sequence = sequence;
+  }
+
+  SequenceMode _readSequenceMode(String name) {
+    switch (name) {
+      case 'hold':
+        return SequenceMode.hold;
+      case 'once':
+        return SequenceMode.once;
+      case 'loop':
+        return SequenceMode.loop;
+      case 'pingpong':
+        return SequenceMode.pingpong;
+      case 'onceReverse':
+        return SequenceMode.onceReverse;
+      case 'loopReverse':
+        return SequenceMode.loopReverse;
+      case 'pingpongReverse':
+        return SequenceMode.pingpongReverse;
+      default:
+        throw UnsupportedError('Unsupported Spine sequence mode: $name.');
+    }
+  }
+
+  //---------------------------------------------------------------------------
+
   void _readAnimation(Json map, String name, SkeletonData skeletonData, bool spine43) {
     final timelines = <Timeline>[];
     double duration = 0;
@@ -556,6 +605,60 @@ class SkeletonLoader {
                   .frames[(twoColorTimeline.frameCount - 1) * TwoColorTimeline._entries]);
         } else {
           throw StateError('Invalid timeline type for a slot: $timelineName ($slotName)');
+        }
+      }
+    }
+
+    //-------------------------------------
+
+    final attachments = map['attachments'].json;
+
+    for (final skinName in attachments.keys) {
+      final skin = skeletonData.findSkin(skinName)!;
+      final slotMap = attachments[skinName]! as Json;
+
+      for (final slotName in slotMap.keys) {
+        final slotIndex = skeletonData.findSlotIndex(slotName);
+        final attachmentMap = slotMap[slotName]! as Json;
+
+        for (final attachmentName in attachmentMap.keys) {
+          final attachment = skin.getAttachment(slotIndex, attachmentName);
+          if (attachment == null) {
+            throw StateError('Timeline attachment not found: $attachmentName');
+          }
+
+          final timelineMap = attachmentMap[attachmentName]! as Json;
+          for (final timelineName in timelineMap.keys) {
+            final valueMaps = timelineMap[timelineName].getList<Json>();
+
+            if (timelineName == 'sequence') {
+              if (attachment is! RenderAttachment || attachment.sequence == null) {
+                throw StateError('Sequence attachment not found: $attachmentName');
+              }
+
+              final sequenceTimeline = SequenceTimeline(valueMaps.length, attachment);
+              sequenceTimeline.slotIndex = slotIndex;
+              var frameIndex = 0;
+              var lastDelay = 0.0;
+
+              for (final valueMap in valueMaps) {
+                final delay = _getDouble(valueMap, 'delay', lastDelay);
+                final time = _getDouble(valueMap, 'time', 0);
+                final mode = _readSequenceMode(_getString(valueMap, 'mode', 'hold')!);
+                final index = _getInt(valueMap, 'index', 0);
+                sequenceTimeline.setFrame(frameIndex, time, mode, index, delay);
+                lastDelay = delay;
+                frameIndex++;
+              }
+
+              timelines.add(sequenceTimeline);
+              duration = math.max(
+                  duration, sequenceTimeline.frames[(sequenceTimeline.frameCount - 1) * 3]);
+            } else {
+              throw UnsupportedError(
+                  'Unsupported attachment timeline type: $timelineName on "$attachmentName".');
+            }
+          }
         }
       }
     }
@@ -1067,10 +1170,6 @@ class SkeletonLoader {
         final attachmentName = attachmentEntry.key;
         final attachment = attachmentEntry.value! as Json;
         final type = _getString(attachment, 'type', 'region')!;
-        if (attachment.containsKey('sequence') || type == 'sequence') {
-          throw UnsupportedError(
-              'Unsupported Spine 4.3 feature: sequence attachment "$attachmentName".');
-        }
         if (!AttachmentType.values.any((e) => e.toString() == 'AttachmentType.$type')) {
           throw UnsupportedError('Unsupported Spine 4.3 attachment type: $type ($attachmentName).');
         }
@@ -1087,10 +1186,6 @@ class SkeletonLoader {
     for (final slotName in slots.keys) {
       final slotMap = slots[slotName]! as Json;
       for (final timelineName in slotMap.keys) {
-        if (timelineName == 'sequence') {
-          throw UnsupportedError(
-              'Unsupported timeline type: sequence on slot "$slotName" in "$animationName".');
-        }
         if (!{
           'attachment',
           'color',
@@ -1103,6 +1198,25 @@ class SkeletonLoader {
         }.contains(timelineName)) {
           throw UnsupportedError(
               'Unsupported timeline type: $timelineName on slot "$slotName" in "$animationName".');
+        }
+      }
+    }
+
+    final attachments = animationMap['attachments'].json;
+    for (final skinName in attachments.keys) {
+      final skinMap = attachments[skinName]! as Json;
+      for (final slotEntry in skinMap.entries) {
+        final slotMap = slotEntry.value! as Json;
+        for (final attachmentEntry in slotMap.entries) {
+          final attachmentName = attachmentEntry.key;
+          final attachmentMap = attachmentEntry.value! as Json;
+          for (final timelineName in attachmentMap.keys) {
+            if (timelineName != 'sequence') {
+              throw UnsupportedError(
+                  'Unsupported attachment timeline type: $timelineName on "$attachmentName" '
+                  'in "$animationName".');
+            }
+          }
         }
       }
     }

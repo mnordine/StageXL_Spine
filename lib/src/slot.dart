@@ -39,6 +39,7 @@ class Slot {
 
   Attachment? _attachment;
   double _attachmentTime = 0;
+  int sequenceIndex = -1;
   Float32List attachmentVertices = Float32List(0);
 
   Slot(this.data, this.bone) {
@@ -54,6 +55,7 @@ class Slot {
     if (_attachment == attachment) return;
     _attachment = attachment;
     _attachmentTime = bone.skeleton.time;
+    sequenceIndex = -1;
     attachmentVertices = Float32List(0);
   }
 
@@ -67,6 +69,7 @@ class Slot {
   void setToSetupPose() {
     color.setFromColor(data.color);
     if (darkColor != null && data.darkColor != null) darkColor!.setFromColor(data.darkColor!);
+    sequenceIndex = -1;
     if (data.attachmentName == null) {
       attachment = null;
     } else {

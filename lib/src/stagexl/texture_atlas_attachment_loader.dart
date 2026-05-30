@@ -1,6 +1,6 @@
 part of '../../stagexl_spine.dart';
 
-class TextureAtlasAttachmentLoader implements AttachmentLoader {
+class TextureAtlasAttachmentLoader implements AttachmentLoader, SequenceAttachmentLoader {
   final TextureAtlas textureAtlas;
   final String namePrefix;
 
@@ -29,4 +29,10 @@ class TextureAtlasAttachmentLoader implements AttachmentLoader {
 
   @override
   ClippingAttachment newClippingAttachment(Skin skin, String name) => ClippingAttachment(name);
+
+  @override
+  List<BitmapData> getSequenceBitmapData(String path, SpineSequence sequence) => [
+        for (var i = 0; i < sequence.count; i++)
+          textureAtlas.getBitmapData(namePrefix + sequence.pathFor(path, i)),
+      ];
 }

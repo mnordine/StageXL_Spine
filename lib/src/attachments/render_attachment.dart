@@ -34,6 +34,7 @@ abstract class RenderAttachment extends VertexAttachment {
   final String path;
 
   BitmapData bitmapData;
+  SpineSequence? sequence;
   late Float32List vxList;
   late Int16List ixList;
   int hullLength = 0;
@@ -45,7 +46,16 @@ abstract class RenderAttachment extends VertexAttachment {
 
   void initRenderGeometry();
 
-  void updateRenderGeometry(Slot slot) {
+  BitmapData updateRenderGeometry(Slot slot) {
     computeWorldVertices2(slot, 0, worldVerticesLength, vxList, 0, 4);
+    return currentBitmapData(slot);
+  }
+
+  BitmapData currentBitmapData(Slot slot) {
+    final sequence = this.sequence;
+    if (sequence == null) return bitmapData;
+
+    final sequenceIndex = slot.sequenceIndex == -1 ? sequence.setupIndex : slot.sequenceIndex;
+    return sequence.bitmapDataForIndex(sequenceIndex);
   }
 }

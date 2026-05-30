@@ -49,6 +49,7 @@ part 'src/animation/path_constraint_position_timeline.dart';
 part 'src/animation/path_constraint_spacing_timeline.dart';
 part 'src/animation/rotate_timeline.dart';
 part 'src/animation/scale_timeline.dart';
+part 'src/animation/sequence_timeline.dart';
 part 'src/animation/shear_timeline.dart';
 part 'src/animation/timeline.dart';
 part 'src/animation/timeline_type.dart';
@@ -68,6 +69,7 @@ part 'src/attachments/path_attachment.dart';
 part 'src/attachments/point_attachment.dart';
 part 'src/attachments/region_attachment.dart';
 part 'src/attachments/render_attachment.dart';
+part 'src/attachments/sequence.dart';
 part 'src/attachments/vertex_attachment.dart';
 
 part 'src/stagexl/skeleton_animation.dart';
