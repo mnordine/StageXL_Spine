@@ -93,7 +93,9 @@ class SkeletonLoader {
         continue;
 
       final boneData = BoneData(boneIndex, boneName, parent);
-      final transformMode = "TransformMode.${_getString(boneMap, "transform", "normal")!}";
+      final transformName = _getString(boneMap, 'transform', null) ??
+          _getString(boneMap, 'inherit', 'normal')!;
+      final transformMode = 'TransformMode.$transformName';
 
       boneData.length = _getDouble(boneMap, 'length', 0);
       boneData.x = _getDouble(boneMap, 'x', 0);
