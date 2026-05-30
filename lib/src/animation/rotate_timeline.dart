@@ -39,6 +39,7 @@ class RotateTimeline extends CurveTimeline {
 
   final Float32List frames; // time, degrees, ...
   int boneIndex = 0;
+  bool absoluteCurveValues = false;
 
   RotateTimeline(super.frameCount)
       : frames = Float32List(frameCount * _entries);
@@ -81,16 +82,23 @@ class RotateTimeline extends CurveTimeline {
       final r0 = frames[frame + _prevRotation];
       final t1 = frames[frame + _time];
       final r1 = frames[frame + _rotation];
-      final between = 1.0 - (time - t1) / (t0 - t1);
-      final percent = getCurvePercent((frame >> 1) - 1, between);
-      rotation = r0 + _wrapRotation(r1 - r0) * percent;
+      final frameIndex = (frame >> 1) - 1;
+      if (absoluteCurveValues) {
+        rotation = getCurveValue(frameIndex, 0, time, t0, r0, t1, r1);
+      } else {
+        final between = 1.0 - (time - t1) / (t0 - t1);
+        final percent = getCurvePercent(frameIndex, between);
+        rotation = r0 + _wrapRotation(r1 - r0) * percent;
+      }
     }
 
     if (pose == MixPose.setup) {
-      bone.rotation = bone.data.rotation + _wrapRotation(rotation) * alpha;
+      bone.rotation = bone.data.rotation +
+          (absoluteCurveValues ? rotation : _wrapRotation(rotation)) * alpha;
     } else {
       rotation = bone.data.rotation - bone.rotation + rotation;
-      bone.rotation = bone.rotation + _wrapRotation(rotation) * alpha;
+      bone.rotation = bone.rotation +
+          (absoluteCurveValues ? rotation : _wrapRotation(rotation)) * alpha;
     }
   }
 }

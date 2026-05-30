@@ -576,11 +576,14 @@ class SkeletonLoader {
         if (timelineName == 'rotate') {
           final rotateTimeline = RotateTimeline(values.length);
           rotateTimeline.boneIndex = boneIndex;
+          rotateTimeline.absoluteCurveValues = spine43;
 
           var frameIndex = 0;
           for (final valueMap in values) {
             final time = _getDouble(valueMap, 'time', 0);
-            final degrees = _getDouble(valueMap, 'angle', 0);
+            final degrees = spine43 && valueMap.containsKey('value')
+                ? _getDouble(valueMap, 'value', 0)
+                : _getDouble(valueMap, 'angle', 0);
             rotateTimeline.setFrame(frameIndex, time, degrees);
             if (!spine43) _readCurve(valueMap, rotateTimeline, frameIndex);
             frameIndex++;
@@ -692,7 +695,9 @@ class SkeletonLoader {
           for (final valueMap in values) {
             final valueName = timelineName.endsWith('x') ? 'x' : 'y';
             final defaultValue = timelineName.startsWith('scale') ? 1.0 : 0.0;
-            final value = _getDouble(valueMap, valueName, defaultValue);
+            final value = spine43 && valueMap.containsKey('value')
+                ? _getDouble(valueMap, 'value', defaultValue)
+                : _getDouble(valueMap, valueName, defaultValue);
             final time = _getDouble(valueMap, 'time', 0);
             setFrame(frameIndex, time, value);
             if (!spine43) _readCurve(valueMap, curveTimeline, frameIndex);
