@@ -158,11 +158,16 @@ class CurveTimeline implements Timeline {
 
   double getCurveValue(int frameIndex, int valueIndex, double time, double time1,
       double value1, double time2, double value2) {
-    final curve = _getCurveData(frameIndex, valueIndex);
+    final curve = _getCurveDataForValue(frameIndex, valueIndex);
     if (curve.type == _linear) {
       return value1 + (value2 - value1) * (time - time1) / (time2 - time1);
     }
     if (curve.type == _stepped) return value1;
+
+    if (!curve.absolute) {
+      final percent = getCurvePercent(frameIndex, (time - time1) / (time2 - time1));
+      return value1 + (value2 - value1) * percent;
+    }
 
     final curves = curve.values;
     if (curves[0] > time) {
@@ -184,13 +189,26 @@ class CurveTimeline implements Timeline {
 
   void setSteppedValue(int frameIndex, int valueIndex) {
     if (frameIndex >= _curves.length) return;
-    _setCurveData(frameIndex, valueIndex, _CurveData.stepped());
+    _setCurveData(frameIndex, valueIndex, _CurveData.steppedValue());
   }
 
   _CurveData _getCurveData(int frameIndex, int valueIndex) {
     final frameCurves = _curves[frameIndex];
     if (frameCurves == null) return _CurveData.linear();
     return frameCurves[valueIndex] ?? _CurveData.linear();
+  }
+
+  _CurveData _getCurveDataForValue(int frameIndex, int valueIndex) {
+    final frameCurves = _curves[frameIndex];
+    if (frameCurves == null) return _CurveData.linear();
+
+    final curve = frameCurves[valueIndex];
+    if (curve != null) return curve;
+
+    final legacyCurve = frameCurves[0];
+    if (legacyCurve != null && !legacyCurve.absolute) return legacyCurve;
+
+    return _CurveData.linear();
   }
 
   void _setCurveData(int frameIndex, int valueIndex, _CurveData curve) {
@@ -202,14 +220,17 @@ class CurveTimeline implements Timeline {
 class _CurveData {
   final int type;
   final Float32List values;
+  final bool absolute;
 
-  _CurveData._(this.type, this.values);
+  _CurveData._(this.type, this.values, this.absolute);
 
-  factory _CurveData.linear() => _CurveData._(CurveTimeline._linear, Float32List(0));
+  factory _CurveData.linear() => _CurveData._(CurveTimeline._linear, Float32List(0), false);
 
-  factory _CurveData.stepped() => _CurveData._(CurveTimeline._stepped, Float32List(0));
+  factory _CurveData.stepped() => _CurveData._(CurveTimeline._stepped, Float32List(0), false);
 
-  factory _CurveData.percent(Float32List values) => _CurveData._(CurveTimeline._bezier, values);
+  factory _CurveData.steppedValue() => _CurveData._(CurveTimeline._stepped, Float32List(0), true);
 
-  factory _CurveData.absolute(Float32List values) => _CurveData._(CurveTimeline._bezier, values);
+  factory _CurveData.percent(Float32List values) => _CurveData._(CurveTimeline._bezier, values, false);
+
+  factory _CurveData.absolute(Float32List values) => _CurveData._(CurveTimeline._bezier, values, true);
 }
