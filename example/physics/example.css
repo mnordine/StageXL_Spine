@@ -1,0 +1,19 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #111;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+#stage {
+  width: min(100vw, calc(100vh * 12 / 7));
+  height: min(100vh, calc(100vw * 7 / 12));
+  display: block;
+}
