@@ -73,6 +73,7 @@ class SkeletonLoader {
       skeletonData.width = _getDouble(skeletonMap, 'width', 0);
       skeletonData.height = _getDouble(skeletonMap, 'height', 0);
       skeletonData.fps = _getDouble(skeletonMap, 'fps', 0);
+      skeletonData.referenceScale = _getDouble(skeletonMap, 'referenceScale', 100);
       skeletonData.imagesPath = _getString(skeletonMap, 'images', '')!;
     }
 
@@ -207,10 +208,14 @@ class SkeletonLoader {
       constraintData.offsetScaleX = _getDouble(constraintMap, 'scaleX', 0);
       constraintData.offsetScaleY = _getDouble(constraintMap, 'scaleY', 0);
       constraintData.offsetShearY = _getDouble(constraintMap, 'shearY', 0);
-      constraintData.rotateMix = _getDouble(constraintMap, 'rotateMix', 1);
-      constraintData.translateMix = _getDouble(constraintMap, 'translateMix', 1);
-      constraintData.scaleMix = _getDouble(constraintMap, 'scaleMix', 1);
-      constraintData.shearMix = _getDouble(constraintMap, 'shearMix', 1);
+      constraintData.rotateMix = _getDouble(constraintMap, 'rotateMix',
+          _getDouble(constraintMap, 'mixRotate', 1));
+      constraintData.translateMix = _getDouble(constraintMap, 'translateMix',
+          _getDouble(constraintMap, 'mixX', 1));
+      constraintData.scaleMix = _getDouble(constraintMap, 'scaleMix',
+          _getDouble(constraintMap, 'mixScaleX', 1));
+      constraintData.shearMix = _getDouble(constraintMap, 'shearMix',
+          _getDouble(constraintMap, 'mixShearY', 1));
 
       skeletonData.transformConstraints.add(constraintData);
     }
@@ -253,6 +258,50 @@ class SkeletonLoader {
       pathConstraintData.translateMix = _getDouble(constraintMap, 'translateMix', 1);
 
       skeletonData.pathConstraints.add(pathConstraintData);
+    }
+
+    // Physics constraints.
+
+    for (final constraintMap in root['physics'].getList<Json>()) {
+      final constraintName = _getString(constraintMap, 'name', null);
+      if (constraintName == null) continue;
+
+      final constraintData = PhysicsConstraintData(constraintName);
+      final boneName = _getString(constraintMap, 'bone', null);
+      if (boneName == null) continue;
+
+      final bone = skeletonData.findBone(boneName);
+      if (bone == null) throw StateError('Physics constraint bone not found: $boneName');
+
+      constraintData.bone = bone;
+      constraintData.order = _getInt(constraintMap, 'order', 0);
+      constraintData.x = _getDouble(constraintMap, 'x', 0);
+      constraintData.y = _getDouble(constraintMap, 'y', 0);
+      constraintData.rotate = _getDouble(constraintMap, 'rotate', 0);
+      constraintData.scaleX = _getDouble(constraintMap, 'scaleX', 0);
+      constraintData.scaleYMode = _readScaleYMode(_getString(constraintMap, 'scaleY', null));
+      constraintData.shearX = _getDouble(constraintMap, 'shearX', 0);
+      constraintData.limit = _getDouble(constraintMap, 'limit', 5000);
+      constraintData.step = 1 / _getDouble(constraintMap, 'fps', 60);
+
+      final setup = constraintData.setupPose;
+      setup.inertia = _getDouble(constraintMap, 'inertia', 0.5);
+      setup.strength = _getDouble(constraintMap, 'strength', 100);
+      setup.damping = _getDouble(constraintMap, 'damping', 0.85);
+      setup.massInverse = 1 / _getDouble(constraintMap, 'mass', 1);
+      setup.wind = _getDouble(constraintMap, 'wind', 0);
+      setup.gravity = _getDouble(constraintMap, 'gravity', 0);
+      setup.mix = _getDouble(constraintMap, 'mix', 1);
+
+      constraintData.inertiaGlobal = _getBool(constraintMap, 'inertiaGlobal', false);
+      constraintData.strengthGlobal = _getBool(constraintMap, 'strengthGlobal', false);
+      constraintData.dampingGlobal = _getBool(constraintMap, 'dampingGlobal', false);
+      constraintData.massGlobal = _getBool(constraintMap, 'massGlobal', false);
+      constraintData.windGlobal = _getBool(constraintMap, 'windGlobal', false);
+      constraintData.gravityGlobal = _getBool(constraintMap, 'gravityGlobal', false);
+      constraintData.mixGlobal = _getBool(constraintMap, 'mixGlobal', false);
+
+      skeletonData.physicsConstraints.add(constraintData);
     }
 
     // Skins
@@ -323,7 +372,7 @@ class SkeletonLoader {
 
     for (final animationName in animations.keys) {
       final map = animations[animationName]! as Json;
-      _readAnimation(map, animationName, skeletonData, _isSpine43(skeletonData.version));
+      _readAnimation(map, animationName, skeletonData, _isSpine4(skeletonData.version));
     }
 
     return skeletonData;
@@ -814,6 +863,12 @@ class SkeletonLoader {
 
           timelines.add(timeline);
           duration = math.max(duration, frames[(frameCount - 1) * 2]);
+        } else if (timelineName == 'inherit') {
+          // Spine 4.x can animate transform inheritance. The current runtime only needs to accept
+          // static single-key inherit timelines used by the physics sample.
+          if (values.length > 1) {
+            throw UnsupportedError('Unsupported animated inherit timeline on bone "$boneName" in "$name".');
+          }
         } else {
           throw StateError('Invalid timeline type for a bone: $timelineName ($boneName)');
         }
@@ -856,10 +911,10 @@ class SkeletonLoader {
           skeletonData.transformConstraints.indexOf(transformConstraint);
       var frameIndex = 0;
       for (final valueMap in valueMaps) {
-        final rotateMix = _getDouble(valueMap, 'rotateMix', 1);
-        final translateMix = _getDouble(valueMap, 'translateMix', 1);
-        final scaleMix = _getDouble(valueMap, 'scaleMix', 1);
-        final shearMix = _getDouble(valueMap, 'shearMix', 1);
+        final rotateMix = _getDouble(valueMap, 'rotateMix', _getDouble(valueMap, 'mixRotate', 1));
+        final translateMix = _getDouble(valueMap, 'translateMix', _getDouble(valueMap, 'mixX', 1));
+        final scaleMix = _getDouble(valueMap, 'scaleMix', _getDouble(valueMap, 'mixScaleX', 1));
+        final shearMix = _getDouble(valueMap, 'shearMix', _getDouble(valueMap, 'mixShearY', 1));
         final time = _getDouble(valueMap, 'time', 0);
         transformTimeline.setFrame(frameIndex, time, rotateMix, translateMix, scaleMix, shearMix);
         _readCurve(valueMap, transformTimeline, frameIndex);
@@ -929,6 +984,57 @@ class SkeletonLoader {
               pathMixTimeline
                   .frames[(pathMixTimeline.frameCount - 1) * PathConstraintMixTimeline._entries]);
         }
+      }
+    }
+
+    //-------------------------------------
+
+    final physicsMap = map['physics'].json;
+
+    for (final constraintName in physicsMap.keys) {
+      final index = constraintName.isEmpty ? -1 : skeletonData.findPhysicsConstraintIndex(constraintName);
+      if (constraintName.isNotEmpty && index == -1) {
+        throw StateError('Physics constraint not found: $constraintName');
+      }
+
+      final constraintMap = physicsMap[constraintName]! as Json;
+      for (final timelineName in constraintMap.keys) {
+        final valueMaps = constraintMap[timelineName].getList<Json>();
+        if (valueMaps.isEmpty) continue;
+
+        if (timelineName == 'reset') {
+          final resetTimeline = PhysicsConstraintResetTimeline(valueMaps.length, index);
+          var frameIndex = 0;
+          for (final valueMap in valueMaps) {
+            resetTimeline.setFrame(frameIndex++, _getDouble(valueMap, 'time', 0));
+          }
+          timelines.add(resetTimeline);
+          duration = math.max(duration, resetTimeline.frames[resetTimeline.frameCount - 1]);
+          continue;
+        }
+
+        final property = _readPhysicsConstraintProperty(timelineName);
+        if (property == null) {
+          throw UnsupportedError(
+              'Unsupported physics timeline type: $timelineName on "$constraintName" in "$name".');
+        }
+
+        final defaultValue = property == PhysicsConstraintProperty.mix ? 1.0 : 0.0;
+        final timeline = PhysicsConstraintTimeline(valueMaps.length, property, index);
+        var frameIndex = 0;
+        for (final valueMap in valueMaps) {
+          timeline.setFrame(
+              frameIndex,
+              _getDouble(valueMap, 'time', 0),
+              _getDouble(valueMap, 'value', defaultValue));
+          frameIndex++;
+        }
+        for (var i = 0; i < valueMaps.length - 1; i++) {
+          _readCurve2(valueMaps[i], timeline, i, timeline.frames, 2, [1]);
+        }
+
+        timelines.add(timeline);
+        duration = math.max(duration, timeline.frames[(timeline.frameCount - 1) * 2]);
       }
     }
 
@@ -1123,7 +1229,7 @@ class SkeletonLoader {
 
   void _validateRestricted43Features(Json root) {
     final version = _getString(root['skeleton'].json, 'spine', '');
-    final spine43 = _isSpine43(version);
+    final spine43 = _isSpine4(version);
 
     if (root['constraints'] case final List<Object?> constraints) {
       for (final constraintObject in constraints) {
@@ -1134,10 +1240,6 @@ class SkeletonLoader {
             'Unsupported Spine 4.3 feature: $type constraint "$name". Use legacy-compatible '
             'top-level ik/path exports or remove the constraint.');
       }
-    }
-
-    if (root['physics'] != null) {
-      throw UnsupportedError('Unsupported Spine 4.3 feature: physics constraints.');
     }
 
     final skinsObject = root['skins'];
@@ -1236,6 +1338,7 @@ class SkeletonLoader {
           'shear',
           'shearx',
           'sheary',
+          'inherit',
         }.contains(timelineName)) {
           throw UnsupportedError(
               'Unsupported timeline type: $timelineName on bone "$boneName" in "$animationName".');
@@ -1244,7 +1347,7 @@ class SkeletonLoader {
     }
 
     if (spine43) {
-      for (final key in ['ik', 'transform', 'paths', 'deform']) {
+      for (final key in ['paths', 'deform']) {
         if (animationMap[key] != null) {
           throw UnsupportedError(
               'Unsupported Spine 4.3 timeline section: $key in animation "$animationName".');
@@ -1253,7 +1356,28 @@ class SkeletonLoader {
     }
   }
 
-  bool _isSpine43(String? version) => version?.startsWith('4.3') ?? false;
+  PhysicsConstraintProperty? _readPhysicsConstraintProperty(String timelineName) {
+    switch (timelineName) {
+      case 'inertia':
+        return PhysicsConstraintProperty.inertia;
+      case 'strength':
+        return PhysicsConstraintProperty.strength;
+      case 'damping':
+        return PhysicsConstraintProperty.damping;
+      case 'mass':
+        return PhysicsConstraintProperty.mass;
+      case 'wind':
+        return PhysicsConstraintProperty.wind;
+      case 'gravity':
+        return PhysicsConstraintProperty.gravity;
+      case 'mix':
+        return PhysicsConstraintProperty.mix;
+      default:
+        return null;
+    }
+  }
+
+  bool _isSpine4(String? version) => version?.startsWith('4.') ?? false;
 
   Float32List _getFloat32List(Json map, String name) {
     final values = map[name].getList<num>().map((n) => n.toDouble());

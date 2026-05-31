@@ -38,6 +38,7 @@ class Skeleton {
   final List<IkConstraint> ikConstraints = [];
   final List<TransformConstraint> transformConstraints = [];
   final List<PathConstraint> pathConstraints = [];
+  final List<PhysicsConstraint> physicsConstraints = [];
   final List<Updatable> _updateCache = [];
   final List<Bone> _updateCacheReset = [];
 
@@ -47,6 +48,12 @@ class Skeleton {
   double time = 0;
   double x = 0;
   double y = 0;
+  double scaleX = 1;
+  double scaleY = 1;
+  double windX = 1;
+  double windY = 0;
+  double gravityX = 0;
+  double gravityY = 1;
 
   Skeleton(this.data) {
     for (final boneData in data.bones) {
@@ -83,6 +90,11 @@ class Skeleton {
       pathConstraints.add(pathConstraint);
     }
 
+    for (final physicsConstraintData in data.physicsConstraints) {
+      final physicsConstraint = PhysicsConstraint(physicsConstraintData, this);
+      physicsConstraints.add(physicsConstraint);
+    }
+
     updateCache();
   }
 
@@ -101,10 +113,12 @@ class Skeleton {
     final ikConstraints = this.ikConstraints;
     final transformConstraints = this.transformConstraints;
     final pathConstraints = this.pathConstraints;
+    final physicsConstraints = this.physicsConstraints;
     final ikCount = ikConstraints.length;
     final transformCount = transformConstraints.length;
     final pathCount = pathConstraints.length;
-    final constraintCount = ikCount + transformCount + pathCount;
+    final physicsCount = physicsConstraints.length;
+    final constraintCount = ikCount + transformCount + pathCount + physicsCount;
 
     outer:
     for (var i = 0; i < constraintCount; i++) {
@@ -126,6 +140,13 @@ class Skeleton {
         final pathConstraint = pathConstraints[ii];
         if (pathConstraint.data.order == i) {
           _sortPathConstraint(pathConstraint);
+          continue outer;
+        }
+      }
+      for (var ii = 0; ii < physicsCount; ii++) {
+        final physicsConstraint = physicsConstraints[ii];
+        if (physicsConstraint.data.order == i) {
+          _sortPhysicsConstraint(physicsConstraint);
           continue outer;
         }
       }
@@ -224,6 +245,14 @@ class Skeleton {
     }
   }
 
+  void _sortPhysicsConstraint(PhysicsConstraint constraint) {
+    final bone = constraint.bone;
+    _sortBone(bone);
+    _updateCache.add(constraint);
+    _sortReset(bone.children);
+    bone._sorted = true;
+  }
+
   void _sortPathConstraintAttachment(Skin skin, int slotIndex, Bone slotBone) {
     final dict = skin.attachments[slotIndex];
     if (dict == null) return;
@@ -268,7 +297,7 @@ class Skeleton {
 
   /// Updates the world transform for each bone and applies constraints.
 
-  void updateWorldTransform() {
+  void updateWorldTransform([Physics physics = Physics.update]) {
     for (final bone in _updateCacheReset) {
       bone.ax = bone.x;
       bone.ay = bone.y;
@@ -280,7 +309,11 @@ class Skeleton {
       bone.appliedValid = true;
     }
     for (final updatable in _updateCache) {
-      updatable.update();
+      if (updatable is PhysicsConstraint) {
+        updatable.updatePhysics(physics);
+      } else {
+        updatable.update();
+      }
     }
   }
 
@@ -315,6 +348,11 @@ class Skeleton {
       pathConstraint.spacing = pathConstraint.data.spacing;
       pathConstraint.rotateMix = pathConstraint.data.rotateMix;
       pathConstraint.translateMix = pathConstraint.data.translateMix;
+    }
+
+    for (final physicsConstraint in physicsConstraints) {
+      physicsConstraint.pose.set(physicsConstraint.data.setupPose);
+      physicsConstraint.reset(this);
     }
   }
 
