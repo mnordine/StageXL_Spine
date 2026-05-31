@@ -80,7 +80,9 @@ class PhysicsConstraint extends Constraint {
 
     final applyX = data.x > 0;
     final applyY = data.y > 0;
-    final rotateOrShearX = data.rotate > 0 || data.shearX > 0;
+    final rotate = data.rotate;
+    final shearX = data.shearX;
+    final rotateOrShearX = rotate > 0 || shearX > 0;
     final applyScaleX = data.scaleX > 0;
     final length = bone.data.length;
     final step = data.step;
@@ -91,24 +93,23 @@ class PhysicsConstraint extends Constraint {
         return;
       case Physics.reset:
         reset(bone.skeleton);
-        z = _update(physics, applyX, applyY, rotateOrShearX, applyScaleX, length, step, mix, z);
+        z = _update(physics, applyX, applyY, rotateOrShearX, applyScaleX, rotate, shearX, length, step, mix, z);
       case Physics.update:
-        z = _update(physics, applyX, applyY, rotateOrShearX, applyScaleX, length, step, mix, z);
+        z = _update(physics, applyX, applyY, rotateOrShearX, applyScaleX, rotate, shearX, length, step, mix, z);
       case Physics.pose:
         z = math.max(0, 1 - remaining / step);
         if (applyX) bone._worldX += (xOffset - xLag * z) * mix * data.x;
         if (applyY) bone._worldY += (yOffset - yLag * z) * mix * data.y;
     }
 
-    _applyRotationAndScale(physics, rotateOrShearX, applyScaleX, length, mix, z);
+    _applyRotationAndScale(physics, rotateOrShearX, applyScaleX, rotate, shearX, length, mix, z);
     bone._updateAppliedTransform();
   }
 
   double _update(Physics physics, bool applyX, bool applyY, bool rotateOrShearX, bool applyScaleX,
-      double length, double step, double mix, double z) {
+      double rotate, double shearX, double length, double step, double mix, double z) {
     final skeleton = bone.skeleton;
     final delta = math.max(skeleton.time - lastTime, 0);
-    final previousRemaining = remaining;
     remaining += delta;
     lastTime = skeleton.time;
 
@@ -183,11 +184,10 @@ class PhysicsConstraint extends Constraint {
         if (dy < -qy) dy = -qy;
         a = remaining;
         if (rotateOrShearX) {
-          mixedRotate = (data.rotate + data.shearX) * mix;
-          z = rotateLag * math.max(0, 1 - previousRemaining / step);
-          var r = math.atan2(dy + ty, dx + tx) - ca - (rotateOffset - z) * mixedRotate;
+          mixedRotate = (rotate + shearX) * mix;
+          var r = math.atan2(dy + ty, dx + tx) - ca - rotateOffset * mixedRotate;
           rotateOffset += (r - (r * 0.5 / math.pi - 0.5).ceil() * math.pi * 2) * inertia;
-          r = (rotateOffset - z) * mixedRotate + ca;
+          r = rotateOffset * mixedRotate + ca;
           c = math.cos(r);
           s = math.sin(r);
           if (applyScaleX) {
@@ -197,7 +197,7 @@ class PhysicsConstraint extends Constraint {
         } else {
           c = math.cos(ca);
           s = math.sin(ca);
-          final r = length * bone.worldScaleX - scaleLag * math.max(0, 1 - previousRemaining / step);
+          final r = length * bone.worldScaleX;
           if (r > 0) scaleOffset += (dx * c + dy * s) * inertia / r;
         }
         if (a >= step) {
@@ -208,8 +208,6 @@ class PhysicsConstraint extends Constraint {
           }
           final ax = pose.wind * skeleton.windX + pose.gravity * skeleton.gravityX;
           final ay = pose.wind * skeleton.windY + pose.gravity * skeleton.gravityY;
-          final rotateStart = rotateOffset;
-          final scaleStart = scaleOffset;
           final h = length / referenceScale;
           for (;;) {
             a -= step;
@@ -230,8 +228,6 @@ class PhysicsConstraint extends Constraint {
               break;
             }
           }
-          rotateLag = rotateOffset - rotateStart;
-          scaleLag = scaleOffset - scaleStart;
         }
         z = math.max(0, 1 - a / step);
       }
@@ -242,28 +238,28 @@ class PhysicsConstraint extends Constraint {
     return z;
   }
 
-  void _applyRotationAndScale(Physics physics, bool rotateOrShearX, bool applyScaleX, double length,
-      double mix, double z) {
+  void _applyRotationAndScale(Physics physics, bool rotateOrShearX, bool applyScaleX, double rotate,
+      double shearX, double length, double mix, double z) {
     if (rotateOrShearX) {
-      var offset = (rotateOffset - rotateLag * z) * mix;
-      if (data.shearX > 0) {
+      var offset = rotateOffset * mix;
+      if (shearX > 0) {
         var r = 0.0;
-        if (data.rotate > 0) {
-          r = offset * data.rotate;
+        if (rotate != 0) {
+          r = offset * rotate;
           final s = math.sin(r);
           final c = math.cos(r);
           final a = bone.b;
           bone._b = c * a - s * bone.d;
           bone._d = s * a + c * bone.d;
         }
-        r += offset * data.shearX;
+        r += offset * shearX;
         final s = math.sin(r);
         final c = math.cos(r);
         final a = bone.a;
         bone._a = c * a - s * bone.c;
         bone._c = s * a + c * bone.c;
       } else {
-        offset *= data.rotate;
+        offset *= rotate;
         final s = math.sin(offset);
         final c = math.cos(offset);
         var a = bone.a;
@@ -275,7 +271,7 @@ class PhysicsConstraint extends Constraint {
       }
     }
     if (applyScaleX) {
-      var scale = 1 + (scaleOffset - scaleLag * z) * mix * data.scaleX;
+      var scale = 1 + scaleOffset * mix * data.scaleX;
       bone._a *= scale;
       bone._c *= scale;
       switch (data.scaleYMode) {

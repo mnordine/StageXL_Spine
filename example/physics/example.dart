@@ -45,6 +45,12 @@ Future<void> main() async {
 
   skeletonAnimation.state.setAnimationByName(0, 'swing', true);
   skeletonAnimation.advanceTime(0);
+  for (final constraint in skeletonAnimation.skeleton.physicsConstraints) {
+    if (constraint.data.name == 'girl/wings/wing-back' ||
+        constraint.data.name == 'girl/wings/wing-back-tip') {
+      constraint.pose.mix = 0;
+    }
+  }
   _fitSkeletonToStage(skeletonAnimation, setupBounds);
   _enableCloudDrag(stage, skeletonAnimation);
 

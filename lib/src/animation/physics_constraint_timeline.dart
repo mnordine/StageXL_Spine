@@ -38,7 +38,11 @@ class PhysicsConstraintTimeline extends CurveTimeline {
   void apply(Skeleton skeleton, double lastTime, double time, List<SpineEvent>? firedEvents,
       double alpha, MixPose pose, MixDirection direction) {
     if (physicsConstraintIndex < 0) {
-      _applyGlobal(skeleton, time, alpha, pose);
+      for (final constraint in skeleton.physicsConstraints) {
+        if (_usesGlobalValue(constraint.data) == false) continue;
+        final value = _getValue(time, _setupValue(constraint.data.setupPose));
+        _applyPoseValue(constraint.pose, value, alpha, pose);
+      }
       return;
     }
 
@@ -98,38 +102,22 @@ class PhysicsConstraintTimeline extends CurveTimeline {
     }
   }
 
-  void _applyGlobal(Skeleton skeleton, double time, double alpha, MixPose pose) {
-    final value = _getValue(time, _globalSetupValue(skeleton));
+  bool _usesGlobalValue(PhysicsConstraintData data) {
     switch (property) {
-      case PhysicsConstraintProperty.wind:
-        skeleton.windX = _mixValue(skeleton.windX, value, alpha, pose);
-      case PhysicsConstraintProperty.gravity:
-        skeleton.gravityY = _mixValue(skeleton.gravityY, value, alpha, pose);
       case PhysicsConstraintProperty.inertia:
+        return data.inertiaGlobal;
       case PhysicsConstraintProperty.strength:
+        return data.strengthGlobal;
       case PhysicsConstraintProperty.damping:
+        return data.dampingGlobal;
       case PhysicsConstraintProperty.mass:
-      case PhysicsConstraintProperty.mix:
-        for (final constraint in skeleton.physicsConstraints) {
-          _applyPoseValue(constraint.pose, value, alpha, pose);
-        }
-    }
-  }
-
-  double _globalSetupValue(Skeleton skeleton) {
-    switch (property) {
+        return data.massGlobal;
       case PhysicsConstraintProperty.wind:
-        return 1;
+        return data.windGlobal;
       case PhysicsConstraintProperty.gravity:
-        return 1;
-      case PhysicsConstraintProperty.inertia:
-      case PhysicsConstraintProperty.strength:
-      case PhysicsConstraintProperty.damping:
-      case PhysicsConstraintProperty.mass:
+        return data.gravityGlobal;
       case PhysicsConstraintProperty.mix:
-        return skeleton.physicsConstraints.isEmpty
-            ? 0
-            : _setupValue(skeleton.physicsConstraints.first.data.setupPose);
+        return data.mixGlobal;
     }
   }
 
