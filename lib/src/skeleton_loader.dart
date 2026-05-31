@@ -766,8 +766,9 @@ class SkeletonLoader {
 
           var frameIndex = 0;
           for (final valueMap in values) {
-            final x = _getDouble(valueMap, 'x', 0);
-            final y = _getDouble(valueMap, 'y', timelineName == 'scale' ? 1 : 0);
+            final defaultValue = timelineName == 'scale' ? 1.0 : 0.0;
+            final x = _getDouble(valueMap, 'x', defaultValue);
+            final y = _getDouble(valueMap, 'y', defaultValue);
             final time = _getDouble(valueMap, 'time', 0);
             translateTimeline.setFrame(frameIndex, time, x, y);
             if (!spine43) _readCurve(valueMap, translateTimeline, frameIndex);
