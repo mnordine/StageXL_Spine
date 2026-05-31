@@ -34,6 +34,7 @@ abstract class RenderAttachment extends VertexAttachment {
   final String path;
 
   BitmapData bitmapData;
+  TextureAtlasFrame? textureAtlasFrame;
   SpineSequence? sequence;
   late Float32List vxList;
   late Int16List ixList;

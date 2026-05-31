@@ -101,7 +101,7 @@ class PhysicsConstraint extends Constraint {
     }
 
     _applyRotationAndScale(physics, rotateOrShearX, applyScaleX, length, mix, z);
-    bone.appliedValid = false;
+    bone._updateAppliedTransform();
   }
 
   double _update(Physics physics, bool applyX, bool applyY, bool rotateOrShearX, bool applyScaleX,

@@ -75,19 +75,80 @@ class MeshAttachment extends RenderAttachment {
     ixList = Int16List.fromList(triangles);
     vxList = Float32List(regionUVs.length * 2);
 
-    final matrix = bitmapData.renderTextureQuad.samplerMatrix;
-    final ma = matrix.a * bitmapData.width;
-    final mb = matrix.b * bitmapData.width;
-    final mc = matrix.c * bitmapData.height;
-    final md = matrix.d * bitmapData.height;
-    final mx = matrix.tx;
-    final my = matrix.ty;
-
-    for (var i = 0, o = 0; i < regionUVs.length - 1; i += 2, o += 4) {
-      final u = regionUVs[i + 0];
-      final v = regionUVs[i + 1];
-      vxList[o + 2] = u * ma + v * mc + mx;
-      vxList[o + 3] = u * mb + v * md + my;
+    final textureUvs = _computeTextureUvs();
+    for (var i = 0, o = 0; i < textureUvs.length - 1; i += 2, o += 4) {
+      vxList[o + 2] = textureUvs[i + 0];
+      vxList[o + 3] = textureUvs[i + 1];
     }
+  }
+
+  Float32List _computeTextureUvs() {
+    final atlasFrame = textureAtlasFrame;
+    final renderTextureQuad = bitmapData.renderTextureQuad;
+    final sourceRectangle = renderTextureQuad.sourceRectangle;
+    final offsetRectangle = renderTextureQuad.offsetRectangle;
+    final textureWidth = renderTextureQuad.renderTexture.width.toDouble();
+    final textureHeight = renderTextureQuad.renderTexture.height.toDouble();
+    final rotation = atlasFrame?.rotation ?? renderTextureQuad.rotation;
+    final offsetX = (atlasFrame?.offsetX ?? -offsetRectangle.left).toDouble();
+    final offsetY = (atlasFrame?.offsetY ?? -offsetRectangle.top).toDouble();
+    final originalWidth = (atlasFrame?.originalWidth ?? offsetRectangle.width).toDouble();
+    final originalHeight = (atlasFrame?.originalHeight ?? offsetRectangle.height).toDouble();
+    final packedWidth = atlasFrame == null
+      ? (rotation.isOdd ? sourceRectangle.height : sourceRectangle.width).toDouble()
+      : (rotation.isOdd ? atlasFrame.frameHeight : atlasFrame.frameWidth).toDouble();
+    final packedHeight = atlasFrame == null
+      ? (rotation.isOdd ? sourceRectangle.width : sourceRectangle.height).toDouble()
+      : (rotation.isOdd ? atlasFrame.frameWidth : atlasFrame.frameHeight).toDouble();
+    final textureUvs = Float32List(regionUVs.length);
+
+    var baseU = (atlasFrame?.frameX ?? sourceRectangle.left) / textureWidth;
+    var baseV = (atlasFrame?.frameY ?? sourceRectangle.top) / textureHeight;
+    late double width;
+    late double height;
+
+    if (rotation == 3) {
+      baseU -= (originalHeight - offsetY - packedHeight) / textureWidth;
+      baseV -= (originalWidth - offsetX - packedWidth) / textureHeight;
+      width = originalHeight / textureWidth;
+      height = originalWidth / textureHeight;
+
+      for (var i = 0; i < textureUvs.length - 1; i += 2) {
+        textureUvs[i + 0] = baseU + regionUVs[i + 1] * width;
+        textureUvs[i + 1] = baseV + (1.0 - regionUVs[i + 0]) * height;
+      }
+    } else if (rotation == 2) {
+      baseU -= (originalWidth - offsetX - packedWidth) / textureWidth;
+      baseV -= offsetY / textureHeight;
+      width = originalWidth / textureWidth;
+      height = originalHeight / textureHeight;
+
+      for (var i = 0; i < textureUvs.length - 1; i += 2) {
+        textureUvs[i + 0] = baseU + (1.0 - regionUVs[i + 0]) * width;
+        textureUvs[i + 1] = baseV + (1.0 - regionUVs[i + 1]) * height;
+      }
+    } else if (rotation == 1) {
+      baseU -= offsetY / textureWidth;
+      baseV -= offsetX / textureHeight;
+      width = originalHeight / textureWidth;
+      height = originalWidth / textureHeight;
+
+      for (var i = 0; i < textureUvs.length - 1; i += 2) {
+        textureUvs[i + 0] = baseU + (1.0 - regionUVs[i + 1]) * width;
+        textureUvs[i + 1] = baseV + regionUVs[i + 0] * height;
+      }
+    } else {
+      baseU -= offsetX / textureWidth;
+      baseV -= (originalHeight - offsetY - packedHeight) / textureHeight;
+      width = originalWidth / textureWidth;
+      height = originalHeight / textureHeight;
+
+      for (var i = 0; i < textureUvs.length - 1; i += 2) {
+        textureUvs[i + 0] = baseU + regionUVs[i + 0] * width;
+        textureUvs[i + 1] = baseV + regionUVs[i + 1] * height;
+      }
+    }
+
+    return textureUvs;
   }
 }

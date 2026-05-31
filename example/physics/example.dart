@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:async';
 
-import 'package:web/web.dart';
+import 'package:web/web.dart' as web;
+import 'package:stagexl/stagexl.dart' as st show MouseEvent;
 import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_spine/stagexl_spine.dart';
 
@@ -9,7 +11,7 @@ Future<void> main() async {
   StageXL.stageOptions.renderEngine = RenderEngine.WebGL;
   StageXL.stageOptions.backgroundColor = Color.Black;
 
-  final canvas = document.querySelector('#stage')! as HTMLCanvasElement;
+  final canvas = web.document.querySelector('#stage')! as web.HTMLCanvasElement;
   final stage = Stage(canvas, width: _stageWidth, height: _stageHeight);
   final renderLoop = RenderLoop();
   renderLoop.addStage(stage);
@@ -44,6 +46,7 @@ Future<void> main() async {
   skeletonAnimation.state.setAnimationByName(0, 'swing', true);
   skeletonAnimation.advanceTime(0);
   _fitSkeletonToStage(skeletonAnimation, setupBounds);
+  _enableCloudDrag(stage, skeletonAnimation);
 
   stage.addChild(skeletonAnimation);
   stage.juggler.add(skeletonAnimation);
@@ -162,4 +165,50 @@ void _fitSkeletonToStage(SkeletonAnimation skeletonAnimation, Map<String, Object
     ..scaleY = scale
     ..x = (_stageWidth - boundsWidth * scale) / 2 - boundsX * scale
     ..y = (_stageHeight - boundsHeight * scale) / 2 - boundsTop * scale;
+}
+
+void _enableCloudDrag(Stage stage, SkeletonAnimation skeletonAnimation) {
+  final cloudBone = skeletonAnimation.skeleton.findBone('cloud');
+  if (cloudBone == null) return;
+
+  skeletonAnimation.useHandCursor = true;
+
+  var isDragging = false;
+  var dragOffsetX = 0.0;
+  var dragOffsetY = 0.0;
+  StreamSubscription<st.MouseEvent>? moveSubscription;
+  StreamSubscription<st.MouseEvent>? upSubscription;
+
+  void updateCloud(st.MouseEvent event) {
+    final localPoint = skeletonAnimation.globalToLocal(Point<num>(event.stageX, event.stageY));
+    cloudBone.x = localPoint.x.toDouble() / skeletonAnimation.scaleX - dragOffsetX;
+    cloudBone.y = -localPoint.y.toDouble() / skeletonAnimation.scaleY - dragOffsetY;
+    skeletonAnimation.skeleton.updateWorldTransform();
+  }
+
+  void stopDrag() {
+    isDragging = false;
+    unawaited(moveSubscription?.cancel());
+    unawaited(upSubscription?.cancel());
+    moveSubscription = null;
+    upSubscription = null;
+  }
+
+  skeletonAnimation.onMouseDown.listen((event) {
+    final localPoint = skeletonAnimation.globalToLocal(Point<num>(event.stageX, event.stageY));
+    final pointerX = localPoint.x.toDouble() / skeletonAnimation.scaleX;
+    final pointerY = -localPoint.y.toDouble() / skeletonAnimation.scaleY;
+
+    dragOffsetX = pointerX - cloudBone.x;
+    dragOffsetY = pointerY - cloudBone.y;
+    isDragging = true;
+    updateCloud(event);
+
+    unawaited(moveSubscription?.cancel());
+    unawaited(upSubscription?.cancel());
+    moveSubscription = stage.onMouseMove.listen((moveEvent) {
+      if (isDragging) updateCloud(moveEvent);
+    });
+    upSubscription = stage.onMouseUp.listen((_) => stopDrag());
+  });
 }

@@ -298,7 +298,7 @@ class Skeleton {
   /// Updates the world transform for each bone and applies constraints.
 
   void updateWorldTransform([Physics physics = Physics.update]) {
-    for (final bone in _updateCacheReset) {
+    for (final bone in bones) {
       bone.ax = bone.x;
       bone.ay = bone.y;
       bone.arotation = bone.rotation;
