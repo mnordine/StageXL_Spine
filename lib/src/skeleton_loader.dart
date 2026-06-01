@@ -703,6 +703,13 @@ class SkeletonLoader {
               timelines.add(sequenceTimeline);
               duration = math.max(
                   duration, sequenceTimeline.frames[(sequenceTimeline.frameCount - 1) * 3]);
+            } else if (timelineName == 'deform') {
+              if (attachment is! VertexAttachment) {
+                throw StateError('Deform attachment not found: $attachmentName');
+              }
+
+              duration = math.max(
+                  duration, _readDeformTimeline(timelines, attachment, slotIndex, valueMaps));
             } else {
               throw UnsupportedError(
                   'Unsupported attachment timeline type: $timelineName on "$attachmentName".');
@@ -1056,40 +1063,8 @@ class SkeletonLoader {
           final attachment = skin.getAttachment(slotIndex, timelineName) as VertexAttachment?;
           if (attachment == null) throw StateError('Deform attachment not found: $timelineName');
 
-          final weighted = attachment.bones != null;
-          final vertices = attachment.vertices;
-          final deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
-          var frameIndex = 0;
-
-          final deformTimeline = DeformTimeline(valueMaps.length, attachment);
-          deformTimeline.slotIndex = slotIndex;
-
-          for (final valueMap in valueMaps) {
-            Float32List deform;
-            final verticesValue = valueMap['vertices'];
-            if (verticesValue == null) {
-              deform = weighted ? Float32List(deformLength) : vertices;
-            } else {
-              deform = Float32List(deformLength);
-              final start = _getInt(valueMap, 'offset', 0);
-              final temp = _getFloat32List(valueMap, 'vertices');
-              for (var i = 0; i < temp.length; i++) {
-                deform[start + i] = temp[i];
-              }
-              if (!weighted) {
-                for (var i = 0; i < deformLength; i++) {
-                  deform[i] += vertices[i];
-                }
-              }
-            }
-            final time = _getDouble(valueMap, 'time', 0);
-            deformTimeline.setFrame(frameIndex, time, deform);
-            _readCurve(valueMap, deformTimeline, frameIndex);
-            frameIndex++;
-          }
-
-          timelines.add(deformTimeline);
-          duration = math.max(duration, deformTimeline.frames[deformTimeline.frameCount - 1]);
+          duration = math.max(
+              duration, _readDeformTimeline(timelines, attachment, slotIndex, valueMaps));
         }
       }
     }
@@ -1228,6 +1203,44 @@ class SkeletonLoader {
     }
   }
 
+  double _readDeformTimeline(
+      List<Timeline> timelines, VertexAttachment attachment, int slotIndex, List<Json> valueMaps) {
+    final weighted = attachment.bones != null;
+    final vertices = attachment.vertices;
+    final deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
+    var frameIndex = 0;
+
+    final deformTimeline = DeformTimeline(valueMaps.length, attachment);
+    deformTimeline.slotIndex = slotIndex;
+
+    for (final valueMap in valueMaps) {
+      Float32List deform;
+      final verticesValue = valueMap['vertices'];
+      if (verticesValue == null) {
+        deform = weighted ? Float32List(deformLength) : vertices;
+      } else {
+        deform = Float32List(deformLength);
+        final start = _getInt(valueMap, 'offset', 0);
+        final temp = _getFloat32List(valueMap, 'vertices');
+        for (var i = 0; i < temp.length; i++) {
+          deform[start + i] = temp[i];
+        }
+        if (!weighted) {
+          for (var i = 0; i < deformLength; i++) {
+            deform[i] += vertices[i];
+          }
+        }
+      }
+      final time = _getDouble(valueMap, 'time', 0);
+      deformTimeline.setFrame(frameIndex, time, deform);
+      _readCurve(valueMap, deformTimeline, frameIndex);
+      frameIndex++;
+    }
+
+    timelines.add(deformTimeline);
+    return deformTimeline.frames[deformTimeline.frameCount - 1];
+  }
+
   void _validateRestricted43Features(Json root) {
     final version = _getString(root['skeleton'].json, 'spine', '');
     final spine43 = _isSpine4(version);
@@ -1314,7 +1327,7 @@ class SkeletonLoader {
           final attachmentName = attachmentEntry.key;
           final attachmentMap = attachmentEntry.value! as Json;
           for (final timelineName in attachmentMap.keys) {
-            if (timelineName != 'sequence') {
+            if (timelineName != 'sequence' && timelineName != 'deform') {
               throw UnsupportedError(
                   'Unsupported attachment timeline type: $timelineName on "$attachmentName" '
                   'in "$animationName".');
