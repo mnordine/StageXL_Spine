@@ -8,14 +8,20 @@ class TextureAtlasAttachmentLoader implements AttachmentLoader, SequenceAttachme
 
   @override
   RegionAttachment newRegionAttachment(Skin skin, String name, String path) {
-    final bitmapData = textureAtlas.getBitmapData(namePrefix + path);
-    return RegionAttachment(name, path, bitmapData);
+    final frame = textureAtlas.frames[namePrefix + path];
+    final bitmapData = frame?.bitmapData ?? textureAtlas.getBitmapData(namePrefix + path);
+    final attachment = RegionAttachment(name, path, bitmapData);
+    attachment.textureAtlasFrame = frame;
+    return attachment;
   }
 
   @override
   MeshAttachment newMeshAttachment(Skin skin, String name, String path) {
-    final bitmapData = textureAtlas.getBitmapData(namePrefix + path);
-    return MeshAttachment(name, path, bitmapData);
+    final frame = textureAtlas.frames[namePrefix + path];
+    final bitmapData = frame?.bitmapData ?? textureAtlas.getBitmapData(namePrefix + path);
+    final attachment = MeshAttachment(name, path, bitmapData);
+    attachment.textureAtlasFrame = frame;
+    return attachment;
   }
 
   @override

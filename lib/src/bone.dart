@@ -71,7 +71,7 @@ class Bone implements Updatable {
 
   @override
   void update() {
-    updateWorldTransformWith(x, y, rotation, scaleX, scaleY, shearX, shearY);
+    updateWorldTransformWith(ax, ay, arotation, ascaleX, ascaleY, ashearX, ashearY);
   }
 
   /// Computes the world SRT using the parent bone and this bone's local SRT.
@@ -251,10 +251,12 @@ class Bone implements Updatable {
   void _updateAppliedTransform() {
     appliedValid = true;
     final parent = this.parent;
+    final skeleton = this.skeleton;
+    final mode = data.transformMode;
 
     if (parent == null) {
-      ax = worldX;
-      ay = worldY;
+      ax = worldX - skeleton.x;
+      ay = worldY - skeleton.y;
       arotation = _toDeg(math.atan2(c, a));
       ascaleX = math.sqrt(a * a + c * c);
       ascaleY = math.sqrt(b * b + d * d);
@@ -263,24 +265,74 @@ class Bone implements Updatable {
       return;
     }
 
-    final pa = parent.a;
-    final pb = parent.b;
-    final pc = parent.c;
-    final pd = parent.d;
-    final pid = 1.0 / (pa * pd - pb * pc);
+    var pa = parent.a;
+    var pb = parent.b;
+    var pc = parent.c;
+    var pd = parent.d;
+    var pid = 1.0 / (pa * pd - pb * pc);
     final dx = worldX - parent.worldX;
     final dy = worldY - parent.worldY;
-    ax = (dx * pd * pid - dy * pb * pid);
-    ay = (dy * pa * pid - dx * pc * pid);
+    var ia = pd * pid;
+    var ib = pb * pid;
+    var ic = pc * pid;
+    var id = pa * pid;
+    ax = dx * ia - dy * ib;
+    ay = dy * id - dx * ic;
 
-    final ia = pid * pd;
-    final id = pid * pa;
-    final ib = pid * pb;
-    final ic = pid * pc;
-    final ra = ia * a - ib * c;
-    final rb = ia * b - ib * d;
-    final rc = id * c - ic * a;
-    final rd = id * d - ic * b;
+    late double ra;
+    late double rb;
+    late double rc;
+    late double rd;
+
+    if (mode == TransformMode.onlyTranslation) {
+      ra = a;
+      rb = b;
+      rc = c;
+      rd = d;
+    } else {
+      switch (mode) {
+        case TransformMode.noRotationOrReflection:
+          final s = (pa * pd - pb * pc).abs() / (pa * pa + pc * pc);
+          pb = -pc * skeleton.scaleX * s / skeleton.scaleY;
+          pd = pa * skeleton.scaleY * s / skeleton.scaleX;
+          pid = 1.0 / (pa * pd - pb * pc);
+          ia = pd * pid;
+          ib = pb * pid;
+
+        case TransformMode.noScale:
+        case TransformMode.noScaleOrReflection:
+          var r = rotation * _deg2rad;
+          final cos = math.cos(r);
+          final sin = math.sin(r);
+          pa = (pa * cos + pb * sin) / skeleton.scaleX;
+          pc = (pc * cos + pd * sin) / skeleton.scaleY;
+          var s = math.sqrt(pa * pa + pc * pc);
+          if (s > 0.00001) s = 1.0 / s;
+          pa *= s;
+          pc *= s;
+          s = math.sqrt(pa * pa + pc * pc);
+          if (mode == TransformMode.noScale && ((pid < 0) != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0)))) {
+            s = -s;
+          }
+          r = math.pi / 2.0 + math.atan2(pc, pa);
+          pb = math.cos(r) * s;
+          pd = math.sin(r) * s;
+          pid = 1.0 / (pa * pd - pb * pc);
+          ia = pd * pid;
+          ib = pb * pid;
+          ic = pc * pid;
+          id = pa * pid;
+
+        case TransformMode.normal:
+        case TransformMode.onlyTranslation:
+          break;
+      }
+
+      ra = ia * a - ib * c;
+      rb = ia * b - ib * d;
+      rc = id * c - ic * a;
+      rd = id * d - ic * b;
+    }
 
     ashearX = 0.0;
     ascaleX = math.sqrt(ra * ra + rc * rc);
@@ -288,7 +340,7 @@ class Bone implements Updatable {
     if (ascaleX > 0.0001) {
       final det = ra * rd - rb * rc;
       ascaleY = det / ascaleX;
-      ashearY = _toDeg(math.atan2(ra * rb + rc * rd, det));
+      ashearY = -_toDeg(math.atan2(ra * rb + rc * rd, det));
       arotation = _toDeg(math.atan2(rc, ra));
     } else {
       ascaleX = 0.0;

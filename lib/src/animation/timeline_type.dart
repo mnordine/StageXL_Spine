@@ -50,4 +50,5 @@ class TimelineType {
   static final TimelineType pathConstraintMix = TimelineType(13);
   static final TimelineType twoColor = TimelineType(14);
   static final TimelineType sequence = TimelineType(15);
+  static final TimelineType physicsConstraint = TimelineType(16);
 }

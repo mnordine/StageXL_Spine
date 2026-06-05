@@ -38,6 +38,7 @@ class SkeletonData {
   double width = 0;
   double height = 0;
   double fps = 30;
+  double referenceScale = 100;
 
   List<BoneData> bones = []; // Ordered parents first.
   List<SlotData> slots = []; // Setup pose draw order.
@@ -47,6 +48,7 @@ class SkeletonData {
   List<IkConstraintData> ikConstraints = [];
   List<TransformConstraintData> transformConstraints = [];
   List<PathConstraintData> pathConstraints = [];
+  List<PhysicsConstraintData> physicsConstraints = [];
 
   Skin? defaultSkin;
 
@@ -106,6 +108,18 @@ class SkeletonData {
   int findPathConstraintIndex(String constraintName) {
     for (var i = 0; i < pathConstraints.length; i++) {
       if (pathConstraints[i].name == constraintName) return i;
+    }
+    return -1;
+  }
+
+  // --- Physics constraints.
+
+  PhysicsConstraintData? findPhysicsConstraint(String constraintName) =>
+      physicsConstraints.firstWhere((p) => p.name == constraintName);
+
+  int findPhysicsConstraintIndex(String constraintName) {
+    for (var i = 0; i < physicsConstraints.length; i++) {
+      if (physicsConstraints[i].name == constraintName) return i;
     }
     return -1;
   }
