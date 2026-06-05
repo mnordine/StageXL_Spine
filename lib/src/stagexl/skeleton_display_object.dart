@@ -162,7 +162,6 @@ class SkeletonDisplayObject extends InteractiveObject {
       }
     }
 
-    renderContext.flush();
     renderState.pop();
   }
 
