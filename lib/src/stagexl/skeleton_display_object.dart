@@ -119,6 +119,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     final clipping = _clipping;
 
     ClippingAttachment? clippingAttachment;
+    Slot? clippingSlot;
     renderContext.activateRenderProgram(renderProgram);
     renderState.push(_skeletonMatrix, 1.0, renderState.globalBlendMode);
 
@@ -151,13 +152,15 @@ class SkeletonDisplayObject extends InteractiveObject {
         renderContext.beginRenderMask(renderState, clipping);
         renderContext.activateRenderProgram(renderProgram);
         clippingAttachment = attachment;
+        clippingSlot = slot;
       }
 
       if (clippingAttachment != null) {
-        if (s == slots.length - 1 || clippingAttachment.endSlot == slot.data) {
+        if (s == slots.length - 1 || (clippingAttachment.endSlot == slot.data && slot != clippingSlot)) {
           renderContext.endRenderMask(renderState, clipping);
           renderContext.activateRenderProgram(renderProgram);
           clippingAttachment = null;
+          clippingSlot = null;
         }
       }
     }
@@ -173,6 +176,7 @@ class SkeletonDisplayObject extends InteractiveObject {
     final slots = skeleton.drawOrder;
 
     ClippingAttachment? clippingAttachment;
+    Slot? clippingSlot;
     renderState.push(_skeletonMatrix, skeleton.color.a, renderState.globalBlendMode);
 
     for (var s = 0; s < slots.length; s++) {
@@ -202,12 +206,14 @@ class SkeletonDisplayObject extends InteractiveObject {
         clipping.vertices = vertices.buffer.asFloat32List(0, length);
         renderContext.beginRenderMask(renderState, clipping);
         clippingAttachment = attachment;
+        clippingSlot = slot;
       }
 
       if (clippingAttachment != null) {
-        if (s == slots.length - 1 || clippingAttachment.endSlot == slot.data) {
+        if (s == slots.length - 1 || (clippingAttachment.endSlot == slot.data && slot != clippingSlot)) {
           renderContext.endRenderMask(renderState, clipping);
           clippingAttachment = null;
+          clippingSlot = null;
         }
       }
     }
