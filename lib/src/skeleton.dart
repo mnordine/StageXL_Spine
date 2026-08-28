@@ -338,7 +338,8 @@ class Skeleton {
 
     for (final transformConstraint in transformConstraints) {
       transformConstraint.rotateMix = transformConstraint.data.rotateMix;
-      transformConstraint.translateMix = transformConstraint.data.translateMix;
+      transformConstraint.translateMixX = transformConstraint.data.translateMixX;
+      transformConstraint.translateMixY = transformConstraint.data.translateMixY;
       transformConstraint.scaleMix = transformConstraint.data.scaleMix;
       transformConstraint.shearMix = transformConstraint.data.shearMix;
     }

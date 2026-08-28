@@ -103,12 +103,11 @@ class ColorTimeline extends CurveTimeline {
       final g1 = frames[frame + _g];
       final b1 = frames[frame + _b];
       final a1 = frames[frame + _a];
-      final between = 1.0 - (time - t1) / (t0 - t1);
-      final percent = getCurvePercent(frame ~/ _entries - 1, between);
-      r = r0 + (r1 - r0) * percent;
-      g = g0 + (g1 - g0) * percent;
-      b = b0 + (b1 - b0) * percent;
-      a = a0 + (a1 - a0) * percent;
+      final frameIndex = frame ~/ _entries - 1;
+      r = getCurveValue(frameIndex, 0, time, t0, r0, t1, r1);
+      g = getCurveValue(frameIndex, 1, time, t0, g0, t1, g1);
+      b = getCurveValue(frameIndex, 2, time, t0, b0, t1, b1);
+      a = getCurveValue(frameIndex, 3, time, t0, a0, t1, a1);
     }
 
     if (alpha == 1.0) {

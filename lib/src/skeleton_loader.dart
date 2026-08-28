@@ -210,8 +210,12 @@ class SkeletonLoader {
       constraintData.offsetShearY = _getDouble(constraintMap, 'shearY', 0);
       constraintData.rotateMix = _getDouble(constraintMap, 'rotateMix',
           _getDouble(constraintMap, 'mixRotate', 1));
-      constraintData.translateMix = _getDouble(constraintMap, 'translateMix',
-          _getDouble(constraintMap, 'mixX', 1));
+      if (constraintMap.containsKey('translateMix')) {
+        constraintData.translateMix = _getDouble(constraintMap, 'translateMix', 1);
+      } else {
+        constraintData.translateMixX = _getDouble(constraintMap, 'mixX', 1);
+        constraintData.translateMixY = _getDouble(constraintMap, 'mixY', constraintData.translateMixX);
+      }
       constraintData.scaleMix = _getDouble(constraintMap, 'scaleMix',
           _getDouble(constraintMap, 'mixScaleX', 1));
       constraintData.shearMix = _getDouble(constraintMap, 'shearMix',
@@ -624,8 +628,17 @@ class SkeletonLoader {
               if (timelineName == 'rgb') color.a = setupColor.a;
             }
             colorTimeline.setFrame(frameIndex, time, color.r, color.g, color.b, color.a);
-            _readCurve(valueMap, colorTimeline, frameIndex);
+            if (!spine43 || (timelineName != 'rgba' && timelineName != 'rgb')) {
+              _readCurve(valueMap, colorTimeline, frameIndex);
+            }
             frameIndex++;
+          }
+          if (spine43 && (timelineName == 'rgba' || timelineName == 'rgb')) {
+            final valueOffsets = timelineName == 'rgba' ? [1, 2, 3, 4] : [1, 2, 3];
+            for (var i = 0; i < values.length - 1; i++) {
+              _readCurve2(values[i], colorTimeline, i, colorTimeline.frames,
+                  ColorTimeline._entries, valueOffsets);
+            }
           }
 
           timelines.add(colorTimeline);
@@ -920,11 +933,15 @@ class SkeletonLoader {
       var frameIndex = 0;
       for (final valueMap in valueMaps) {
         final rotateMix = _getDouble(valueMap, 'rotateMix', _getDouble(valueMap, 'mixRotate', 1));
-        final translateMix = _getDouble(valueMap, 'translateMix', _getDouble(valueMap, 'mixX', 1));
+        final translateMixX = _getDouble(valueMap, 'translateMix', _getDouble(valueMap, 'mixX', 1));
+        final translateMixY = valueMap.containsKey('translateMix')
+            ? translateMixX
+            : _getDouble(valueMap, 'mixY', translateMixX);
         final scaleMix = _getDouble(valueMap, 'scaleMix', _getDouble(valueMap, 'mixScaleX', 1));
         final shearMix = _getDouble(valueMap, 'shearMix', _getDouble(valueMap, 'mixShearY', 1));
         final time = _getDouble(valueMap, 'time', 0);
-        transformTimeline.setFrame(frameIndex, time, rotateMix, translateMix, scaleMix, shearMix);
+        transformTimeline.setFrameWithTranslateMixes(
+            frameIndex, time, rotateMix, translateMixX, translateMixY, scaleMix, shearMix);
         _readCurve(valueMap, transformTimeline, frameIndex);
         frameIndex++;
       }

@@ -52,6 +52,16 @@ class RegionAttachment extends RenderAttachment {
   /// have to call this method after you have changed one of those fields.
 
   void update() {
+    _updateRenderGeometry(bitmapData);
+    invalidateRenderGeometry();
+  }
+
+  @override
+  void updateRenderGeometryForBitmapData(BitmapData bitmapData) {
+    _updateRenderGeometry(bitmapData);
+  }
+
+  void _updateRenderGeometry(BitmapData bitmapData) {
     final num sw = scaleX * width;
     final num sh = scaleY * height;
     final bw = bitmapData.width;
@@ -67,11 +77,16 @@ class RegionAttachment extends RenderAttachment {
     final num my = y - 0.5 * (sw * sinR - sh * cosR);
     transformationMatrix.setTo(ma, mc, mb, md, mx, my);
 
-    final vxList = bitmapData.renderTextureQuad.vxList;
+    final renderTextureQuad = bitmapData.renderTextureQuad;
+    final bitmapVxList = renderTextureQuad.vxList;
+    ixList = Int16List.fromList(renderTextureQuad.ixList);
+    vxList = Float32List.fromList(bitmapVxList);
+    worldVerticesLength = hullLength = vxList.length >> 1;
+    vertices = Float32List(worldVerticesLength);
 
     for (var o = 0; o <= vertices.length - 2; o += 2) {
-      final x = vxList[o * 2 + 0];
-      final y = vxList[o * 2 + 1];
+      final x = bitmapVxList[o * 2 + 0];
+      final y = bitmapVxList[o * 2 + 1];
       vertices[o + 0] = x * ma + y * mb + mx;
       vertices[o + 1] = x * mc + y * md + my;
     }
@@ -100,11 +115,6 @@ class RegionAttachment extends RenderAttachment {
 
   @override
   void initRenderGeometry() {
-    final renderTextureQuad = bitmapData.renderTextureQuad;
-    ixList = Int16List.fromList(renderTextureQuad.ixList);
-    vxList = Float32List.fromList(renderTextureQuad.vxList);
-    worldVerticesLength = hullLength = vxList.length >> 1;
-    vertices = Float32List(worldVerticesLength);
-    update();
+    _updateRenderGeometry(bitmapData);
   }
 }

@@ -40,7 +40,8 @@ class TransformConstraintData {
   bool relative = false;
   bool local = false;
 
-  double translateMix = 0;
+  double translateMixX = 0;
+  double translateMixY = 0;
   double rotateMix = 0;
   double scaleMix = 0;
   double shearMix = 0;
@@ -50,6 +51,13 @@ class TransformConstraintData {
   double offsetScaleX = 0;
   double offsetScaleY = 0;
   double offsetShearY = 0;
+
+  double get translateMix => translateMixX;
+
+  set translateMix(double value) {
+    translateMixX = value;
+    translateMixY = value;
+  }
 
   TransformConstraintData(this.name);
 

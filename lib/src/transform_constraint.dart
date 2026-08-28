@@ -35,15 +35,24 @@ class TransformConstraint implements Constraint {
   final List<Bone> bones = [];
 
   Bone target;
-  double translateMix = 0;
+  double translateMixX = 0;
+  double translateMixY = 0;
   double rotateMix = 0;
   double scaleMix = 0;
   double shearMix = 0;
 
   final Float32List _temp = Float32List(2);
 
+  double get translateMix => translateMixX;
+
+  set translateMix(double value) {
+    translateMixX = value;
+    translateMixY = value;
+  }
+
   TransformConstraint(this.data, Skeleton skeleton) : target = skeleton.findBone(data.target.name)! {
-    translateMix = data.translateMix;
+    translateMixX = data.translateMixX;
+    translateMixY = data.translateMixY;
     rotateMix = data.rotateMix;
     scaleMix = data.scaleMix;
     shearMix = data.shearMix;
@@ -76,7 +85,8 @@ class TransformConstraint implements Constraint {
 
   void _applyAbsoluteWorld() {
     final rotateMix = this.rotateMix;
-    final translateMix = this.translateMix;
+    final translateMixX = this.translateMixX;
+    final translateMixY = this.translateMixY;
     final scaleMix = this.scaleMix;
     final shearMix = this.shearMix;
 
@@ -119,12 +129,12 @@ class TransformConstraint implements Constraint {
         modified = true;
       }
 
-      if (translateMix != 0) {
+      if (translateMixX != 0 || translateMixY != 0) {
         _temp[0] = data.offsetX;
         _temp[1] = data.offsetY;
         target.localToWorld(_temp);
-        bone._worldX += (_temp[0] - bone.worldX) * translateMix;
-        bone._worldY += (_temp[1] - bone.worldY) * translateMix;
+        bone._worldX += (_temp[0] - bone.worldX) * translateMixX;
+        bone._worldY += (_temp[1] - bone.worldY) * translateMixY;
         modified = true;
       }
 
@@ -167,7 +177,8 @@ class TransformConstraint implements Constraint {
 
   void _applyRelativeWorld() {
     final rotateMix = this.rotateMix;
-    final translateMix = this.translateMix;
+    final translateMixX = this.translateMixX;
+    final translateMixY = this.translateMixY;
     final scaleMix = this.scaleMix;
     final shearMix = this.shearMix;
     final target = this.target;
@@ -208,13 +219,13 @@ class TransformConstraint implements Constraint {
         modified = true;
       }
 
-      if (translateMix != 0) {
+      if (translateMixX != 0 || translateMixY != 0) {
         final temp = _temp;
         temp[0] = data.offsetX;
         temp[1] = data.offsetY;
         target.localToWorld(temp);
-        bone._worldX += temp[0] * translateMix;
-        bone._worldY += temp[1] * translateMix;
+        bone._worldX += temp[0] * translateMixX;
+        bone._worldY += temp[1] * translateMixY;
         modified = true;
       }
 
@@ -252,7 +263,8 @@ class TransformConstraint implements Constraint {
 
   void _applyAbsoluteLocal() {
     final rotateMix = this.rotateMix;
-    final translateMix = this.translateMix;
+    final translateMixX = this.translateMixX;
+    final translateMixY = this.translateMixY;
     final scaleMix = this.scaleMix;
     final shearMix = this.shearMix;
     final target = this.target;
@@ -271,9 +283,9 @@ class TransformConstraint implements Constraint {
 
       var x = bone.ax;
       var y = bone.ay;
-      if (translateMix != 0) {
-        x += (target.ax - x + data.offsetX) * translateMix;
-        y += (target.ay - y + data.offsetY) * translateMix;
+      if (translateMixX != 0 || translateMixY != 0) {
+        x += (target.ax - x + data.offsetX) * translateMixX;
+        y += (target.ay - y + data.offsetY) * translateMixY;
       }
 
       var scaleX = bone.ascaleX;
@@ -299,7 +311,8 @@ class TransformConstraint implements Constraint {
 
   void _applyRelativeLocal() {
     final rotateMix = this.rotateMix;
-    final translateMix = this.translateMix;
+    final translateMixX = this.translateMixX;
+    final translateMixY = this.translateMixY;
     final scaleMix = this.scaleMix;
     final shearMix = this.shearMix;
     final target = this.target;
@@ -317,9 +330,9 @@ class TransformConstraint implements Constraint {
 
       var x = bone.ax;
       var y = bone.ay;
-      if (translateMix != 0.0) {
-        x += (target.ax + data.offsetX) * translateMix;
-        y += (target.ay + data.offsetY) * translateMix;
+      if (translateMixX != 0.0 || translateMixY != 0.0) {
+        x += (target.ax + data.offsetX) * translateMixX;
+        y += (target.ay + data.offsetY) * translateMixY;
       }
 
       var scaleX = bone.ascaleX;

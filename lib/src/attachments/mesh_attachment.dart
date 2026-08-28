@@ -74,7 +74,11 @@ class MeshAttachment extends RenderAttachment {
   void initRenderGeometry() {
     ixList = Int16List.fromList(triangles);
     vxList = Float32List(regionUVs.length * 2);
+    updateRenderGeometryForBitmapData(bitmapData);
+  }
 
+  @override
+  void updateRenderGeometryForBitmapData(BitmapData bitmapData) {
     final matrix = bitmapData.renderTextureQuad.samplerMatrix;
     final ma = matrix.a * bitmapData.width;
     final mb = matrix.b * bitmapData.width;

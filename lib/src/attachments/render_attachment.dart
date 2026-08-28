@@ -40,6 +40,7 @@ abstract class RenderAttachment extends VertexAttachment {
   late Int16List ixList;
   int hullLength = 0;
   SpineColor color = SpineColor(1, 1, 1, 1);
+  BitmapData? _geometryBitmapData;
 
   RenderAttachment(super.name, this.path, this.bitmapData);
 
@@ -47,16 +48,30 @@ abstract class RenderAttachment extends VertexAttachment {
 
   void initRenderGeometry();
 
+  void updateRenderGeometryForBitmapData(BitmapData bitmapData);
+
+  void invalidateRenderGeometry() {
+    _geometryBitmapData = null;
+  }
+
   BitmapData updateRenderGeometry(Slot slot) {
+    final bitmapData = currentBitmapData(slot);
     computeWorldVertices2(slot, 0, worldVerticesLength, vxList, 0, 4);
-    return currentBitmapData(slot);
+    return bitmapData;
   }
 
   BitmapData currentBitmapData(Slot slot) {
     final sequence = this.sequence;
-    if (sequence == null) return bitmapData;
+    final currentBitmapData = sequence == null
+        ? bitmapData
+        : sequence.bitmapDataForIndex(
+            slot.sequenceIndex == -1 ? sequence.setupIndex : slot.sequenceIndex);
 
-    final sequenceIndex = slot.sequenceIndex == -1 ? sequence.setupIndex : slot.sequenceIndex;
-    return sequence.bitmapDataForIndex(sequenceIndex);
+    if (!identical(_geometryBitmapData, currentBitmapData)) {
+      updateRenderGeometryForBitmapData(currentBitmapData);
+      _geometryBitmapData = currentBitmapData;
+    }
+
+    return currentBitmapData;
   }
 }
