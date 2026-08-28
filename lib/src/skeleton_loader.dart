@@ -722,7 +722,9 @@ class SkeletonLoader {
               }
 
               duration = math.max(
-                  duration, _readDeformTimeline(timelines, attachment, slotIndex, valueMaps));
+                  duration,
+                  _readDeformTimeline(
+                      timelines, attachment, slotIndex, valueMaps, spine43));
             } else {
               throw UnsupportedError(
                   'Unsupported attachment timeline type: $timelineName on "$attachmentName".');
@@ -1081,7 +1083,9 @@ class SkeletonLoader {
           if (attachment == null) throw StateError('Deform attachment not found: $timelineName');
 
           duration = math.max(
-              duration, _readDeformTimeline(timelines, attachment, slotIndex, valueMaps));
+              duration,
+              _readDeformTimeline(
+                  timelines, attachment, slotIndex, valueMaps, spine43));
         }
       }
     }
@@ -1220,8 +1224,30 @@ class SkeletonLoader {
     }
   }
 
-  double _readDeformTimeline(
-      List<Timeline> timelines, VertexAttachment attachment, int slotIndex, List<Json> valueMaps) {
+  void _readDeformCurve2(Json valueMap, DeformTimeline timeline, int frameIndex) {
+    switch (valueMap['curve']) {
+      case 'stepped':
+        timeline.setSteppedValue(frameIndex, 0);
+
+      case final List<Object?> curve when curve.length >= 4:
+        final [cx1, cy1, cx2, cy2, ...] = curve.cast<num>().map((n) => n.toDouble()).toList();
+        timeline.setBezier(
+          frameIndex,
+          0,
+          timeline.frames[frameIndex],
+          0,
+          cx1,
+          cy1,
+          cx2,
+          cy2,
+          timeline.frames[frameIndex + 1],
+          1,
+        );
+    }
+  }
+
+  double _readDeformTimeline(List<Timeline> timelines, VertexAttachment attachment, int slotIndex,
+      List<Json> valueMaps, bool absoluteCurveValues) {
     final weighted = attachment.bones != null;
     final vertices = attachment.vertices;
     final deformLength = weighted ? vertices.length ~/ 3 * 2 : vertices.length;
@@ -1250,8 +1276,13 @@ class SkeletonLoader {
       }
       final time = _getDouble(valueMap, 'time', 0);
       deformTimeline.setFrame(frameIndex, time, deform);
-      _readCurve(valueMap, deformTimeline, frameIndex);
+      if (!absoluteCurveValues) _readCurve(valueMap, deformTimeline, frameIndex);
       frameIndex++;
+    }
+    if (absoluteCurveValues) {
+      for (var i = 0; i < valueMaps.length - 1; i++) {
+        _readDeformCurve2(valueMaps[i], deformTimeline, i);
+      }
     }
 
     timelines.add(deformTimeline);

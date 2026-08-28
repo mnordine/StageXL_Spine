@@ -178,6 +178,61 @@ void main() {
       expect(attachment.vxList[offset], closeTo(expectedVertices[offset], 0.001));
     }
   });
+
+  test('evaluates Spine 4.x deform curves using absolute control times', () {
+    final data = loader.readSkeletonData(jsonEncode({
+      'skeleton': {'spine': '4.2.43'},
+      'bones': [
+        {'name': 'root'},
+      ],
+      'slots': [
+        {'name': 'slot', 'bone': 'root', 'attachment': 'mesh'},
+      ],
+      'skins': [
+        {
+          'name': 'default',
+          'attachments': {
+            'slot': {
+              'mesh': {
+                'type': 'mesh',
+                'uvs': [0, 0, 1, 0, 1, 1, 0, 1],
+                'triangles': [0, 1, 2, 0, 2, 3],
+                'vertices': [0, 0, 16, 0, 16, 16, 0, 16],
+                'hull': 4,
+              },
+            },
+          },
+        },
+      ],
+      'animations': {
+        'warp': {
+          'attachments': {
+            'default': {
+              'slot': {
+                'mesh': {
+                  'deform': [
+                    {
+                      'curve': [0.022, 0, 0.08, 0.35],
+                    },
+                    {
+                      'time': 0.1,
+                      'vertices': [100, 0, 0, 0, 0, 0, 0, 0],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    }));
+    final skeleton = Skeleton(data);
+
+    data.findAnimation('warp')!.apply(
+        skeleton, 0, 0.05, false, [], 1, MixPose.setup, MixDirection.In);
+
+    expect(skeleton.slots.single.attachmentVertices.first, closeTo(25.044, 0.5));
+  });
 }
 
 class _TestAttachmentLoader implements AttachmentLoader, SequenceAttachmentLoader {

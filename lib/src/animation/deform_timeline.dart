@@ -136,8 +136,7 @@ class DeformTimeline extends CurveTimeline {
     final t1 = frames[frame + 0];
     final v0List = frameVertices[frame - 1]!;
     final v1List = frameVertices[frame + 0]!;
-    final between = 1.0 - (time - t1) / (t0 - t1);
-    final percent = getCurvePercent(frame - 1, between);
+    final percent = getCurveValue(frame - 1, 0, time, t0, 0, t1, 1);
 
     if (alpha == 1.0) {
       // Vertex positions or deform offsets, no alpha.
