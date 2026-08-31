@@ -16,6 +16,7 @@ targets:
           - example/hero/example.dart
           - example/powerup/example.dart
           - example/raptor/example.dart
+          - example/slot_object/example.dart
           - example/spineboy/example.dart
           - example/stretchyman/example.dart
           - example/tank/example.dart

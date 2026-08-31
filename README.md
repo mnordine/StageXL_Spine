@@ -19,6 +19,23 @@ Hero (<http://www.stagexl.org/show/spine/hero/example.html>)
 Coin (<http://www.stagexl.org/show/spine/coin/example.html>)  
 Combined (<http://www.stagexl.org/show/spine/texture_atlas/example.html>)  
 
+## Slot display objects
+
+StageXL display objects can be added to a Spine slot at runtime. The object follows the slot's bone and participates
+in the Spine draw order, alpha, blend mode, clipping, hit testing, and event hierarchy.
+
+```dart
+final weapon = Sprite();
+skeletonAnimation.addSlotObject('weapon', weapon);
+
+// The current Spine attachment was only hidden, so this restores it.
+skeletonAnimation.removeSlotObject('weapon');
+```
+
+The Spine attachment is visually replaced by default but remains assigned for its animation timelines. Pass
+`replaceAttachment: false` to render the display object alongside the attachment, or
+`followAttachmentTimeline: true` to hide the display object while the slot attachment is empty.
+
 ## Spine Runtime
 
 Based on the spine-as3 runtime (2017-07-01)
