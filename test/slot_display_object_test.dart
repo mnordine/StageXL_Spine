@@ -45,7 +45,7 @@ void main() {
       expect(display.numChildren, 1);
     });
 
-    test('follows the bone transform, slot alpha, and slot blend mode', () {
+    test('follows the bone transform without inverting StageXL content', () {
       final data = _skeletonData(['weapon']);
       data.bones.single
         ..x = 10
@@ -66,12 +66,27 @@ void main() {
       expect(slotContainer.matrix.a, closeTo(1, 0.000001));
       expect(slotContainer.matrix.b, closeTo(0, 0.000001));
       expect(slotContainer.matrix.c, closeTo(0, 0.000001));
-      expect(slotContainer.matrix.d, closeTo(-1, 0.000001));
+      expect(slotContainer.matrix.d, closeTo(1, 0.000001));
       expect(slotContainer.matrix.tx, closeTo(10, 0.000001));
       expect(slotContainer.matrix.ty, closeTo(-20, 0.000001));
       expect(slotContainer.alpha, 0.25);
       expect(slotContainer.blendMode, BlendMode.ADD);
       expect(display.hitTestInput(10, -20), same(sprite));
+    });
+
+    test('converts a rotated Spine bone to StageXL coordinates', () {
+      final data = _skeletonData(['weapon']);
+      data.bones.single.rotation = 90;
+      final display = SkeletonDisplayObject(data);
+      final sprite = Sprite();
+
+      display.addSlotObject('weapon', sprite);
+
+      final slotContainer = sprite.parent! as Warp;
+      expect(slotContainer.matrix.a, closeTo(0, 0.000001));
+      expect(slotContainer.matrix.b, closeTo(-1, 0.000001));
+      expect(slotContainer.matrix.c, closeTo(1, 0.000001));
+      expect(slotContainer.matrix.d, closeTo(0, 0.000001));
     });
 
     test('can follow whether the Spine attachment timeline has an attachment', () {

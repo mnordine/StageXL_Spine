@@ -128,8 +128,8 @@ class SkeletonDisplayObject extends DisplayObjectContainer {
     final matrix = slotDisplayObject.container.matrix;
     final a = bone.a;
     final b = 0.0 - bone.c;
-    final c = bone.b;
-    final d = 0.0 - bone.d;
+    final c = 0.0 - bone.b;
+    final d = bone.d;
     final tx = bone.worldX;
     final ty = 0.0 - bone.worldY;
 
