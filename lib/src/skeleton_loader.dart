@@ -146,9 +146,10 @@ class SkeletonLoader {
       skeletonData.slots.add(slotData);
     }
 
-    // IK constraints.
+    final modernConstraints = _readModernConstraints(root);
 
-    for (final constraintMap in root['ik'].getList<Json>()) {
+    // IK constraints.
+    for (final constraintMap in _getConstraints(root, 'ik', modernConstraints)) {
       final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
@@ -178,7 +179,7 @@ class SkeletonLoader {
 
     // Transform constraints.
 
-    for (final constraintMap in root['transform'].getList<Json>()) {
+    for (final constraintMap in _getConstraints(root, 'transform', modernConstraints)) {
       final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
@@ -226,7 +227,7 @@ class SkeletonLoader {
 
     // Path constraints.
 
-    for (final constraintMap in root['path'].getList<Json>()) {
+    for (final constraintMap in _getConstraints(root, 'path', modernConstraints)) {
       final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null)
         continue;
@@ -266,7 +267,7 @@ class SkeletonLoader {
 
     // Physics constraints.
 
-    for (final constraintMap in root['physics'].getList<Json>()) {
+    for (final constraintMap in _getConstraints(root, 'physics', modernConstraints)) {
       final constraintName = _getString(constraintMap, 'name', null);
       if (constraintName == null) continue;
 
@@ -1289,18 +1290,66 @@ class SkeletonLoader {
     return deformTimeline.frames[deformTimeline.frameCount - 1];
   }
 
+  Map<String, List<Json>> _readModernConstraints(Json root) {
+    final constraintsObject = root['constraints'];
+    if (constraintsObject == null) return const {};
+
+    if (constraintsObject is! List) throw const FormatException('"constraints" must be an array.');
+
+    final constraints = <String, List<Json>>{};
+    for (final constraintObject in constraintsObject) {
+      if (constraintObject is! Json)
+        throw const FormatException('Each constraint must be an object.');
+
+      final type = _getString(constraintObject, 'type', null);
+      if (type == null) throw const FormatException('A constraint is missing its type.');
+
+      constraints.putIfAbsent(type, () => []).add(constraintObject);
+    }
+    return constraints;
+  }
+
+  List<Json> _getConstraints(Json root, String type, Map<String, List<Json>> modernConstraints) {
+    final legacy = root[type].getList<Json>();
+    final modern = modernConstraints[type];
+    if (modern == null) return legacy;
+
+    final modernNames = modern
+        .map((constraint) => _getString(constraint, 'name', null))
+        .toSet();
+
+    return [
+      for (final constraint in legacy)
+        if (!modernNames.contains(_getString(constraint, 'name', null)))
+          constraint,
+      ...modern,
+    ];
+  }
+
   void _validateRestricted43Features(Json root) {
     final version = _getString(root['skeleton'].json, 'spine', '');
     final spine43 = _isSpine4(version);
 
     if (root['constraints'] case final List<Object?> constraints) {
       for (final constraintObject in constraints) {
-        final constraint = constraintObject! as Json;
-        final type = _getString(constraint, 'type', 'unknown');
-        final name = _getString(constraint, 'name', 'unknown');
-        throw UnsupportedError(
-            'Unsupported Spine 4.3 feature: $type constraint "$name". Use legacy-compatible '
-            'top-level ik/path exports or remove the constraint.');
+        if (constraintObject is! Json) throw const FormatException('Each constraint must be an object.');
+
+        final constraint = constraintObject;
+        final type = _getString(constraint, 'type', 'unknown')!;
+        final name = _getString(constraint, 'name', 'unknown')!;
+        if (!{'ik', 'transform', 'path', 'physics'}.contains(type))
+          throw UnsupportedError('Unsupported Spine 4.3 feature: $type constraint "$name".');
+
+        if (_getBool(constraint, 'skin', false))
+          throw UnsupportedError('Skin-required Spine constraints are not supported: "$name".');
+
+        if (type == 'ik' &&
+            (_getDouble(constraint, 'softness', 0) != 0 ||
+                _getBool(constraint, 'compress', false) ||
+                _getBool(constraint, 'stretch', false) ||
+                _getBool(constraint, 'uniform', false))) {
+          throw UnsupportedError('IK constraint "$name" uses features unsupported by this runtime.');
+        }
       }
     }
 
